@@ -1,0 +1,604 @@
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccNced6J.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"ps2.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.PS2_ReadData,"ax",%progbits
+  18              		.align	1
+  19              		.global	PS2_ReadData
+  20              		.syntax unified
+  21              		.thumb
+  22              		.thumb_func
+  24              	PS2_ReadData:
+  25              	.LVL0:
+  26              	.LFB68:
+  27              		.file 1 "Core/Src/ps2.c"
+   1:Core/Src/ps2.c **** #include "ps2.h"
+   2:Core/Src/ps2.c **** 
+   3:Core/Src/ps2.c **** void PS2_ReadData(uint8_t* rx)
+   4:Core/Src/ps2.c **** {
+  28              		.loc 1 4 1 view -0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 8
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		.loc 1 4 1 is_stmt 0 view .LVU1
+  33 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 20
+  36              		.cfi_offset 4, -20
+  37              		.cfi_offset 5, -16
+  38              		.cfi_offset 6, -12
+  39              		.cfi_offset 7, -8
+  40              		.cfi_offset 14, -4
+  41 0002 85B0     		sub	sp, sp, #20
+  42              	.LCFI1:
+  43              		.cfi_def_cfa_offset 40
+  44 0004 0546     		mov	r5, r0
+   5:Core/Src/ps2.c ****     uint8_t cmd_start = 0x01;
+  45              		.loc 1 5 5 is_stmt 1 view .LVU2
+  46              		.loc 1 5 13 is_stmt 0 view .LVU3
+  47 0006 0124     		movs	r4, #1
+  48 0008 8DF80F40 		strb	r4, [sp, #15]
+   6:Core/Src/ps2.c ****     uint8_t cmd_ask = 0x42;
+  49              		.loc 1 6 5 is_stmt 1 view .LVU4
+  50              		.loc 1 6 13 is_stmt 0 view .LVU5
+  51 000c 4223     		movs	r3, #66
+  52 000e 8DF80E30 		strb	r3, [sp, #14]
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccNced6J.s 			page 2
+
+
+   7:Core/Src/ps2.c ****     uint8_t cmd_null = 0x00;
+  53              		.loc 1 7 5 is_stmt 1 view .LVU6
+  54              		.loc 1 7 13 is_stmt 0 view .LVU7
+  55 0012 0022     		movs	r2, #0
+  56 0014 8DF80D20 		strb	r2, [sp, #13]
+   8:Core/Src/ps2.c ****     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
+  57              		.loc 1 8 5 is_stmt 1 view .LVU8
+  58 0018 1021     		movs	r1, #16
+  59 001a 1948     		ldr	r0, .L5
+  60              	.LVL1:
+  61              		.loc 1 8 5 is_stmt 0 view .LVU9
+  62 001c FFF7FEFF 		bl	HAL_GPIO_WritePin
+  63              	.LVL2:
+   9:Core/Src/ps2.c ****     HAL_SPI_TransmitReceive(&hspi1, &cmd_start, &rx[0], 1, 100);
+  64              		.loc 1 9 5 is_stmt 1 view .LVU10
+  65 0020 184E     		ldr	r6, .L5+4
+  66 0022 6427     		movs	r7, #100
+  67 0024 0097     		str	r7, [sp]
+  68 0026 2346     		mov	r3, r4
+  69 0028 2A46     		mov	r2, r5
+  70 002a 0DF10F01 		add	r1, sp, #15
+  71 002e 3046     		mov	r0, r6
+  72 0030 FFF7FEFF 		bl	HAL_SPI_TransmitReceive
+  73              	.LVL3:
+  10:Core/Src/ps2.c ****     delay_us(10);
+  74              		.loc 1 10 5 view .LVU11
+  75 0034 0A20     		movs	r0, #10
+  76 0036 FFF7FEFF 		bl	delay_us
+  77              	.LVL4:
+  11:Core/Src/ps2.c ****     HAL_SPI_TransmitReceive(&hspi1, &cmd_ask, &rx[1], 1, 100);
+  78              		.loc 1 11 5 view .LVU12
+  79 003a 0097     		str	r7, [sp]
+  80 003c 2346     		mov	r3, r4
+  81 003e 2A19     		adds	r2, r5, r4
+  82 0040 0DF10E01 		add	r1, sp, #14
+  83 0044 3046     		mov	r0, r6
+  84 0046 FFF7FEFF 		bl	HAL_SPI_TransmitReceive
+  85              	.LVL5:
+  12:Core/Src/ps2.c ****     delay_us(10);
+  86              		.loc 1 12 5 view .LVU13
+  87 004a 0A20     		movs	r0, #10
+  88 004c FFF7FEFF 		bl	delay_us
+  89              	.LVL6:
+  13:Core/Src/ps2.c ****     for(int i = 2; i <= 8; i++)
+  90              		.loc 1 13 5 view .LVU14
+  91              	.LBB2:
+  92              		.loc 1 13 9 view .LVU15
+  93              		.loc 1 13 13 is_stmt 0 view .LVU16
+  94 0050 0224     		movs	r4, #2
+  95              		.loc 1 13 5 view .LVU17
+  96 0052 0CE0     		b	.L2
+  97              	.LVL7:
+  98              	.L3:
+  14:Core/Src/ps2.c ****     {
+  15:Core/Src/ps2.c ****         HAL_SPI_TransmitReceive(&hspi1, &cmd_null, &rx[i], 1, 100);
+  99              		.loc 1 15 9 is_stmt 1 discriminator 3 view .LVU18
+ 100 0054 6423     		movs	r3, #100
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccNced6J.s 			page 3
+
+
+ 101 0056 0093     		str	r3, [sp]
+ 102 0058 0123     		movs	r3, #1
+ 103 005a 2A19     		adds	r2, r5, r4
+ 104 005c 0DF10D01 		add	r1, sp, #13
+ 105 0060 0848     		ldr	r0, .L5+4
+ 106 0062 FFF7FEFF 		bl	HAL_SPI_TransmitReceive
+ 107              	.LVL8:
+  16:Core/Src/ps2.c ****         delay_us(10);
+ 108              		.loc 1 16 9 discriminator 3 view .LVU19
+ 109 0066 0A20     		movs	r0, #10
+ 110 0068 FFF7FEFF 		bl	delay_us
+ 111              	.LVL9:
+  13:Core/Src/ps2.c ****     for(int i = 2; i <= 8; i++)
+ 112              		.loc 1 13 28 discriminator 3 view .LVU20
+  13:Core/Src/ps2.c ****     for(int i = 2; i <= 8; i++)
+ 113              		.loc 1 13 29 is_stmt 0 discriminator 3 view .LVU21
+ 114 006c 0134     		adds	r4, r4, #1
+ 115              	.LVL10:
+ 116              	.L2:
+  13:Core/Src/ps2.c ****     for(int i = 2; i <= 8; i++)
+ 117              		.loc 1 13 20 is_stmt 1 discriminator 1 view .LVU22
+  13:Core/Src/ps2.c ****     for(int i = 2; i <= 8; i++)
+ 118              		.loc 1 13 5 is_stmt 0 discriminator 1 view .LVU23
+ 119 006e 082C     		cmp	r4, #8
+ 120 0070 F0DD     		ble	.L3
+ 121              	.LBE2:
+  17:Core/Src/ps2.c ****     }
+  18:Core/Src/ps2.c ****     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
+ 122              		.loc 1 18 5 is_stmt 1 view .LVU24
+ 123 0072 0122     		movs	r2, #1
+ 124 0074 1021     		movs	r1, #16
+ 125 0076 0248     		ldr	r0, .L5
+ 126 0078 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 127              	.LVL11:
+  19:Core/Src/ps2.c **** }
+ 128              		.loc 1 19 1 is_stmt 0 view .LVU25
+ 129 007c 05B0     		add	sp, sp, #20
+ 130              	.LCFI2:
+ 131              		.cfi_def_cfa_offset 20
+ 132              		@ sp needed
+ 133 007e F0BD     		pop	{r4, r5, r6, r7, pc}
+ 134              	.LVL12:
+ 135              	.L6:
+ 136              		.loc 1 19 1 view .LVU26
+ 137              		.align	2
+ 138              	.L5:
+ 139 0080 00080140 		.word	1073809408
+ 140 0084 00000000 		.word	hspi1
+ 141              		.cfi_endproc
+ 142              	.LFE68:
+ 144              		.section	.text.PS2_Solve,"ax",%progbits
+ 145              		.align	1
+ 146              		.global	PS2_Solve
+ 147              		.syntax unified
+ 148              		.thumb
+ 149              		.thumb_func
+ 151              	PS2_Solve:
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccNced6J.s 			page 4
+
+
+ 152              	.LVL13:
+ 153              	.LFB69:
+  20:Core/Src/ps2.c **** 
+  21:Core/Src/ps2.c **** void PS2_Solve(robot_state* obj, uint8_t* rx)
+  22:Core/Src/ps2.c **** {
+ 154              		.loc 1 22 1 is_stmt 1 view -0
+ 155              		.cfi_startproc
+ 156              		@ args = 0, pretend = 0, frame = 0
+ 157              		@ frame_needed = 0, uses_anonymous_args = 0
+ 158              		.loc 1 22 1 is_stmt 0 view .LVU28
+ 159 0000 10B5     		push	{r4, lr}
+ 160              	.LCFI3:
+ 161              		.cfi_def_cfa_offset 8
+ 162              		.cfi_offset 4, -8
+ 163              		.cfi_offset 14, -4
+ 164 0002 0446     		mov	r4, r0
+  23:Core/Src/ps2.c ****     obj->music = !(rx[4] & 0x10);
+ 165              		.loc 1 23 5 is_stmt 1 view .LVU29
+ 166              		.loc 1 23 22 is_stmt 0 view .LVU30
+ 167 0004 0B79     		ldrb	r3, [r1, #4]	@ zero_extendqisi2
+ 168              		.loc 1 23 18 view .LVU31
+ 169 0006 1B09     		lsrs	r3, r3, #4
+ 170 0008 83F00103 		eor	r3, r3, #1
+ 171 000c 03F00103 		and	r3, r3, #1
+ 172              		.loc 1 23 16 view .LVU32
+ 173 0010 0373     		strb	r3, [r0, #12]
+  24:Core/Src/ps2.c ****     if(rx[1] == 0x73)
+ 174              		.loc 1 24 5 is_stmt 1 view .LVU33
+ 175              		.loc 1 24 10 is_stmt 0 view .LVU34
+ 176 0012 4B78     		ldrb	r3, [r1, #1]	@ zero_extendqisi2
+ 177              		.loc 1 24 7 view .LVU35
+ 178 0014 732B     		cmp	r3, #115
+ 179 0016 08D0     		beq	.L22
+  25:Core/Src/ps2.c ****     {
+  26:Core/Src/ps2.c ****         obj->control = REMOTE;
+  27:Core/Src/ps2.c **** 
+  28:Core/Src/ps2.c ****         if( !(rx[4] & 0x04) && (rx[4] & 0x01) ) obj->frame = UP;
+  29:Core/Src/ps2.c ****         else if( (rx[4] & 0x04) && !(rx[4] & 0x01) ) obj->frame = DOWN;
+  30:Core/Src/ps2.c **** 
+  31:Core/Src/ps2.c ****         obj->vx = rx[5] - 128;
+  32:Core/Src/ps2.c ****         obj->vy = 127 - rx[6];
+  33:Core/Src/ps2.c ****         obj->rorate = rx[7] - 128;
+  34:Core/Src/ps2.c ****     }
+  35:Core/Src/ps2.c ****     else if(rx[1] == 0x41)
+ 180              		.loc 1 35 10 is_stmt 1 view .LVU36
+ 181              		.loc 1 35 12 is_stmt 0 view .LVU37
+ 182 0018 412B     		cmp	r3, #65
+ 183 001a 1FD0     		beq	.L23
+  36:Core/Src/ps2.c ****     {
+  37:Core/Src/ps2.c ****         obj->control = AUTO;
+  38:Core/Src/ps2.c ****         obj->frame = UP;
+  39:Core/Src/ps2.c **** 
+  40:Core/Src/ps2.c ****         if(obj->bally > 100)  //距离过近
+  41:Core/Src/ps2.c ****         {
+  42:Core/Src/ps2.c ****             obj->vx = 0;
+  43:Core/Src/ps2.c ****             obj->vy = -50;
+  44:Core/Src/ps2.c ****             obj->rorate = 0;
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccNced6J.s 			page 5
+
+
+  45:Core/Src/ps2.c ****         }
+  46:Core/Src/ps2.c ****         else if(obj->ballpix >= 1600)  //在框范围内
+  47:Core/Src/ps2.c ****         {
+  48:Core/Src/ps2.c ****             obj->vx = 0;
+  49:Core/Src/ps2.c ****             obj->vy = 0;
+  50:Core/Src/ps2.c ****             obj->rorate = 0;
+  51:Core/Src/ps2.c **** 
+  52:Core/Src/ps2.c ****             obj->frame = DOWN;
+  53:Core/Src/ps2.c ****             HAL_Delay(1500);
+  54:Core/Src/ps2.c ****             obj->frame = UP;
+  55:Core/Src/ps2.c ****             HAL_Delay(1500);
+  56:Core/Src/ps2.c ****         }
+  57:Core/Src/ps2.c ****         else if(obj->ballpix == 0)  //未检测到
+  58:Core/Src/ps2.c ****         {
+  59:Core/Src/ps2.c ****             obj->vx = 0;
+  60:Core/Src/ps2.c ****             obj->vy = 0;
+  61:Core/Src/ps2.c ****             obj->rorate = obj->connect == SUCCEED ? (obj->direct == LEFT ? -80 : 80) : 0;
+  62:Core/Src/ps2.c ****         }
+  63:Core/Src/ps2.c ****         else
+  64:Core/Src/ps2.c ****         {
+  65:Core/Src/ps2.c ****             obj->vx = (obj->ballx - 120) / 2;
+  66:Core/Src/ps2.c ****             if(obj->ballx > 120) obj->direct = RIGHT;
+  67:Core/Src/ps2.c ****             else obj->direct = LEFT;
+  68:Core/Src/ps2.c ****             obj->vy = 127;
+  69:Core/Src/ps2.c ****             obj->rorate = 0;
+  70:Core/Src/ps2.c ****         }
+  71:Core/Src/ps2.c ****     }
+  72:Core/Src/ps2.c ****     else
+  73:Core/Src/ps2.c ****     {
+  74:Core/Src/ps2.c ****         obj->control = ERR;
+ 184              		.loc 1 74 9 is_stmt 1 view .LVU38
+ 185              		.loc 1 74 22 is_stmt 0 view .LVU39
+ 186 001c 0223     		movs	r3, #2
+ 187 001e 0370     		strb	r3, [r0]
+  75:Core/Src/ps2.c ****         //obj->frame = UP;
+  76:Core/Src/ps2.c ****         obj->vx = 0;
+ 188              		.loc 1 76 9 is_stmt 1 view .LVU40
+ 189              		.loc 1 76 17 is_stmt 0 view .LVU41
+ 190 0020 0023     		movs	r3, #0
+ 191 0022 0371     		strb	r3, [r0, #4]
+  77:Core/Src/ps2.c ****         obj->vy = 0;
+ 192              		.loc 1 77 9 is_stmt 1 view .LVU42
+ 193              		.loc 1 77 17 is_stmt 0 view .LVU43
+ 194 0024 4371     		strb	r3, [r0, #5]
+  78:Core/Src/ps2.c ****         obj->rorate = 0;
+ 195              		.loc 1 78 9 is_stmt 1 view .LVU44
+ 196              		.loc 1 78 21 is_stmt 0 view .LVU45
+ 197 0026 8371     		strb	r3, [r0, #6]
+ 198              	.LVL14:
+ 199              	.L7:
+  79:Core/Src/ps2.c ****     }
+  80:Core/Src/ps2.c **** }...
+ 200              		.loc 1 80 1 view .LVU46
+ 201 0028 10BD     		pop	{r4, pc}
+ 202              	.LVL15:
+ 203              	.L22:
+  26:Core/Src/ps2.c ****         obj->control = REMOTE;
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccNced6J.s 			page 6
+
+
+ 204              		.loc 1 26 9 is_stmt 1 view .LVU47
+  26:Core/Src/ps2.c ****         obj->control = REMOTE;
+ 205              		.loc 1 26 22 is_stmt 0 view .LVU48
+ 206 002a 0023     		movs	r3, #0
+ 207 002c 0370     		strb	r3, [r0]
+  28:Core/Src/ps2.c ****         if( !(rx[4] & 0x04) && (rx[4] & 0x01) ) obj->frame = UP;
+ 208              		.loc 1 28 9 is_stmt 1 view .LVU49
+  28:Core/Src/ps2.c ****         if( !(rx[4] & 0x04) && (rx[4] & 0x01) ) obj->frame = UP;
+ 209              		.loc 1 28 17 is_stmt 0 view .LVU50
+ 210 002e 0B79     		ldrb	r3, [r1, #4]	@ zero_extendqisi2
+ 211 0030 03F00503 		and	r3, r3, #5
+  28:Core/Src/ps2.c ****         if( !(rx[4] & 0x04) && (rx[4] & 0x01) ) obj->frame = UP;
+ 212              		.loc 1 28 11 view .LVU51
+ 213 0034 012B     		cmp	r3, #1
+ 214 0036 0CD0     		beq	.L24
+  29:Core/Src/ps2.c ****         else if( (rx[4] & 0x04) && !(rx[4] & 0x01) ) obj->frame = DOWN;
+ 215              		.loc 1 29 14 is_stmt 1 view .LVU52
+  29:Core/Src/ps2.c ****         else if( (rx[4] & 0x04) && !(rx[4] & 0x01) ) obj->frame = DOWN;
+ 216              		.loc 1 29 16 is_stmt 0 view .LVU53
+ 217 0038 042B     		cmp	r3, #4
+ 218 003a 0CD0     		beq	.L25
+ 219              	.L10:
+  31:Core/Src/ps2.c ****         obj->vx = rx[5] - 128;
+ 220              		.loc 1 31 9 is_stmt 1 view .LVU54
+  31:Core/Src/ps2.c ****         obj->vx = rx[5] - 128;
+ 221              		.loc 1 31 21 is_stmt 0 view .LVU55
+ 222 003c 4B79     		ldrb	r3, [r1, #5]	@ zero_extendqisi2
+  31:Core/Src/ps2.c ****         obj->vx = rx[5] - 128;
+ 223              		.loc 1 31 25 view .LVU56
+ 224 003e 803B     		subs	r3, r3, #128
+  31:Core/Src/ps2.c ****         obj->vx = rx[5] - 128;
+ 225              		.loc 1 31 17 view .LVU57
+ 226 0040 2371     		strb	r3, [r4, #4]
+  32:Core/Src/ps2.c ****         obj->vy = 127 - rx[6];
+ 227              		.loc 1 32 9 is_stmt 1 view .LVU58
+  32:Core/Src/ps2.c ****         obj->vy = 127 - rx[6];
+ 228              		.loc 1 32 27 is_stmt 0 view .LVU59
+ 229 0042 8B79     		ldrb	r3, [r1, #6]	@ zero_extendqisi2
+  32:Core/Src/ps2.c ****         obj->vy = 127 - rx[6];
+ 230              		.loc 1 32 23 view .LVU60
+ 231 0044 C3F17F03 		rsb	r3, r3, #127
+  32:Core/Src/ps2.c ****         obj->vy = 127 - rx[6];
+ 232              		.loc 1 32 17 view .LVU61
+ 233 0048 6371     		strb	r3, [r4, #5]
+  33:Core/Src/ps2.c ****         obj->rorate = rx[7] - 128;
+ 234              		.loc 1 33 9 is_stmt 1 view .LVU62
+  33:Core/Src/ps2.c ****         obj->rorate = rx[7] - 128;
+ 235              		.loc 1 33 25 is_stmt 0 view .LVU63
+ 236 004a CB79     		ldrb	r3, [r1, #7]	@ zero_extendqisi2
+  33:Core/Src/ps2.c ****         obj->rorate = rx[7] - 128;
+ 237              		.loc 1 33 29 view .LVU64
+ 238 004c 803B     		subs	r3, r3, #128
+  33:Core/Src/ps2.c ****         obj->rorate = rx[7] - 128;
+ 239              		.loc 1 33 21 view .LVU65
+ 240 004e A371     		strb	r3, [r4, #6]
+ 241 0050 EAE7     		b	.L7
+ 242              	.L24:
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccNced6J.s 			page 7
+
+
+  28:Core/Src/ps2.c ****         if( !(rx[4] & 0x04) && (rx[4] & 0x01) ) obj->frame = UP;
+ 243              		.loc 1 28 49 is_stmt 1 discriminator 1 view .LVU66
+  28:Core/Src/ps2.c ****         if( !(rx[4] & 0x04) && (rx[4] & 0x01) ) obj->frame = UP;
+ 244              		.loc 1 28 60 is_stmt 0 discriminator 1 view .LVU67
+ 245 0052 4370     		strb	r3, [r0, #1]
+ 246 0054 F2E7     		b	.L10
+ 247              	.L25:
+  29:Core/Src/ps2.c ****         else if( (rx[4] & 0x04) && !(rx[4] & 0x01) ) obj->frame = DOWN;
+ 248              		.loc 1 29 54 is_stmt 1 discriminator 1 view .LVU68
+  29:Core/Src/ps2.c ****         else if( (rx[4] & 0x04) && !(rx[4] & 0x01) ) obj->frame = DOWN;
+ 249              		.loc 1 29 65 is_stmt 0 discriminator 1 view .LVU69
+ 250 0056 0023     		movs	r3, #0
+ 251 0058 4370     		strb	r3, [r0, #1]
+ 252 005a EFE7     		b	.L10
+ 253              	.L23:
+  37:Core/Src/ps2.c ****         obj->control = AUTO;
+ 254              		.loc 1 37 9 is_stmt 1 view .LVU70
+  37:Core/Src/ps2.c ****         obj->control = AUTO;
+ 255              		.loc 1 37 22 is_stmt 0 view .LVU71
+ 256 005c 0123     		movs	r3, #1
+ 257 005e 0370     		strb	r3, [r0]
+  38:Core/Src/ps2.c ****         obj->frame = UP;
+ 258              		.loc 1 38 9 is_stmt 1 view .LVU72
+  38:Core/Src/ps2.c ****         obj->frame = UP;
+ 259              		.loc 1 38 20 is_stmt 0 view .LVU73
+ 260 0060 4370     		strb	r3, [r0, #1]
+  40:Core/Src/ps2.c ****         if(obj->bally > 100)  //距离过近
+ 261              		.loc 1 40 9 is_stmt 1 view .LVU74
+  40:Core/Src/ps2.c ****         if(obj->bally > 100)  //距离过近
+ 262              		.loc 1 40 15 is_stmt 0 view .LVU75
+ 263 0062 037A     		ldrb	r3, [r0, #8]	@ zero_extendqisi2
+  40:Core/Src/ps2.c ****         if(obj->bally > 100)  //距离过近
+ 264              		.loc 1 40 11 view .LVU76
+ 265 0064 642B     		cmp	r3, #100
+ 266 0066 05D9     		bls	.L13
+  42:Core/Src/ps2.c ****             obj->vx = 0;
+ 267              		.loc 1 42 13 is_stmt 1 view .LVU77
+  42:Core/Src/ps2.c ****             obj->vx = 0;
+ 268              		.loc 1 42 21 is_stmt 0 view .LVU78
+ 269 0068 0023     		movs	r3, #0
+ 270 006a 0371     		strb	r3, [r0, #4]
+  43:Core/Src/ps2.c ****             obj->vy = -50;
+ 271              		.loc 1 43 13 is_stmt 1 view .LVU79
+  43:Core/Src/ps2.c ****             obj->vy = -50;
+ 272              		.loc 1 43 21 is_stmt 0 view .LVU80
+ 273 006c CE22     		movs	r2, #206
+ 274 006e 4271     		strb	r2, [r0, #5]
+  44:Core/Src/ps2.c ****             obj->rorate = 0;
+ 275              		.loc 1 44 13 is_stmt 1 view .LVU81
+  44:Core/Src/ps2.c ****             obj->rorate = 0;
+ 276              		.loc 1 44 25 is_stmt 0 view .LVU82
+ 277 0070 8371     		strb	r3, [r0, #6]
+ 278 0072 D9E7     		b	.L7
+ 279              	.L13:
+  46:Core/Src/ps2.c ****         else if(obj->ballpix >= 1600)  //在框范围内
+ 280              		.loc 1 46 14 is_stmt 1 view .LVU83
+  46:Core/Src/ps2.c ****         else if(obj->ballpix >= 1600)  //在框范围内
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccNced6J.s 			page 8
+
+
+ 281              		.loc 1 46 20 is_stmt 0 view .LVU84
+ 282 0074 4389     		ldrh	r3, [r0, #10]
+  46:Core/Src/ps2.c ****         else if(obj->ballpix >= 1600)  //在框范围内
+ 283              		.loc 1 46 16 view .LVU85
+ 284 0076 B3F5C86F 		cmp	r3, #1600
+ 285 007a 08D2     		bcs	.L26
+  57:Core/Src/ps2.c ****         else if(obj->ballpix == 0)  //未检测到
+ 286              		.loc 1 57 14 is_stmt 1 view .LVU86
+  57:Core/Src/ps2.c ****         else if(obj->ballpix == 0)  //未检测到
+ 287              		.loc 1 57 16 is_stmt 0 view .LVU87
+ 288 007c F3B9     		cbnz	r3, .L15
+  59:Core/Src/ps2.c ****             obj->vx = 0;
+ 289              		.loc 1 59 13 is_stmt 1 view .LVU88
+  59:Core/Src/ps2.c ****             obj->vx = 0;
+ 290              		.loc 1 59 21 is_stmt 0 view .LVU89
+ 291 007e 0371     		strb	r3, [r0, #4]
+  60:Core/Src/ps2.c ****             obj->vy = 0;
+ 292              		.loc 1 60 13 is_stmt 1 view .LVU90
+  60:Core/Src/ps2.c ****             obj->vy = 0;
+ 293              		.loc 1 60 21 is_stmt 0 view .LVU91
+ 294 0080 4371     		strb	r3, [r0, #5]
+  61:Core/Src/ps2.c ****             obj->rorate = obj->connect == SUCCEED ? (obj->direct == LEFT ? -80 : 80) : 0;
+ 295              		.loc 1 61 13 is_stmt 1 view .LVU92
+  61:Core/Src/ps2.c ****             obj->rorate = obj->connect == SUCCEED ? (obj->direct == LEFT ? -80 : 80) : 0;
+ 296              		.loc 1 61 30 is_stmt 0 view .LVU93
+ 297 0082 8378     		ldrb	r3, [r0, #2]	@ zero_extendqisi2
+  61:Core/Src/ps2.c ****             obj->rorate = obj->connect == SUCCEED ? (obj->direct == LEFT ? -80 : 80) : 0;
+ 298              		.loc 1 61 25 view .LVU94
+ 299 0084 012B     		cmp	r3, #1
+ 300 0086 12D0     		beq	.L27
+ 301 0088 0023     		movs	r3, #0
+ 302              	.L16:
+  61:Core/Src/ps2.c ****             obj->rorate = obj->connect == SUCCEED ? (obj->direct == LEFT ? -80 : 80) : 0;
+ 303              		.loc 1 61 25 discriminator 8 view .LVU95
+ 304 008a A371     		strb	r3, [r4, #6]
+ 305 008c CCE7     		b	.L7
+ 306              	.L26:
+  48:Core/Src/ps2.c ****             obj->vx = 0;
+ 307              		.loc 1 48 13 is_stmt 1 view .LVU96
+  48:Core/Src/ps2.c ****             obj->vx = 0;
+ 308              		.loc 1 48 21 is_stmt 0 view .LVU97
+ 309 008e 0023     		movs	r3, #0
+ 310 0090 0371     		strb	r3, [r0, #4]
+  49:Core/Src/ps2.c ****             obj->vy = 0;
+ 311              		.loc 1 49 13 is_stmt 1 view .LVU98
+  49:Core/Src/ps2.c ****             obj->vy = 0;
+ 312              		.loc 1 49 21 is_stmt 0 view .LVU99
+ 313 0092 4371     		strb	r3, [r0, #5]
+  50:Core/Src/ps2.c ****             obj->rorate = 0;
+ 314              		.loc 1 50 13 is_stmt 1 view .LVU100
+  50:Core/Src/ps2.c ****             obj->rorate = 0;
+ 315              		.loc 1 50 25 is_stmt 0 view .LVU101
+ 316 0094 8371     		strb	r3, [r0, #6]
+  52:Core/Src/ps2.c ****             obj->frame = DOWN;
+ 317              		.loc 1 52 13 is_stmt 1 view .LVU102
+  52:Core/Src/ps2.c ****             obj->frame = DOWN;
+ 318              		.loc 1 52 24 is_stmt 0 view .LVU103
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccNced6J.s 			page 9
+
+
+ 319 0096 4370     		strb	r3, [r0, #1]
+  53:Core/Src/ps2.c ****             HAL_Delay(1500);
+ 320              		.loc 1 53 13 is_stmt 1 view .LVU104
+ 321 0098 40F2DC50 		movw	r0, #1500
+ 322              	.LVL16:
+  53:Core/Src/ps2.c ****             HAL_Delay(1500);
+ 323              		.loc 1 53 13 is_stmt 0 view .LVU105
+ 324 009c FFF7FEFF 		bl	HAL_Delay
+ 325              	.LVL17:
+  54:Core/Src/ps2.c ****             obj->frame = UP;
+ 326              		.loc 1 54 13 is_stmt 1 view .LVU106
+  54:Core/Src/ps2.c ****             obj->frame = UP;
+ 327              		.loc 1 54 24 is_stmt 0 view .LVU107
+ 328 00a0 0123     		movs	r3, #1
+ 329 00a2 6370     		strb	r3, [r4, #1]
+  55:Core/Src/ps2.c ****             HAL_Delay(1500);
+ 330              		.loc 1 55 13 is_stmt 1 view .LVU108
+ 331 00a4 40F2DC50 		movw	r0, #1500
+ 332 00a8 FFF7FEFF 		bl	HAL_Delay
+ 333              	.LVL18:
+ 334 00ac BCE7     		b	.L7
+ 335              	.LVL19:
+ 336              	.L27:
+  61:Core/Src/ps2.c ****             obj->rorate = obj->connect == SUCCEED ? (obj->direct == LEFT ? -80 : 80) : 0;
+ 337              		.loc 1 61 57 is_stmt 0 discriminator 1 view .LVU109
+ 338 00ae C378     		ldrb	r3, [r0, #3]	@ zero_extendqisi2
+  61:Core/Src/ps2.c ****             obj->rorate = obj->connect == SUCCEED ? (obj->direct == LEFT ? -80 : 80) : 0;
+ 339              		.loc 1 61 25 discriminator 1 view .LVU110
+ 340 00b0 13B9     		cbnz	r3, .L20
+  61:Core/Src/ps2.c ****             obj->rorate = obj->connect == SUCCEED ? (obj->direct == LEFT ? -80 : 80) : 0;
+ 341              		.loc 1 61 25 view .LVU111
+ 342 00b2 6FF04F03 		mvn	r3, #79
+ 343 00b6 E8E7     		b	.L16
+ 344              	.L20:
+ 345 00b8 5023     		movs	r3, #80
+ 346 00ba E6E7     		b	.L16
+ 347              	.L15:
+  65:Core/Src/ps2.c ****             obj->vx = (obj->ballx - 120) / 2;
+ 348              		.loc 1 65 13 is_stmt 1 view .LVU112
+  65:Core/Src/ps2.c ****             obj->vx = (obj->ballx - 120) / 2;
+ 349              		.loc 1 65 27 is_stmt 0 view .LVU113
+ 350 00bc C279     		ldrb	r2, [r0, #7]	@ zero_extendqisi2
+  65:Core/Src/ps2.c ****             obj->vx = (obj->ballx - 120) / 2;
+ 351              		.loc 1 65 35 view .LVU114
+ 352 00be A2F17803 		sub	r3, r2, #120
+  65:Core/Src/ps2.c ****             obj->vx = (obj->ballx - 120) / 2;
+ 353              		.loc 1 65 42 view .LVU115
+ 354 00c2 03EBD373 		add	r3, r3, r3, lsr #31
+ 355 00c6 5B10     		asrs	r3, r3, #1
+  65:Core/Src/ps2.c ****             obj->vx = (obj->ballx - 120) / 2;
+ 356              		.loc 1 65 21 view .LVU116
+ 357 00c8 0371     		strb	r3, [r0, #4]
+  66:Core/Src/ps2.c ****             if(obj->ballx > 120) obj->direct = RIGHT;
+ 358              		.loc 1 66 13 is_stmt 1 view .LVU117
+  66:Core/Src/ps2.c ****             if(obj->ballx > 120) obj->direct = RIGHT;
+ 359              		.loc 1 66 15 is_stmt 0 view .LVU118
+ 360 00ca 782A     		cmp	r2, #120
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccNced6J.s 			page 10
+
+
+ 361 00cc 06D9     		bls	.L17
+  66:Core/Src/ps2.c ****             if(obj->ballx > 120) obj->direct = RIGHT;
+ 362              		.loc 1 66 34 is_stmt 1 discriminator 1 view .LVU119
+  66:Core/Src/ps2.c ****             if(obj->ballx > 120) obj->direct = RIGHT;
+ 363              		.loc 1 66 46 is_stmt 0 discriminator 1 view .LVU120
+ 364 00ce 0123     		movs	r3, #1
+ 365 00d0 C370     		strb	r3, [r0, #3]
+ 366              	.L18:
+  68:Core/Src/ps2.c ****             obj->vy = 127;
+ 367              		.loc 1 68 13 is_stmt 1 view .LVU121
+  68:Core/Src/ps2.c ****             obj->vy = 127;
+ 368              		.loc 1 68 21 is_stmt 0 view .LVU122
+ 369 00d2 7F23     		movs	r3, #127
+ 370 00d4 6371     		strb	r3, [r4, #5]
+  69:Core/Src/ps2.c ****             obj->rorate = 0;
+ 371              		.loc 1 69 13 is_stmt 1 view .LVU123
+  69:Core/Src/ps2.c ****             obj->rorate = 0;
+ 372              		.loc 1 69 25 is_stmt 0 view .LVU124
+ 373 00d6 0023     		movs	r3, #0
+ 374 00d8 A371     		strb	r3, [r4, #6]
+ 375 00da A5E7     		b	.L7
+ 376              	.L17:
+  67:Core/Src/ps2.c ****             else obj->direct = LEFT;
+ 377              		.loc 1 67 18 is_stmt 1 view .LVU125
+  67:Core/Src/ps2.c ****             else obj->direct = LEFT;
+ 378              		.loc 1 67 30 is_stmt 0 view .LVU126
+ 379 00dc 0023     		movs	r3, #0
+ 380 00de C370     		strb	r3, [r0, #3]
+ 381 00e0 F7E7     		b	.L18
+ 382              		.cfi_endproc
+ 383              	.LFE69:
+ 385              		.text
+ 386              	.Letext0:
+ 387              		.file 2 "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2021.10\\arm-none-eabi\\include\\
+ 388              		.file 3 "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2021.10\\arm-none-eabi\\include\\
+ 389              		.file 4 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xe.h"
+ 390              		.file 5 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h"
+ 391              		.file 6 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h"
+ 392              		.file 7 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma.h"
+ 393              		.file 8 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h"
+ 394              		.file 9 "Core/Inc/ps2.h"
+ 395              		.file 10 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
+ 396              		.file 11 "Core/Inc/bsp.h"
+ 397              		.file 12 "Core/Inc/spi.h"
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccNced6J.s 			page 11
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 ps2.c
+C:\Users\LJH\AppData\Local\Temp\ccNced6J.s:18     .text.PS2_ReadData:00000000 $t
+C:\Users\LJH\AppData\Local\Temp\ccNced6J.s:24     .text.PS2_ReadData:00000000 PS2_ReadData
+C:\Users\LJH\AppData\Local\Temp\ccNced6J.s:139    .text.PS2_ReadData:00000080 $d
+C:\Users\LJH\AppData\Local\Temp\ccNced6J.s:145    .text.PS2_Solve:00000000 $t
+C:\Users\LJH\AppData\Local\Temp\ccNced6J.s:151    .text.PS2_Solve:00000000 PS2_Solve
+
+UNDEFINED SYMBOLS
+HAL_GPIO_WritePin
+HAL_SPI_TransmitReceive
+delay_us
+hspi1
+HAL_Delay

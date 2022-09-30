@@ -1,0 +1,479 @@
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\cc4DtRbd.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"motor.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.Motor_Init,"ax",%progbits
+  18              		.align	1
+  19              		.global	Motor_Init
+  20              		.syntax unified
+  21              		.thumb
+  22              		.thumb_func
+  24              	Motor_Init:
+  25              	.LVL0:
+  26              	.LFB68:
+  27              		.file 1 "Core/Src/motor.c"
+   1:Core/Src/motor.c **** #include "motor.h"
+   2:Core/Src/motor.c **** 
+   3:Core/Src/motor.c **** //设置连接TB2216输入的引脚
+   4:Core/Src/motor.c **** void Motor_Init(motor* obj, __IO uint32_t* ccr, GPIO_TypeDef* gpio, uint16_t in1, uint16_t in2)
+   5:Core/Src/motor.c **** {
+  28              		.loc 1 5 1 view -0
+  29              		.cfi_startproc
+  30              		@ args = 4, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		.loc 1 5 1 is_stmt 0 view .LVU1
+  33 0000 38B5     		push	{r3, r4, r5, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 16
+  36              		.cfi_offset 3, -16
+  37              		.cfi_offset 4, -12
+  38              		.cfi_offset 5, -8
+  39              		.cfi_offset 14, -4
+  40 0002 0446     		mov	r4, r0
+  41 0004 0D46     		mov	r5, r1
+  42 0006 1046     		mov	r0, r2
+  43              	.LVL1:
+  44              		.loc 1 5 1 view .LVU2
+  45 0008 BDF81010 		ldrh	r1, [sp, #16]
+  46              	.LVL2:
+   6:Core/Src/motor.c ****     obj->ccr = ccr;
+  47              		.loc 1 6 5 is_stmt 1 view .LVU3
+  48              		.loc 1 6 14 is_stmt 0 view .LVU4
+  49 000c 2560     		str	r5, [r4]
+   7:Core/Src/motor.c ****     obj->gpio = gpio;
+  50              		.loc 1 7 5 is_stmt 1 view .LVU5
+  51              		.loc 1 7 15 is_stmt 0 view .LVU6
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\cc4DtRbd.s 			page 2
+
+
+  52 000e 6260     		str	r2, [r4, #4]
+   8:Core/Src/motor.c ****     obj->in1 = in1;
+  53              		.loc 1 8 5 is_stmt 1 view .LVU7
+  54              		.loc 1 8 14 is_stmt 0 view .LVU8
+  55 0010 2381     		strh	r3, [r4, #8]	@ movhi
+   9:Core/Src/motor.c ****     obj->in2 = in2;
+  56              		.loc 1 9 5 is_stmt 1 view .LVU9
+  57              		.loc 1 9 14 is_stmt 0 view .LVU10
+  58 0012 6181     		strh	r1, [r4, #10]	@ movhi
+  10:Core/Src/motor.c **** 
+  11:Core/Src/motor.c ****     HAL_GPIO_WritePin(obj->gpio, obj->in2, GPIO_PIN_RESET);
+  59              		.loc 1 11 5 is_stmt 1 view .LVU11
+  60 0014 0022     		movs	r2, #0
+  61              	.LVL3:
+  62              		.loc 1 11 5 is_stmt 0 view .LVU12
+  63 0016 FFF7FEFF 		bl	HAL_GPIO_WritePin
+  64              	.LVL4:
+  12:Core/Src/motor.c ****     HAL_GPIO_WritePin(obj->gpio, obj->in1, GPIO_PIN_RESET);
+  65              		.loc 1 12 5 is_stmt 1 view .LVU13
+  66 001a 0022     		movs	r2, #0
+  67 001c 2189     		ldrh	r1, [r4, #8]
+  68 001e 6068     		ldr	r0, [r4, #4]
+  69 0020 FFF7FEFF 		bl	HAL_GPIO_WritePin
+  70              	.LVL5:
+  13:Core/Src/motor.c **** }
+  71              		.loc 1 13 1 is_stmt 0 view .LVU14
+  72 0024 38BD     		pop	{r3, r4, r5, pc}
+  73              		.loc 1 13 1 view .LVU15
+  74              		.cfi_endproc
+  75              	.LFE68:
+  77              		.global	__aeabi_i2d
+  78              		.global	__aeabi_ddiv
+  79              		.global	__aeabi_ui2d
+  80              		.global	__aeabi_dmul
+  81              		.global	__aeabi_d2uiz
+  82              		.section	.text.Motor_Update,"ax",%progbits
+  83              		.align	1
+  84              		.global	Motor_Update
+  85              		.syntax unified
+  86              		.thumb
+  87              		.thumb_func
+  89              	Motor_Update:
+  90              	.LVL6:
+  91              	.LFB70:
+  14:Core/Src/motor.c **** 
+  15:Core/Src/motor.c **** void Motor_Control(motor* lf, motor* rf, motor* rb, motor* lb, robot_state* state)
+  16:Core/Src/motor.c **** {
+  17:Core/Src/motor.c ****     
+  18:Core/Src/motor.c ****     int speed[4] = {0}; //分别表示lf, rf, rb, lb
+  19:Core/Src/motor.c ****     speed[0] = -state->vx - state->vy - state->rorate;
+  20:Core/Src/motor.c ****     speed[1] = state->vx - state->vy + state->rorate;
+  21:Core/Src/motor.c ****     speed[2] = -state->vx - state->vy + state->rorate;
+  22:Core/Src/motor.c ****     speed[3] = state->vx - state->vy - state->rorate;
+  23:Core/Src/motor.c **** 
+  24:Core/Src/motor.c ****     for(int i = 0; i <= 3; i++)
+  25:Core/Src/motor.c ****     {
+  26:Core/Src/motor.c ****         if(speed[i] > OUTPUTMAX) speed[i] = OUTPUTMAX;
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\cc4DtRbd.s 			page 3
+
+
+  27:Core/Src/motor.c ****         else if(speed[i] < -OUTPUTMAX) speed[i] = -OUTPUTMAX;
+  28:Core/Src/motor.c ****     }
+  29:Core/Src/motor.c **** 
+  30:Core/Src/motor.c ****     Motor_Update(lf, speed[0]);
+  31:Core/Src/motor.c ****     Motor_Update(rf, speed[1]);
+  32:Core/Src/motor.c ****     Motor_Update(rb, speed[2]);
+  33:Core/Src/motor.c ****     Motor_Update(lb, speed[3]);
+  34:Core/Src/motor.c **** }
+  35:Core/Src/motor.c **** 
+  36:Core/Src/motor.c **** void Motor_Update(motor* obj, int speed)
+  37:Core/Src/motor.c **** {
+  92              		.loc 1 37 1 is_stmt 1 view -0
+  93              		.cfi_startproc
+  94              		@ args = 0, pretend = 0, frame = 0
+  95              		@ frame_needed = 0, uses_anonymous_args = 0
+  96              		.loc 1 37 1 is_stmt 0 view .LVU17
+  97 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+  98              	.LCFI1:
+  99              		.cfi_def_cfa_offset 24
+ 100              		.cfi_offset 4, -24
+ 101              		.cfi_offset 5, -20
+ 102              		.cfi_offset 6, -16
+ 103              		.cfi_offset 7, -12
+ 104              		.cfi_offset 8, -8
+ 105              		.cfi_offset 14, -4
+ 106 0004 0446     		mov	r4, r0
+  38:Core/Src/motor.c ****     if(speed > 0)
+ 107              		.loc 1 38 5 is_stmt 1 view .LVU18
+ 108              		.loc 1 38 7 is_stmt 0 view .LVU19
+ 109 0006 0D1E     		subs	r5, r1, #0
+ 110 0008 26DD     		ble	.L4
+  39:Core/Src/motor.c ****     {
+  40:Core/Src/motor.c ****         HAL_GPIO_WritePin(obj->gpio, obj->in2, GPIO_PIN_SET);
+ 111              		.loc 1 40 9 is_stmt 1 view .LVU20
+ 112 000a 0122     		movs	r2, #1
+ 113 000c 4189     		ldrh	r1, [r0, #10]
+ 114              	.LVL7:
+ 115              		.loc 1 40 9 is_stmt 0 view .LVU21
+ 116 000e 4068     		ldr	r0, [r0, #4]
+ 117              	.LVL8:
+ 118              		.loc 1 40 9 view .LVU22
+ 119 0010 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 120              	.LVL9:
+  41:Core/Src/motor.c ****         HAL_GPIO_WritePin(obj->gpio, obj->in1, GPIO_PIN_RESET);
+ 121              		.loc 1 41 9 is_stmt 1 view .LVU23
+ 122 0014 0022     		movs	r2, #0
+ 123 0016 2189     		ldrh	r1, [r4, #8]
+ 124 0018 6068     		ldr	r0, [r4, #4]
+ 125 001a FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 126              	.LVL10:
+ 127              	.L5:
+  42:Core/Src/motor.c ****     }
+  43:Core/Src/motor.c ****     else
+  44:Core/Src/motor.c ****     {
+  45:Core/Src/motor.c ****         HAL_GPIO_WritePin(obj->gpio, obj->in1, GPIO_PIN_SET);
+  46:Core/Src/motor.c ****         HAL_GPIO_WritePin(obj->gpio, obj->in2, GPIO_PIN_RESET);
+  47:Core/Src/motor.c ****     }
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\cc4DtRbd.s 			page 4
+
+
+  48:Core/Src/motor.c ****     *(obj->ccr) = TIM2->ARR * (fabs(speed) / OUTPUTMAX);
+ 128              		.loc 1 48 5 view .LVU24
+ 129              		.loc 1 48 23 is_stmt 0 view .LVU25
+ 130 001e 4FF08043 		mov	r3, #1073741824
+ 131 0022 D3F82C80 		ldr	r8, [r3, #44]
+ 132              		.loc 1 48 32 view .LVU26
+ 133 0026 2846     		mov	r0, r5
+ 134 0028 FFF7FEFF 		bl	__aeabi_i2d
+ 135              	.LVL11:
+ 136              		.loc 1 48 44 view .LVU27
+ 137 002c 0022     		movs	r2, #0
+ 138 002e 104B     		ldr	r3, .L7
+ 139 0030 21F00047 		bic	r7, r1, #-2147483648
+ 140 0034 3946     		mov	r1, r7
+ 141 0036 FFF7FEFF 		bl	__aeabi_ddiv
+ 142              	.LVL12:
+ 143 003a 0646     		mov	r6, r0
+ 144 003c 0F46     		mov	r7, r1
+ 145              		.loc 1 48 29 view .LVU28
+ 146 003e 4046     		mov	r0, r8
+ 147 0040 FFF7FEFF 		bl	__aeabi_ui2d
+ 148              	.LVL13:
+ 149 0044 3246     		mov	r2, r6
+ 150 0046 3B46     		mov	r3, r7
+ 151 0048 FFF7FEFF 		bl	__aeabi_dmul
+ 152              	.LVL14:
+ 153              		.loc 1 48 10 view .LVU29
+ 154 004c 2468     		ldr	r4, [r4]
+ 155              	.LVL15:
+ 156              		.loc 1 48 17 view .LVU30
+ 157 004e FFF7FEFF 		bl	__aeabi_d2uiz
+ 158              	.LVL16:
+ 159 0052 2060     		str	r0, [r4]
+  49:Core/Src/motor.c **** }...
+ 160              		.loc 1 49 1 view .LVU31
+ 161 0054 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 162              	.LVL17:
+ 163              	.L4:
+  45:Core/Src/motor.c ****         HAL_GPIO_WritePin(obj->gpio, obj->in1, GPIO_PIN_SET);
+ 164              		.loc 1 45 9 is_stmt 1 view .LVU32
+ 165 0058 0122     		movs	r2, #1
+ 166 005a 0189     		ldrh	r1, [r0, #8]
+ 167              	.LVL18:
+  45:Core/Src/motor.c ****         HAL_GPIO_WritePin(obj->gpio, obj->in1, GPIO_PIN_SET);
+ 168              		.loc 1 45 9 is_stmt 0 view .LVU33
+ 169 005c 4068     		ldr	r0, [r0, #4]
+ 170              	.LVL19:
+  45:Core/Src/motor.c ****         HAL_GPIO_WritePin(obj->gpio, obj->in1, GPIO_PIN_SET);
+ 171              		.loc 1 45 9 view .LVU34
+ 172 005e FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 173              	.LVL20:
+  46:Core/Src/motor.c ****         HAL_GPIO_WritePin(obj->gpio, obj->in2, GPIO_PIN_RESET);
+ 174              		.loc 1 46 9 is_stmt 1 view .LVU35
+ 175 0062 0022     		movs	r2, #0
+ 176 0064 6189     		ldrh	r1, [r4, #10]
+ 177 0066 6068     		ldr	r0, [r4, #4]
+ 178 0068 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\cc4DtRbd.s 			page 5
+
+
+ 179              	.LVL21:
+ 180 006c D7E7     		b	.L5
+ 181              	.L8:
+ 182 006e 00BF     		.align	2
+ 183              	.L7:
+ 184 0070 00006840 		.word	1080557568
+ 185              		.cfi_endproc
+ 186              	.LFE70:
+ 188              		.section	.text.Motor_Control,"ax",%progbits
+ 189              		.align	1
+ 190              		.global	Motor_Control
+ 191              		.syntax unified
+ 192              		.thumb
+ 193              		.thumb_func
+ 195              	Motor_Control:
+ 196              	.LVL22:
+ 197              	.LFB69:
+  16:Core/Src/motor.c **** {
+ 198              		.loc 1 16 1 view -0
+ 199              		.cfi_startproc
+ 200              		@ args = 4, pretend = 0, frame = 16
+ 201              		@ frame_needed = 0, uses_anonymous_args = 0
+  16:Core/Src/motor.c **** {
+ 202              		.loc 1 16 1 is_stmt 0 view .LVU37
+ 203 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 204              	.LCFI2:
+ 205              		.cfi_def_cfa_offset 20
+ 206              		.cfi_offset 4, -20
+ 207              		.cfi_offset 5, -16
+ 208              		.cfi_offset 6, -12
+ 209              		.cfi_offset 7, -8
+ 210              		.cfi_offset 14, -4
+ 211 0002 85B0     		sub	sp, sp, #20
+ 212              	.LCFI3:
+ 213              		.cfi_def_cfa_offset 40
+ 214 0004 0F46     		mov	r7, r1
+ 215 0006 1646     		mov	r6, r2
+ 216 0008 1D46     		mov	r5, r3
+ 217 000a 0A9B     		ldr	r3, [sp, #40]
+ 218              	.LVL23:
+  18:Core/Src/motor.c ****     int speed[4] = {0}; //分别表示lf, rf, rb, lb
+ 219              		.loc 1 18 5 is_stmt 1 view .LVU38
+  18:Core/Src/motor.c ****     int speed[4] = {0}; //分别表示lf, rf, rb, lb
+ 220              		.loc 1 18 9 is_stmt 0 view .LVU39
+ 221 000c 0024     		movs	r4, #0
+ 222 000e 0094     		str	r4, [sp]
+ 223 0010 0194     		str	r4, [sp, #4]
+ 224 0012 0294     		str	r4, [sp, #8]
+ 225 0014 0394     		str	r4, [sp, #12]
+  19:Core/Src/motor.c ****     speed[0] = -state->vx - state->vy - state->rorate;
+ 226              		.loc 1 19 5 is_stmt 1 view .LVU40
+  19:Core/Src/motor.c ****     speed[0] = -state->vx - state->vy - state->rorate;
+ 227              		.loc 1 19 22 is_stmt 0 view .LVU41
+ 228 0016 93F904C0 		ldrsb	ip, [r3, #4]
+  19:Core/Src/motor.c ****     speed[0] = -state->vx - state->vy - state->rorate;
+ 229              		.loc 1 19 16 view .LVU42
+ 230 001a CCF10002 		rsb	r2, ip, #0
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\cc4DtRbd.s 			page 6
+
+
+ 231              	.LVL24:
+  19:Core/Src/motor.c ****     speed[0] = -state->vx - state->vy - state->rorate;
+ 232              		.loc 1 19 34 view .LVU43
+ 233 001e 93F90510 		ldrsb	r1, [r3, #5]
+ 234              	.LVL25:
+  19:Core/Src/motor.c ****     speed[0] = -state->vx - state->vy - state->rorate;
+ 235              		.loc 1 19 27 view .LVU44
+ 236 0022 521A     		subs	r2, r2, r1
+  19:Core/Src/motor.c ****     speed[0] = -state->vx - state->vy - state->rorate;
+ 237              		.loc 1 19 46 view .LVU45
+ 238 0024 93F90630 		ldrsb	r3, [r3, #6]
+  19:Core/Src/motor.c ****     speed[0] = -state->vx - state->vy - state->rorate;
+ 239              		.loc 1 19 39 view .LVU46
+ 240 0028 A2EB030E 		sub	lr, r2, r3
+  19:Core/Src/motor.c ****     speed[0] = -state->vx - state->vy - state->rorate;
+ 241              		.loc 1 19 14 view .LVU47
+ 242 002c CDF800E0 		str	lr, [sp]
+  20:Core/Src/motor.c ****     speed[1] = state->vx - state->vy + state->rorate;
+ 243              		.loc 1 20 5 is_stmt 1 view .LVU48
+  20:Core/Src/motor.c ****     speed[1] = state->vx - state->vy + state->rorate;
+ 244              		.loc 1 20 26 is_stmt 0 view .LVU49
+ 245 0030 ACEB010C 		sub	ip, ip, r1
+  20:Core/Src/motor.c ****     speed[1] = state->vx - state->vy + state->rorate;
+ 246              		.loc 1 20 38 view .LVU50
+ 247 0034 03EB0C01 		add	r1, r3, ip
+  20:Core/Src/motor.c ****     speed[1] = state->vx - state->vy + state->rorate;
+ 248              		.loc 1 20 14 view .LVU51
+ 249 0038 0191     		str	r1, [sp, #4]
+  21:Core/Src/motor.c ****     speed[2] = -state->vx - state->vy + state->rorate;
+ 250              		.loc 1 21 5 is_stmt 1 view .LVU52
+  21:Core/Src/motor.c ****     speed[2] = -state->vx - state->vy + state->rorate;
+ 251              		.loc 1 21 39 is_stmt 0 view .LVU53
+ 252 003a 1A44     		add	r2, r2, r3
+  21:Core/Src/motor.c ****     speed[2] = -state->vx - state->vy + state->rorate;
+ 253              		.loc 1 21 14 view .LVU54
+ 254 003c 0292     		str	r2, [sp, #8]
+  22:Core/Src/motor.c ****     speed[3] = state->vx - state->vy - state->rorate;
+ 255              		.loc 1 22 5 is_stmt 1 view .LVU55
+  22:Core/Src/motor.c ****     speed[3] = state->vx - state->vy - state->rorate;
+ 256              		.loc 1 22 38 is_stmt 0 view .LVU56
+ 257 003e ACEB0303 		sub	r3, ip, r3
+  22:Core/Src/motor.c ****     speed[3] = state->vx - state->vy - state->rorate;
+ 258              		.loc 1 22 14 view .LVU57
+ 259 0042 0393     		str	r3, [sp, #12]
+  24:Core/Src/motor.c ****     for(int i = 0; i <= 3; i++)
+ 260              		.loc 1 24 5 is_stmt 1 view .LVU58
+ 261              	.LBB2:
+  24:Core/Src/motor.c ****     for(int i = 0; i <= 3; i++)
+ 262              		.loc 1 24 9 view .LVU59
+ 263              	.LVL26:
+  24:Core/Src/motor.c ****     for(int i = 0; i <= 3; i++)
+ 264              		.loc 1 24 13 is_stmt 0 view .LVU60
+ 265 0044 A446     		mov	ip, r4
+  24:Core/Src/motor.c ****     for(int i = 0; i <= 3; i++)
+ 266              		.loc 1 24 5 view .LVU61
+ 267 0046 0BE0     		b	.L10
+ 268              	.LVL27:
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\cc4DtRbd.s 			page 7
+
+
+ 269              	.L11:
+  27:Core/Src/motor.c ****         else if(speed[i] < -OUTPUTMAX) speed[i] = -OUTPUTMAX;
+ 270              		.loc 1 27 14 is_stmt 1 view .LVU62
+  27:Core/Src/motor.c ****         else if(speed[i] < -OUTPUTMAX) speed[i] = -OUTPUTMAX;
+ 271              		.loc 1 27 16 is_stmt 0 view .LVU63
+ 272 0048 14F1C00F 		cmn	r4, #192
+ 273 004c 06DA     		bge	.L12
+  27:Core/Src/motor.c ****         else if(speed[i] < -OUTPUTMAX) speed[i] = -OUTPUTMAX;
+ 274              		.loc 1 27 40 is_stmt 1 discriminator 1 view .LVU64
+  27:Core/Src/motor.c ****         else if(speed[i] < -OUTPUTMAX) speed[i] = -OUTPUTMAX;
+ 275              		.loc 1 27 49 is_stmt 0 discriminator 1 view .LVU65
+ 276 004e 6FF0BF02 		mvn	r2, #191
+ 277 0052 04AB     		add	r3, sp, #16
+ 278 0054 03EB8C03 		add	r3, r3, ip, lsl #2
+ 279 0058 43F8102C 		str	r2, [r3, #-16]
+ 280              	.L12:
+  24:Core/Src/motor.c ****     for(int i = 0; i <= 3; i++)
+ 281              		.loc 1 24 28 is_stmt 1 discriminator 2 view .LVU66
+  24:Core/Src/motor.c ****     for(int i = 0; i <= 3; i++)
+ 282              		.loc 1 24 29 is_stmt 0 discriminator 2 view .LVU67
+ 283 005c 0CF1010C 		add	ip, ip, #1
+ 284              	.LVL28:
+ 285              	.L10:
+  24:Core/Src/motor.c ****     for(int i = 0; i <= 3; i++)
+ 286              		.loc 1 24 20 is_stmt 1 discriminator 1 view .LVU68
+  24:Core/Src/motor.c ****     for(int i = 0; i <= 3; i++)
+ 287              		.loc 1 24 5 is_stmt 0 discriminator 1 view .LVU69
+ 288 0060 BCF1030F 		cmp	ip, #3
+ 289 0064 0DDC     		bgt	.L15
+  26:Core/Src/motor.c ****         if(speed[i] > OUTPUTMAX) speed[i] = OUTPUTMAX;
+ 290              		.loc 1 26 9 is_stmt 1 view .LVU70
+  26:Core/Src/motor.c ****         if(speed[i] > OUTPUTMAX) speed[i] = OUTPUTMAX;
+ 291              		.loc 1 26 17 is_stmt 0 view .LVU71
+ 292 0066 04AB     		add	r3, sp, #16
+ 293 0068 03EB8C03 		add	r3, r3, ip, lsl #2
+ 294 006c 53F8104C 		ldr	r4, [r3, #-16]
+  26:Core/Src/motor.c ****         if(speed[i] > OUTPUTMAX) speed[i] = OUTPUTMAX;
+ 295              		.loc 1 26 11 view .LVU72
+ 296 0070 C02C     		cmp	r4, #192
+ 297 0072 E9DD     		ble	.L11
+  26:Core/Src/motor.c ****         if(speed[i] > OUTPUTMAX) speed[i] = OUTPUTMAX;
+ 298              		.loc 1 26 34 is_stmt 1 discriminator 1 view .LVU73
+  26:Core/Src/motor.c ****         if(speed[i] > OUTPUTMAX) speed[i] = OUTPUTMAX;
+ 299              		.loc 1 26 43 is_stmt 0 discriminator 1 view .LVU74
+ 300 0074 C022     		movs	r2, #192
+ 301 0076 04AB     		add	r3, sp, #16
+ 302 0078 03EB8C03 		add	r3, r3, ip, lsl #2
+ 303 007c 43F8102C 		str	r2, [r3, #-16]
+ 304 0080 ECE7     		b	.L12
+ 305              	.L15:
+ 306              	.LBE2:
+  30:Core/Src/motor.c ****     Motor_Update(lf, speed[0]);
+ 307              		.loc 1 30 5 is_stmt 1 view .LVU75
+ 308 0082 0099     		ldr	r1, [sp]
+ 309 0084 FFF7FEFF 		bl	Motor_Update
+ 310              	.LVL29:
+  31:Core/Src/motor.c ****     Motor_Update(rf, speed[1]);
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\cc4DtRbd.s 			page 8
+
+
+ 311              		.loc 1 31 5 view .LVU76
+ 312 0088 0199     		ldr	r1, [sp, #4]
+ 313 008a 3846     		mov	r0, r7
+ 314 008c FFF7FEFF 		bl	Motor_Update
+ 315              	.LVL30:
+  32:Core/Src/motor.c ****     Motor_Update(rb, speed[2]);
+ 316              		.loc 1 32 5 view .LVU77
+ 317 0090 0299     		ldr	r1, [sp, #8]
+ 318 0092 3046     		mov	r0, r6
+ 319 0094 FFF7FEFF 		bl	Motor_Update
+ 320              	.LVL31:
+  33:Core/Src/motor.c ****     Motor_Update(lb, speed[3]);
+ 321              		.loc 1 33 5 view .LVU78
+ 322 0098 0399     		ldr	r1, [sp, #12]
+ 323 009a 2846     		mov	r0, r5
+ 324 009c FFF7FEFF 		bl	Motor_Update
+ 325              	.LVL32:
+  34:Core/Src/motor.c **** }
+ 326              		.loc 1 34 1 is_stmt 0 view .LVU79
+ 327 00a0 05B0     		add	sp, sp, #20
+ 328              	.LCFI4:
+ 329              		.cfi_def_cfa_offset 20
+ 330              		@ sp needed
+ 331 00a2 F0BD     		pop	{r4, r5, r6, r7, pc}
+  34:Core/Src/motor.c **** }
+ 332              		.loc 1 34 1 view .LVU80
+ 333              		.cfi_endproc
+ 334              	.LFE69:
+ 336              		.text
+ 337              	.Letext0:
+ 338              		.file 2 "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2021.10\\arm-none-eabi\\include\\
+ 339              		.file 3 "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2021.10\\arm-none-eabi\\include\\
+ 340              		.file 4 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xe.h"
+ 341              		.file 5 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h"
+ 342              		.file 6 "Core/Inc/ps2.h"
+ 343              		.file 7 "Core/Inc/motor.h"
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\cc4DtRbd.s 			page 9
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 motor.c
+C:\Users\LJH\AppData\Local\Temp\cc4DtRbd.s:18     .text.Motor_Init:00000000 $t
+C:\Users\LJH\AppData\Local\Temp\cc4DtRbd.s:24     .text.Motor_Init:00000000 Motor_Init
+C:\Users\LJH\AppData\Local\Temp\cc4DtRbd.s:83     .text.Motor_Update:00000000 $t
+C:\Users\LJH\AppData\Local\Temp\cc4DtRbd.s:89     .text.Motor_Update:00000000 Motor_Update
+C:\Users\LJH\AppData\Local\Temp\cc4DtRbd.s:184    .text.Motor_Update:00000070 $d
+C:\Users\LJH\AppData\Local\Temp\cc4DtRbd.s:189    .text.Motor_Control:00000000 $t
+C:\Users\LJH\AppData\Local\Temp\cc4DtRbd.s:195    .text.Motor_Control:00000000 Motor_Control
+
+UNDEFINED SYMBOLS
+HAL_GPIO_WritePin
+__aeabi_i2d
+__aeabi_ddiv
+__aeabi_ui2d
+__aeabi_dmul
+__aeabi_d2uiz

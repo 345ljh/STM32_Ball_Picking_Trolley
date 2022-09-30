@@ -1,0 +1,1916 @@
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"freertos.c"
+  14              		.section	.rodata.str1.4,"aMS",%progbits,1
+  15              		.align	2
+  16              	.LC0:
+  17 0000 64656661 		.ascii	"defaultTask\000"
+  17      756C7454 
+  17      61736B00 
+  18              		.align	2
+  19              	.LC2:
+  20 000c 496D6167 		.ascii	"Image_Task\000"
+  20      655F5461 
+  20      736B00
+  21 0017 00       		.align	2
+  22              	.LC4:
+  23 0018 5053325F 		.ascii	"PS2_Recv_Task\000"
+  23      52656376 
+  23      5F546173 
+  23      6B00
+  24 0026 0000     		.align	2
+  25              	.LC6:
+  26 0028 4D6F746F 		.ascii	"MotorServo_Task\000"
+  26      72536572 
+  26      766F5F54 
+  26      61736B00 
+  27              		.text
+  28              	.Ltext0:
+  29              		.cfi_sections	.debug_frame
+  30              		.section	.text.StartDefaultTask,"ax",%progbits
+  31              		.align	1
+  32              		.global	StartDefaultTask
+  33              		.syntax unified
+  34              		.thumb
+  35              		.thumb_func
+  37              	StartDefaultTask:
+  38              	.LVL0:
+  39              	.LFB75:
+  40              		.file 1 "Core/Src/freertos.c"
+   1:Core/Src/freertos.c **** /* USER CODE BEGIN Header */
+   2:Core/Src/freertos.c **** /**
+   3:Core/Src/freertos.c ****   ******************************************************************************
+   4:Core/Src/freertos.c ****   * File Name          : freertos.c
+   5:Core/Src/freertos.c ****   * Description        : Code for freertos applications
+   6:Core/Src/freertos.c ****   ******************************************************************************
+   7:Core/Src/freertos.c ****   * @attention
+   8:Core/Src/freertos.c ****   *
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s 			page 2
+
+
+   9:Core/Src/freertos.c ****   * Copyright (c) 2022 STMicroelectronics.
+  10:Core/Src/freertos.c ****   * All rights reserved.
+  11:Core/Src/freertos.c ****   *
+  12:Core/Src/freertos.c ****   * This software is licensed under terms that can be found in the LICENSE file
+  13:Core/Src/freertos.c ****   * in the root directory of this software component.
+  14:Core/Src/freertos.c ****   * If no LICENSE file comes with this software, it is provided AS-IS.
+  15:Core/Src/freertos.c ****   *
+  16:Core/Src/freertos.c ****   ******************************************************************************
+  17:Core/Src/freertos.c ****   */
+  18:Core/Src/freertos.c **** /* USER CODE END Header */
+  19:Core/Src/freertos.c **** 
+  20:Core/Src/freertos.c **** /* Includes ------------------------------------------------------------------*/
+  21:Core/Src/freertos.c **** #include "FreeRTOS.h"
+  22:Core/Src/freertos.c **** #include "task.h"
+  23:Core/Src/freertos.c **** #include "main.h"
+  24:Core/Src/freertos.c **** #include "cmsis_os.h"
+  25:Core/Src/freertos.c **** 
+  26:Core/Src/freertos.c **** /* Private includes ----------------------------------------------------------*/
+  27:Core/Src/freertos.c **** /* USER CODE BEGIN Includes */
+  28:Core/Src/freertos.c **** #include "tim.h"
+  29:Core/Src/freertos.c **** #include "spi.h"
+  30:Core/Src/freertos.c **** #include "ps2.h"
+  31:Core/Src/freertos.c **** #include "motor.h"
+  32:Core/Src/freertos.c **** #include "beep.h"
+  33:Core/Src/freertos.c **** #include "tft.h"
+  34:Core/Src/freertos.c **** #include "malloc.h"
+  35:Core/Src/freertos.c **** #include "usart.h"
+  36:Core/Src/freertos.c **** /* USER CODE END Includes */
+  37:Core/Src/freertos.c **** 
+  38:Core/Src/freertos.c **** /* Private typedef -----------------------------------------------------------*/
+  39:Core/Src/freertos.c **** /* USER CODE BEGIN PTD */
+  40:Core/Src/freertos.c **** 
+  41:Core/Src/freertos.c **** /* USER CODE END PTD */
+  42:Core/Src/freertos.c **** 
+  43:Core/Src/freertos.c **** /* Private define ------------------------------------------------------------*/
+  44:Core/Src/freertos.c **** /* USER CODE BEGIN PD */
+  45:Core/Src/freertos.c **** #define MV_LEN 7
+  46:Core/Src/freertos.c **** /* USER CODE END PD */
+  47:Core/Src/freertos.c **** 
+  48:Core/Src/freertos.c **** /* Private macro -------------------------------------------------------------*/
+  49:Core/Src/freertos.c **** /* USER CODE BEGIN PM */
+  50:Core/Src/freertos.c **** 
+  51:Core/Src/freertos.c **** /* USER CODE END PM */
+  52:Core/Src/freertos.c **** 
+  53:Core/Src/freertos.c **** /* Private variables ---------------------------------------------------------*/
+  54:Core/Src/freertos.c **** /* USER CODE BEGIN Variables */
+  55:Core/Src/freertos.c **** uint8_t ps2_rx[9] = {0};
+  56:Core/Src/freertos.c **** uint8_t mv_rx[MV_LEN] = {0};
+  57:Core/Src/freertos.c **** 
+  58:Core/Src/freertos.c **** motor* motor_lf = NULL;
+  59:Core/Src/freertos.c **** motor* motor_lb = NULL;
+  60:Core/Src/freertos.c **** motor* motor_rf = NULL;
+  61:Core/Src/freertos.c **** motor* motor_rb = NULL;
+  62:Core/Src/freertos.c **** 
+  63:Core/Src/freertos.c **** robot_state state;
+  64:Core/Src/freertos.c **** /* USER CODE END Variables */
+  65:Core/Src/freertos.c **** osThreadId defaultTaskHandle;
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s 			page 3
+
+
+  66:Core/Src/freertos.c **** osThreadId Image_TaskHandle;
+  67:Core/Src/freertos.c **** osThreadId PS2_Recv_TaskHandle;
+  68:Core/Src/freertos.c **** osThreadId MotorServo_TaskHandle;
+  69:Core/Src/freertos.c **** 
+  70:Core/Src/freertos.c **** /* Private function prototypes -----------------------------------------------*/
+  71:Core/Src/freertos.c **** /* USER CODE BEGIN FunctionPrototypes */
+  72:Core/Src/freertos.c **** 
+  73:Core/Src/freertos.c **** /* USER CODE END FunctionPrototypes */
+  74:Core/Src/freertos.c **** 
+  75:Core/Src/freertos.c **** void StartDefaultTask(void const * argument);
+  76:Core/Src/freertos.c **** void StartImageTask(void const * argument);
+  77:Core/Src/freertos.c **** void StartPS2Task(void const * argument);
+  78:Core/Src/freertos.c **** void StartMotorServoTask(void const * argument);
+  79:Core/Src/freertos.c **** 
+  80:Core/Src/freertos.c **** void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
+  81:Core/Src/freertos.c **** 
+  82:Core/Src/freertos.c **** /* GetIdleTaskMemory prototype (linked to static allocation support) */
+  83:Core/Src/freertos.c **** void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskS
+  84:Core/Src/freertos.c **** 
+  85:Core/Src/freertos.c **** /* USER CODE BEGIN GET_IDLE_TASK_MEMORY */
+  86:Core/Src/freertos.c **** static StaticTask_t xIdleTaskTCBBuffer;
+  87:Core/Src/freertos.c **** static StackType_t xIdleStack[configMINIMAL_STACK_SIZE];
+  88:Core/Src/freertos.c **** 
+  89:Core/Src/freertos.c **** void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskS
+  90:Core/Src/freertos.c **** {
+  91:Core/Src/freertos.c ****   *ppxIdleTaskTCBBuffer = &xIdleTaskTCBBuffer;
+  92:Core/Src/freertos.c ****   *ppxIdleTaskStackBuffer = &xIdleStack[0];
+  93:Core/Src/freertos.c ****   *pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
+  94:Core/Src/freertos.c ****   /* place for user code */
+  95:Core/Src/freertos.c **** }
+  96:Core/Src/freertos.c **** /* USER CODE END GET_IDLE_TASK_MEMORY */
+  97:Core/Src/freertos.c **** 
+  98:Core/Src/freertos.c **** /**
+  99:Core/Src/freertos.c ****   * @brief  FreeRTOS initialization
+ 100:Core/Src/freertos.c ****   * @param  None
+ 101:Core/Src/freertos.c ****   * @retval None
+ 102:Core/Src/freertos.c ****   */
+ 103:Core/Src/freertos.c **** void MX_FREERTOS_Init(void) {
+ 104:Core/Src/freertos.c ****   /* USER CODE BEGIN Init */
+ 105:Core/Src/freertos.c **** 
+ 106:Core/Src/freertos.c ****   /* USER CODE END Init */
+ 107:Core/Src/freertos.c **** 
+ 108:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_MUTEX */
+ 109:Core/Src/freertos.c ****   /* add mutexes, ... */
+ 110:Core/Src/freertos.c ****   /* USER CODE END RTOS_MUTEX */
+ 111:Core/Src/freertos.c **** 
+ 112:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_SEMAPHORES */
+ 113:Core/Src/freertos.c ****   /* add semaphores, ... */
+ 114:Core/Src/freertos.c ****   /* USER CODE END RTOS_SEMAPHORES */
+ 115:Core/Src/freertos.c **** 
+ 116:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_TIMERS */
+ 117:Core/Src/freertos.c ****   /* start timers, add new ones, ... */
+ 118:Core/Src/freertos.c ****   /* USER CODE END RTOS_TIMERS */
+ 119:Core/Src/freertos.c **** 
+ 120:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_QUEUES */
+ 121:Core/Src/freertos.c ****   /* add queues, ... */
+ 122:Core/Src/freertos.c ****   /* USER CODE END RTOS_QUEUES */
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s 			page 4
+
+
+ 123:Core/Src/freertos.c **** 
+ 124:Core/Src/freertos.c ****   /* Create the thread(s) */
+ 125:Core/Src/freertos.c ****   /* definition and creation of defaultTask */
+ 126:Core/Src/freertos.c ****   osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
+ 127:Core/Src/freertos.c ****   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
+ 128:Core/Src/freertos.c **** 
+ 129:Core/Src/freertos.c ****   /* definition and creation of Image_Task */
+ 130:Core/Src/freertos.c ****   osThreadDef(Image_Task, StartImageTask, osPriorityNormal, 0, 128);
+ 131:Core/Src/freertos.c ****   Image_TaskHandle = osThreadCreate(osThread(Image_Task), NULL);
+ 132:Core/Src/freertos.c **** 
+ 133:Core/Src/freertos.c ****   /* definition and creation of PS2_Recv_Task */
+ 134:Core/Src/freertos.c ****   osThreadDef(PS2_Recv_Task, StartPS2Task, osPriorityNormal, 0, 128);
+ 135:Core/Src/freertos.c ****   PS2_Recv_TaskHandle = osThreadCreate(osThread(PS2_Recv_Task), NULL);
+ 136:Core/Src/freertos.c **** 
+ 137:Core/Src/freertos.c ****   /* definition and creation of MotorServo_Task */
+ 138:Core/Src/freertos.c ****   osThreadDef(MotorServo_Task, StartMotorServoTask, osPriorityNormal, 0, 128);
+ 139:Core/Src/freertos.c ****   MotorServo_TaskHandle = osThreadCreate(osThread(MotorServo_Task), NULL);
+ 140:Core/Src/freertos.c **** 
+ 141:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_THREADS */
+ 142:Core/Src/freertos.c ****   /* add threads, ... */
+ 143:Core/Src/freertos.c ****   /* USER CODE END RTOS_THREADS */
+ 144:Core/Src/freertos.c **** 
+ 145:Core/Src/freertos.c **** }
+ 146:Core/Src/freertos.c **** 
+ 147:Core/Src/freertos.c **** /* USER CODE BEGIN Header_StartDefaultTask */
+ 148:Core/Src/freertos.c **** /**
+ 149:Core/Src/freertos.c ****   * @brief  Function implementing the defaultTask thread.
+ 150:Core/Src/freertos.c ****   * @param  argument: Not used
+ 151:Core/Src/freertos.c ****   * @retval None
+ 152:Core/Src/freertos.c ****   */
+ 153:Core/Src/freertos.c **** /* USER CODE END Header_StartDefaultTask */
+ 154:Core/Src/freertos.c **** void StartDefaultTask(void const * argument)
+ 155:Core/Src/freertos.c **** {
+  41              		.loc 1 155 1 view -0
+  42              		.cfi_startproc
+  43              		@ Volatile: function does not return.
+  44              		@ args = 0, pretend = 0, frame = 0
+  45              		@ frame_needed = 0, uses_anonymous_args = 0
+  46              		.loc 1 155 1 is_stmt 0 view .LVU1
+  47 0000 00B5     		push	{lr}
+  48              	.LCFI0:
+  49              		.cfi_def_cfa_offset 4
+  50              		.cfi_offset 14, -4
+  51 0002 E3B0     		sub	sp, sp, #396
+  52              	.LCFI1:
+  53              		.cfi_def_cfa_offset 400
+ 156:Core/Src/freertos.c ****   /* USER CODE BEGIN StartDefaultTask */
+ 157:Core/Src/freertos.c ****   HAL_TIM_Base_Start(&htim5);   //delay_us
+  54              		.loc 1 157 3 is_stmt 1 view .LVU2
+  55 0004 1648     		ldr	r0, .L6
+  56              	.LVL1:
+  57              		.loc 1 157 3 is_stmt 0 view .LVU3
+  58 0006 FFF7FEFF 		bl	HAL_TIM_Base_Start
+  59              	.LVL2:
+ 158:Core/Src/freertos.c ****   HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_3);   //控制蜂鸣�????????
+  60              		.loc 1 158 3 is_stmt 1 view .LVU4
+  61 000a 0821     		movs	r1, #8
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s 			page 5
+
+
+  62 000c 1548     		ldr	r0, .L6+4
+  63 000e FFF7FEFF 		bl	HAL_TIM_PWM_Start
+  64              	.LVL3:
+ 159:Core/Src/freertos.c ****   TIM8->ARR = 0;
+  65              		.loc 1 159 3 view .LVU5
+  66              		.loc 1 159 13 is_stmt 0 view .LVU6
+  67 0012 154B     		ldr	r3, .L6+8
+  68 0014 0025     		movs	r5, #0
+  69 0016 DD62     		str	r5, [r3, #44]
+ 160:Core/Src/freertos.c ****   TIM8->CCR3 = 0;
+  70              		.loc 1 160 3 is_stmt 1 view .LVU7
+  71              		.loc 1 160 14 is_stmt 0 view .LVU8
+  72 0018 DD63     		str	r5, [r3, #60]
+ 161:Core/Src/freertos.c ****   Beep_Play(music_ready);
+  73              		.loc 1 161 3 is_stmt 1 view .LVU9
+  74 001a 144C     		ldr	r4, .L6+12
+  75 001c 4FF4C272 		mov	r2, #388
+  76 0020 04F11001 		add	r1, r4, #16
+  77 0024 6846     		mov	r0, sp
+  78 0026 FFF7FEFF 		bl	memcpy
+  79              	.LVL4:
+  80 002a 94E80F00 		ldm	r4, {r0, r1, r2, r3}
+  81 002e FFF7FEFF 		bl	Beep_Play
+  82              	.LVL5:
+ 162:Core/Src/freertos.c ****   state.control = INIT;
+  83              		.loc 1 162 3 view .LVU10
+  84              		.loc 1 162 17 is_stmt 0 view .LVU11
+  85 0032 0F4B     		ldr	r3, .L6+16
+  86 0034 1D70     		strb	r5, [r3]
+  87 0036 0EE0     		b	.L3
+  88              	.L5:
+ 163:Core/Src/freertos.c ****   /* Infinite loop */
+ 164:Core/Src/freertos.c ****   
+ 165:Core/Src/freertos.c ****   for(;;)
+ 166:Core/Src/freertos.c ****   {
+ 167:Core/Src/freertos.c ****     if(state.music) Beep_Play(music_thank);
+  89              		.loc 1 167 21 is_stmt 1 discriminator 1 view .LVU12
+  90 0038 0E4C     		ldr	r4, .L6+20
+  91 003a 4FF4C272 		mov	r2, #388
+  92 003e 04F11001 		add	r1, r4, #16
+  93 0042 6846     		mov	r0, sp
+  94 0044 FFF7FEFF 		bl	memcpy
+  95              	.LVL6:
+  96 0048 94E80F00 		ldm	r4, {r0, r1, r2, r3}
+  97 004c FFF7FEFF 		bl	Beep_Play
+  98              	.LVL7:
+  99              	.L2:
+ 168:Core/Src/freertos.c ****     osDelay(1);
+ 100              		.loc 1 168 5 view .LVU13
+ 101 0050 0120     		movs	r0, #1
+ 102 0052 FFF7FEFF 		bl	osDelay
+ 103              	.LVL8:
+ 165:Core/Src/freertos.c ****   {
+ 104              		.loc 1 165 8 view .LVU14
+ 105              	.L3:
+ 165:Core/Src/freertos.c ****   {
+ 106              		.loc 1 165 3 view .LVU15
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s 			page 6
+
+
+ 167:Core/Src/freertos.c ****     osDelay(1);
+ 107              		.loc 1 167 5 view .LVU16
+ 167:Core/Src/freertos.c ****     osDelay(1);
+ 108              		.loc 1 167 13 is_stmt 0 view .LVU17
+ 109 0056 064B     		ldr	r3, .L6+16
+ 110 0058 1B7B     		ldrb	r3, [r3, #12]	@ zero_extendqisi2
+ 167:Core/Src/freertos.c ****     osDelay(1);
+ 111              		.loc 1 167 7 view .LVU18
+ 112 005a 002B     		cmp	r3, #0
+ 113 005c ECD1     		bne	.L5
+ 114 005e F7E7     		b	.L2
+ 115              	.L7:
+ 116              		.align	2
+ 117              	.L6:
+ 118 0060 00000000 		.word	htim5
+ 119 0064 00000000 		.word	htim8
+ 120 0068 00340140 		.word	1073820672
+ 121 006c 00000000 		.word	music_ready
+ 122 0070 00000000 		.word	.LANCHOR0
+ 123 0074 00000000 		.word	music_thank
+ 124              		.cfi_endproc
+ 125              	.LFE75:
+ 127              		.section	.rodata.StartImageTask.str1.4,"aMS",%progbits,1
+ 128              		.align	2
+ 129              	.LC8:
+ 130 0000 434F4E4E 		.ascii	"CONNECTION:\000"
+ 130      45435449 
+ 130      4F4E3A00 
+ 131              		.align	2
+ 132              	.LC9:
+ 133 000c 56495355 		.ascii	"VISUAL:\000"
+ 133      414C3A00 
+ 134              		.align	2
+ 135              	.LC10:
+ 136 0014 434F4E54 		.ascii	"CONTROL:\000"
+ 136      524F4C3A 
+ 136      00
+ 137 001d 000000   		.align	2
+ 138              	.LC11:
+ 139 0020 585F5350 		.ascii	"X_SPEED:\000"
+ 139      4545443A 
+ 139      00
+ 140 0029 000000   		.align	2
+ 141              	.LC12:
+ 142 002c 595F5350 		.ascii	"Y_SPEED:\000"
+ 142      4545443A 
+ 142      00
+ 143 0035 000000   		.align	2
+ 144              	.LC13:
+ 145 0038 575F5350 		.ascii	"W_SPEED:\000"
+ 145      4545443A 
+ 145      00
+ 146 0041 000000   		.align	2
+ 147              	.LC14:
+ 148 0044 4652414D 		.ascii	"FRAME:\000"
+ 148      453A00
+ 149 004b 00       		.align	2
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s 			page 7
+
+
+ 150              	.LC15:
+ 151 004c 53554343 		.ascii	"SUCCEED\000"
+ 151      45454400 
+ 152              		.align	2
+ 153              	.LC16:
+ 154 0054 46494E44 		.ascii	"FIND    \000"
+ 154      20202020 
+ 154      00
+ 155 005d 000000   		.align	2
+ 156              	.LC17:
+ 157 0060 4E4F5420 		.ascii	"NOT FIND\000"
+ 157      46494E44 
+ 157      00
+ 158 0069 000000   		.align	2
+ 159              	.LC18:
+ 160 006c 4641494C 		.ascii	"FAILED \000"
+ 160      45442000 
+ 161              		.align	2
+ 162              	.LC19:
+ 163 0074 52454D4F 		.ascii	"REMOTE\000"
+ 163      544500
+ 164 007b 00       		.align	2
+ 165              	.LC20:
+ 166 007c 4155544F 		.ascii	"AUTO  \000"
+ 166      202000
+ 167 0083 00       		.align	2
+ 168              	.LC21:
+ 169 0084 55502020 		.ascii	"UP  \000"
+ 169      00
+ 170 0089 000000   		.align	2
+ 171              	.LC22:
+ 172 008c 444F574E 		.ascii	"DOWN\000"
+ 172      00
+ 173              		.section	.text.StartImageTask,"ax",%progbits
+ 174              		.align	1
+ 175              		.global	StartImageTask
+ 176              		.syntax unified
+ 177              		.thumb
+ 178              		.thumb_func
+ 180              	StartImageTask:
+ 181              	.LVL9:
+ 182              	.LFB76:
+ 169:Core/Src/freertos.c ****   }
+ 170:Core/Src/freertos.c ****   /* USER CODE END StartDefaultTask */
+ 171:Core/Src/freertos.c **** }
+ 172:Core/Src/freertos.c **** 
+ 173:Core/Src/freertos.c **** /* USER CODE BEGIN Header_StartImageTask */
+ 174:Core/Src/freertos.c **** /**
+ 175:Core/Src/freertos.c **** * @brief Function implementing the Image_Task thread.
+ 176:Core/Src/freertos.c **** * @param argument: Not used
+ 177:Core/Src/freertos.c **** * @retval None
+ 178:Core/Src/freertos.c **** */
+ 179:Core/Src/freertos.c **** /* USER CODE END Header_StartImageTask */
+ 180:Core/Src/freertos.c **** void StartImageTask(void const * argument)
+ 181:Core/Src/freertos.c **** {
+ 183              		.loc 1 181 1 is_stmt 1 view -0
+ 184              		.cfi_startproc
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s 			page 8
+
+
+ 185              		@ args = 0, pretend = 0, frame = 0
+ 186              		@ frame_needed = 0, uses_anonymous_args = 0
+ 187              		.loc 1 181 1 is_stmt 0 view .LVU20
+ 188 0000 30B5     		push	{r4, r5, lr}
+ 189              	.LCFI2:
+ 190              		.cfi_def_cfa_offset 12
+ 191              		.cfi_offset 4, -12
+ 192              		.cfi_offset 5, -8
+ 193              		.cfi_offset 14, -4
+ 194 0002 83B0     		sub	sp, sp, #12
+ 195              	.LCFI3:
+ 196              		.cfi_def_cfa_offset 24
+ 182:Core/Src/freertos.c ****   /* USER CODE BEGIN StartImageTask */
+ 183:Core/Src/freertos.c ****   TFT_Init();
+ 197              		.loc 1 183 3 is_stmt 1 view .LVU21
+ 198 0004 FFF7FEFF 		bl	TFT_Init
+ 199              	.LVL10:
+ 184:Core/Src/freertos.c ****   TFT_Fill(1, 0, 240, 320, 0);
+ 200              		.loc 1 184 3 view .LVU22
+ 201 0008 0021     		movs	r1, #0
+ 202 000a 0091     		str	r1, [sp]
+ 203 000c 4FF4A073 		mov	r3, #320
+ 204 0010 F022     		movs	r2, #240
+ 205 0012 0120     		movs	r0, #1
+ 206 0014 FFF7FEFF 		bl	TFT_Fill
+ 207              	.LVL11:
+ 185:Core/Src/freertos.c ****   TFT_Test();
+ 208              		.loc 1 185 3 view .LVU23
+ 209 0018 FFF7FEFF 		bl	TFT_Test
+ 210              	.LVL12:
+ 186:Core/Src/freertos.c **** 
+ 187:Core/Src/freertos.c ****   TFT_DrawStr(16, 10, "CONNECTION:", RGB2565(200, 184, 248));
+ 211              		.loc 1 187 3 view .LVU24
+ 212 001c F822     		movs	r2, #248
+ 213 001e B821     		movs	r1, #184
+ 214 0020 C820     		movs	r0, #200
+ 215 0022 FFF7FEFF 		bl	RGB2565
+ 216              	.LVL13:
+ 217 0026 0346     		mov	r3, r0
+ 218 0028 AF4A     		ldr	r2, .L24
+ 219 002a 0A21     		movs	r1, #10
+ 220 002c 1020     		movs	r0, #16
+ 221 002e FFF7FEFF 		bl	TFT_DrawStr
+ 222              	.LVL14:
+ 188:Core/Src/freertos.c ****   TFT_DrawStr(50, 30, "VISUAL:", RGB2565(200, 184, 248));
+ 223              		.loc 1 188 3 view .LVU25
+ 224 0032 F822     		movs	r2, #248
+ 225 0034 B821     		movs	r1, #184
+ 226 0036 C820     		movs	r0, #200
+ 227 0038 FFF7FEFF 		bl	RGB2565
+ 228              	.LVL15:
+ 229 003c 0346     		mov	r3, r0
+ 230 003e AB4A     		ldr	r2, .L24+4
+ 231 0040 1E21     		movs	r1, #30
+ 232 0042 3220     		movs	r0, #50
+ 233 0044 FFF7FEFF 		bl	TFT_DrawStr
+ 234              	.LVL16:
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s 			page 9
+
+
+ 189:Core/Src/freertos.c ****   TFT_DrawStr(42, 50, "CONTROL:", RGB2565(200, 184, 248));
+ 235              		.loc 1 189 3 view .LVU26
+ 236 0048 F822     		movs	r2, #248
+ 237 004a B821     		movs	r1, #184
+ 238 004c C820     		movs	r0, #200
+ 239 004e FFF7FEFF 		bl	RGB2565
+ 240              	.LVL17:
+ 241 0052 0346     		mov	r3, r0
+ 242 0054 A64A     		ldr	r2, .L24+8
+ 243 0056 3221     		movs	r1, #50
+ 244 0058 2A20     		movs	r0, #42
+ 245 005a FFF7FEFF 		bl	TFT_DrawStr
+ 246              	.LVL18:
+ 190:Core/Src/freertos.c ****   TFT_DrawStr(42, 70, "X_SPEED:", RGB2565(200, 184, 248));
+ 247              		.loc 1 190 3 view .LVU27
+ 248 005e F822     		movs	r2, #248
+ 249 0060 B821     		movs	r1, #184
+ 250 0062 C820     		movs	r0, #200
+ 251 0064 FFF7FEFF 		bl	RGB2565
+ 252              	.LVL19:
+ 253 0068 0346     		mov	r3, r0
+ 254 006a A24A     		ldr	r2, .L24+12
+ 255 006c 4621     		movs	r1, #70
+ 256 006e 2A20     		movs	r0, #42
+ 257 0070 FFF7FEFF 		bl	TFT_DrawStr
+ 258              	.LVL20:
+ 191:Core/Src/freertos.c ****   TFT_DrawStr(42, 90, "Y_SPEED:", RGB2565(200, 184, 248));
+ 259              		.loc 1 191 3 view .LVU28
+ 260 0074 F822     		movs	r2, #248
+ 261 0076 B821     		movs	r1, #184
+ 262 0078 C820     		movs	r0, #200
+ 263 007a FFF7FEFF 		bl	RGB2565
+ 264              	.LVL21:
+ 265 007e 0346     		mov	r3, r0
+ 266 0080 9D4A     		ldr	r2, .L24+16
+ 267 0082 5A21     		movs	r1, #90
+ 268 0084 2A20     		movs	r0, #42
+ 269 0086 FFF7FEFF 		bl	TFT_DrawStr
+ 270              	.LVL22:
+ 192:Core/Src/freertos.c ****   TFT_DrawStr(42, 110, "W_SPEED:", RGB2565(200, 184, 248));
+ 271              		.loc 1 192 3 view .LVU29
+ 272 008a F822     		movs	r2, #248
+ 273 008c B821     		movs	r1, #184
+ 274 008e C820     		movs	r0, #200
+ 275 0090 FFF7FEFF 		bl	RGB2565
+ 276              	.LVL23:
+ 277 0094 0346     		mov	r3, r0
+ 278 0096 994A     		ldr	r2, .L24+20
+ 279 0098 6E21     		movs	r1, #110
+ 280 009a 2A20     		movs	r0, #42
+ 281 009c FFF7FEFF 		bl	TFT_DrawStr
+ 282              	.LVL24:
+ 193:Core/Src/freertos.c ****   TFT_DrawStr(48, 130, "FRAME:", RGB2565(200, 184, 248));
+ 283              		.loc 1 193 3 view .LVU30
+ 284 00a0 F822     		movs	r2, #248
+ 285 00a2 B821     		movs	r1, #184
+ 286 00a4 C820     		movs	r0, #200
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s 			page 10
+
+
+ 287 00a6 FFF7FEFF 		bl	RGB2565
+ 288              	.LVL25:
+ 289 00aa 0346     		mov	r3, r0
+ 290 00ac 944A     		ldr	r2, .L24+24
+ 291 00ae 8221     		movs	r1, #130
+ 292 00b0 3020     		movs	r0, #48
+ 293 00b2 FFF7FEFF 		bl	TFT_DrawStr
+ 294              	.LVL26:
+ 295 00b6 92E0     		b	.L20
+ 296              	.LVL27:
+ 297              	.L10:
+ 298              	.LBB2:
+ 299              	.LBB3:
+ 194:Core/Src/freertos.c ****   /* Infinite loop */
+ 195:Core/Src/freertos.c ****   for(;;)
+ 196:Core/Src/freertos.c ****   {
+ 197:Core/Src/freertos.c ****     HAL_UART_Receive_DMA(&huart3, mv_rx, MV_LEN);
+ 198:Core/Src/freertos.c ****     //Openmv收到的数据可能错位
+ 199:Core/Src/freertos.c ****     int index = -1;
+ 200:Core/Src/freertos.c ****     for(int i = 0; i <= MV_LEN - 1; i++)
+ 300              		.loc 1 200 37 discriminator 2 view .LVU31
+ 301              		.loc 1 200 38 is_stmt 0 discriminator 2 view .LVU32
+ 302 00b8 0134     		adds	r4, r4, #1
+ 303              	.LVL28:
+ 304              	.L9:
+ 305              		.loc 1 200 20 is_stmt 1 discriminator 1 view .LVU33
+ 306              		.loc 1 200 5 is_stmt 0 discriminator 1 view .LVU34
+ 307 00ba 062C     		cmp	r4, #6
+ 308 00bc 13DC     		bgt	.L22
+ 201:Core/Src/freertos.c ****     {
+ 202:Core/Src/freertos.c ****       if(mv_rx[i] == 0x03)
+ 309              		.loc 1 202 7 is_stmt 1 view .LVU35
+ 310              		.loc 1 202 15 is_stmt 0 view .LVU36
+ 311 00be 914B     		ldr	r3, .L24+28
+ 312 00c0 1B5D     		ldrb	r3, [r3, r4]	@ zero_extendqisi2
+ 313              		.loc 1 202 9 view .LVU37
+ 314 00c2 032B     		cmp	r3, #3
+ 315 00c4 F8D1     		bne	.L10
+ 203:Core/Src/freertos.c ****       {
+ 204:Core/Src/freertos.c ****         if(mv_rx[(i + 1) % MV_LEN] == 0x45)
+ 316              		.loc 1 204 9 is_stmt 1 view .LVU38
+ 317              		.loc 1 204 21 is_stmt 0 view .LVU39
+ 318 00c6 611C     		adds	r1, r4, #1
+ 319              		.loc 1 204 26 view .LVU40
+ 320 00c8 8F4B     		ldr	r3, .L24+32
+ 321 00ca 83FB0123 		smull	r2, r3, r3, r1
+ 322 00ce 5A18     		adds	r2, r3, r1
+ 323 00d0 CB17     		asrs	r3, r1, #31
+ 324 00d2 C3EBA203 		rsb	r3, r3, r2, asr #2
+ 325 00d6 C3EBC303 		rsb	r3, r3, r3, lsl #3
+ 326 00da CB1A     		subs	r3, r1, r3
+ 327              		.loc 1 204 17 view .LVU41
+ 328 00dc 894A     		ldr	r2, .L24+28
+ 329 00de D35C     		ldrb	r3, [r2, r3]	@ zero_extendqisi2
+ 330              		.loc 1 204 11 view .LVU42
+ 331 00e0 452B     		cmp	r3, #69
+ 332 00e2 E9D1     		bne	.L10
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s 			page 11
+
+
+ 333 00e4 01E0     		b	.L11
+ 334              	.L22:
+ 335              	.LBE3:
+ 199:Core/Src/freertos.c ****     for(int i = 0; i <= MV_LEN - 1; i++)
+ 336              		.loc 1 199 9 view .LVU43
+ 337 00e6 4FF0FF34 		mov	r4, #-1
+ 338              	.LVL29:
+ 339              	.L11:
+ 205:Core/Src/freertos.c ****         {
+ 206:Core/Src/freertos.c ****           index = i;
+ 207:Core/Src/freertos.c ****           break;
+ 208:Core/Src/freertos.c ****         }
+ 209:Core/Src/freertos.c ****       }
+ 210:Core/Src/freertos.c ****     }
+ 211:Core/Src/freertos.c **** 
+ 212:Core/Src/freertos.c ****     //判断与Openmv通信情况
+ 213:Core/Src/freertos.c ****     if(index != -1)
+ 340              		.loc 1 213 5 is_stmt 1 view .LVU44
+ 341              		.loc 1 213 7 is_stmt 0 view .LVU45
+ 342 00ea B4F1FF3F 		cmp	r4, #-1
+ 343 00ee 00F0D080 		beq	.L13
+ 214:Core/Src/freertos.c ****     {
+ 215:Core/Src/freertos.c ****       state.connect = SUCCEED;
+ 344              		.loc 1 215 7 is_stmt 1 view .LVU46
+ 345              		.loc 1 215 21 is_stmt 0 view .LVU47
+ 346 00f2 864B     		ldr	r3, .L24+36
+ 347 00f4 0122     		movs	r2, #1
+ 348 00f6 9A70     		strb	r2, [r3, #2]
+ 216:Core/Src/freertos.c ****       TFT_DrawStr(122, 10, "SUCCEED", RGB2565(0, 255, 0));
+ 349              		.loc 1 216 7 is_stmt 1 view .LVU48
+ 350 00f8 0022     		movs	r2, #0
+ 351 00fa FF21     		movs	r1, #255
+ 352 00fc 1046     		mov	r0, r2
+ 353 00fe FFF7FEFF 		bl	RGB2565
+ 354              	.LVL30:
+ 355 0102 0346     		mov	r3, r0
+ 356 0104 824A     		ldr	r2, .L24+40
+ 357 0106 0A21     		movs	r1, #10
+ 358 0108 7A20     		movs	r0, #122
+ 359 010a FFF7FEFF 		bl	TFT_DrawStr
+ 360              	.LVL31:
+ 217:Core/Src/freertos.c **** 
+ 218:Core/Src/freertos.c ****       switch (mv_rx[(index + 2) % MV_LEN])
+ 361              		.loc 1 218 7 view .LVU49
+ 362              		.loc 1 218 28 is_stmt 0 view .LVU50
+ 363 010e A11C     		adds	r1, r4, #2
+ 364              		.loc 1 218 33 view .LVU51
+ 365 0110 7D4B     		ldr	r3, .L24+32
+ 366 0112 83FB0123 		smull	r2, r3, r3, r1
+ 367 0116 5A18     		adds	r2, r3, r1
+ 368 0118 CB17     		asrs	r3, r1, #31
+ 369 011a C3EBA203 		rsb	r3, r3, r2, asr #2
+ 370 011e C3EBC303 		rsb	r3, r3, r3, lsl #3
+ 371 0122 CB1A     		subs	r3, r1, r3
+ 372              		.loc 1 218 20 view .LVU52
+ 373 0124 774A     		ldr	r2, .L24+28
+ 374 0126 D35C     		ldrb	r3, [r2, r3]	@ zero_extendqisi2
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s 			page 12
+
+
+ 375              		.loc 1 218 7 view .LVU53
+ 376 0128 4E2B     		cmp	r3, #78
+ 377 012a 00F0A180 		beq	.L14
+ 378 012e 502B     		cmp	r3, #80
+ 379 0130 00F09E80 		beq	.L14
+ 380 0134 462B     		cmp	r3, #70
+ 381 0136 59D0     		beq	.L23
+ 382              	.LVL32:
+ 383              	.L15:
+ 219:Core/Src/freertos.c ****       {
+ 220:Core/Src/freertos.c ****       case 'F':
+ 221:Core/Src/freertos.c ****         state.ballx = mv_rx[(index + 3) % MV_LEN];
+ 222:Core/Src/freertos.c ****         state.bally = mv_rx[(index + 4) % MV_LEN];
+ 223:Core/Src/freertos.c ****         state.ballpix = mv_rx[(index + 5) % MV_LEN] + (mv_rx[(index + 6) % MV_LEN] << 8);
+ 224:Core/Src/freertos.c ****         TFT_DrawStr(122, 30, "FIND    ", RGB2565(0, 255, 0));
+ 225:Core/Src/freertos.c ****         break;
+ 226:Core/Src/freertos.c ****       case 'N':
+ 227:Core/Src/freertos.c ****       case 'P':
+ 228:Core/Src/freertos.c ****         state.ballx = 0;
+ 229:Core/Src/freertos.c ****         state.bally = 0;
+ 230:Core/Src/freertos.c ****         state.ballpix = 0;
+ 231:Core/Src/freertos.c ****         TFT_DrawStr(122, 30, "NOT FIND", RGB2565(255, 30, 30));
+ 232:Core/Src/freertos.c ****         break;
+ 233:Core/Src/freertos.c ****       }
+ 234:Core/Src/freertos.c ****     }
+ 235:Core/Src/freertos.c ****     else
+ 236:Core/Src/freertos.c ****     {
+ 237:Core/Src/freertos.c ****       state.connect = FAILED;
+ 238:Core/Src/freertos.c ****       state.ballx = 0;
+ 239:Core/Src/freertos.c ****       state.bally = 0;
+ 240:Core/Src/freertos.c ****       state.ballpix = 0;
+ 241:Core/Src/freertos.c ****       TFT_DrawStr(122, 10, "FAILED ", RGB2565(255, 30, 30));
+ 242:Core/Src/freertos.c ****     }
+ 243:Core/Src/freertos.c **** 
+ 244:Core/Src/freertos.c ****     //显示运动信息
+ 245:Core/Src/freertos.c ****     if(state.control == REMOTE) TFT_DrawStr(122, 50, "REMOTE", RGB2565(142, 214, 232));
+ 384              		.loc 1 245 5 is_stmt 1 view .LVU54
+ 385              		.loc 1 245 13 is_stmt 0 view .LVU55
+ 386 0138 744B     		ldr	r3, .L24+36
+ 387 013a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 388              		.loc 1 245 7 view .LVU56
+ 389 013c 002B     		cmp	r3, #0
+ 390 013e 40F0BB80 		bne	.L16
+ 391              		.loc 1 245 33 is_stmt 1 discriminator 1 view .LVU57
+ 392 0142 E822     		movs	r2, #232
+ 393 0144 D621     		movs	r1, #214
+ 394 0146 8E20     		movs	r0, #142
+ 395 0148 FFF7FEFF 		bl	RGB2565
+ 396              	.LVL33:
+ 397 014c 0346     		mov	r3, r0
+ 398 014e 714A     		ldr	r2, .L24+44
+ 399 0150 3221     		movs	r1, #50
+ 400 0152 7A20     		movs	r0, #122
+ 401 0154 FFF7FEFF 		bl	TFT_DrawStr
+ 402              	.LVL34:
+ 403              	.L17:
+ 246:Core/Src/freertos.c ****     else TFT_DrawStr(122, 50, "AUTO  ", RGB2565(255, 209, 53));
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s 			page 13
+
+
+ 247:Core/Src/freertos.c **** 
+ 248:Core/Src/freertos.c ****     TFT_DrawStr(122, 70, TFT_Itoa(state.vx), RGB2565(255, 128, 192));
+ 404              		.loc 1 248 5 view .LVU58
+ 405              		.loc 1 248 40 is_stmt 0 view .LVU59
+ 406 0158 6C4C     		ldr	r4, .L24+36
+ 407              		.loc 1 248 5 view .LVU60
+ 408 015a 94F90400 		ldrsb	r0, [r4, #4]
+ 409 015e FFF7FEFF 		bl	TFT_Itoa
+ 410              	.LVL35:
+ 411 0162 0546     		mov	r5, r0
+ 412 0164 C022     		movs	r2, #192
+ 413 0166 8021     		movs	r1, #128
+ 414 0168 FF20     		movs	r0, #255
+ 415 016a FFF7FEFF 		bl	RGB2565
+ 416              	.LVL36:
+ 417 016e 0346     		mov	r3, r0
+ 418 0170 2A46     		mov	r2, r5
+ 419 0172 4621     		movs	r1, #70
+ 420 0174 7A20     		movs	r0, #122
+ 421 0176 FFF7FEFF 		bl	TFT_DrawStr
+ 422              	.LVL37:
+ 249:Core/Src/freertos.c ****     TFT_DrawStr(122, 90, TFT_Itoa(state.vy), RGB2565(255, 128, 192));
+ 423              		.loc 1 249 5 is_stmt 1 view .LVU61
+ 424 017a 94F90500 		ldrsb	r0, [r4, #5]
+ 425 017e FFF7FEFF 		bl	TFT_Itoa
+ 426              	.LVL38:
+ 427 0182 0546     		mov	r5, r0
+ 428 0184 C022     		movs	r2, #192
+ 429 0186 8021     		movs	r1, #128
+ 430 0188 FF20     		movs	r0, #255
+ 431 018a FFF7FEFF 		bl	RGB2565
+ 432              	.LVL39:
+ 433 018e 0346     		mov	r3, r0
+ 434 0190 2A46     		mov	r2, r5
+ 435 0192 5A21     		movs	r1, #90
+ 436 0194 7A20     		movs	r0, #122
+ 437 0196 FFF7FEFF 		bl	TFT_DrawStr
+ 438              	.LVL40:
+ 250:Core/Src/freertos.c ****     TFT_DrawStr(122, 110, TFT_Itoa(state.rorate), RGB2565(255, 128, 192));
+ 439              		.loc 1 250 5 view .LVU62
+ 440 019a 94F90600 		ldrsb	r0, [r4, #6]
+ 441 019e FFF7FEFF 		bl	TFT_Itoa
+ 442              	.LVL41:
+ 443 01a2 0546     		mov	r5, r0
+ 444 01a4 C022     		movs	r2, #192
+ 445 01a6 8021     		movs	r1, #128
+ 446 01a8 FF20     		movs	r0, #255
+ 447 01aa FFF7FEFF 		bl	RGB2565
+ 448              	.LVL42:
+ 449 01ae 0346     		mov	r3, r0
+ 450 01b0 2A46     		mov	r2, r5
+ 451 01b2 6E21     		movs	r1, #110
+ 452 01b4 7A20     		movs	r0, #122
+ 453 01b6 FFF7FEFF 		bl	TFT_DrawStr
+ 454              	.LVL43:
+ 251:Core/Src/freertos.c **** 
+ 252:Core/Src/freertos.c ****     if(state.frame == UP) TFT_DrawStr(122, 130, "UP  ", RGB2565(142, 214, 232));
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s 			page 14
+
+
+ 455              		.loc 1 252 5 view .LVU63
+ 456              		.loc 1 252 13 is_stmt 0 view .LVU64
+ 457 01ba 6378     		ldrb	r3, [r4, #1]	@ zero_extendqisi2
+ 458              		.loc 1 252 7 view .LVU65
+ 459 01bc 012B     		cmp	r3, #1
+ 460 01be 40F08780 		bne	.L18
+ 461              		.loc 1 252 27 is_stmt 1 discriminator 1 view .LVU66
+ 462 01c2 E822     		movs	r2, #232
+ 463 01c4 D621     		movs	r1, #214
+ 464 01c6 8E20     		movs	r0, #142
+ 465 01c8 FFF7FEFF 		bl	RGB2565
+ 466              	.LVL44:
+ 467 01cc 0346     		mov	r3, r0
+ 468 01ce 524A     		ldr	r2, .L24+48
+ 469 01d0 8221     		movs	r1, #130
+ 470 01d2 7A20     		movs	r0, #122
+ 471 01d4 FFF7FEFF 		bl	TFT_DrawStr
+ 472              	.LVL45:
+ 473              	.L19:
+ 253:Core/Src/freertos.c ****     else TFT_DrawStr(122, 130, "DOWN", RGB2565(255, 209, 53));
+ 254:Core/Src/freertos.c ****     
+ 255:Core/Src/freertos.c ****     osDelay(1);
+ 474              		.loc 1 255 5 view .LVU67
+ 475 01d8 0120     		movs	r0, #1
+ 476 01da FFF7FEFF 		bl	osDelay
+ 477              	.LVL46:
+ 478              	.LBE2:
+ 195:Core/Src/freertos.c ****   {
+ 479              		.loc 1 195 8 view .LVU68
+ 480              	.L20:
+ 195:Core/Src/freertos.c ****   {
+ 481              		.loc 1 195 3 view .LVU69
+ 482              	.LBB5:
+ 197:Core/Src/freertos.c ****     //Openmv收到的数据可能错位
+ 483              		.loc 1 197 5 view .LVU70
+ 484 01de 0722     		movs	r2, #7
+ 485 01e0 4849     		ldr	r1, .L24+28
+ 486 01e2 4E48     		ldr	r0, .L24+52
+ 487 01e4 FFF7FEFF 		bl	HAL_UART_Receive_DMA
+ 488              	.LVL47:
+ 199:Core/Src/freertos.c ****     for(int i = 0; i <= MV_LEN - 1; i++)
+ 489              		.loc 1 199 5 view .LVU71
+ 200:Core/Src/freertos.c ****     {
+ 490              		.loc 1 200 5 view .LVU72
+ 491              	.LBB4:
+ 200:Core/Src/freertos.c ****     {
+ 492              		.loc 1 200 9 view .LVU73
+ 200:Core/Src/freertos.c ****     {
+ 493              		.loc 1 200 13 is_stmt 0 view .LVU74
+ 494 01e8 0024     		movs	r4, #0
+ 200:Core/Src/freertos.c ****     {
+ 495              		.loc 1 200 5 view .LVU75
+ 496 01ea 66E7     		b	.L9
+ 497              	.LVL48:
+ 498              	.L23:
+ 200:Core/Src/freertos.c ****     {
+ 499              		.loc 1 200 5 view .LVU76
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s 			page 15
+
+
+ 500              	.LBE4:
+ 221:Core/Src/freertos.c ****         state.bally = mv_rx[(index + 4) % MV_LEN];
+ 501              		.loc 1 221 9 is_stmt 1 view .LVU77
+ 221:Core/Src/freertos.c ****         state.bally = mv_rx[(index + 4) % MV_LEN];
+ 502              		.loc 1 221 36 is_stmt 0 view .LVU78
+ 503 01ec E11C     		adds	r1, r4, #3
+ 221:Core/Src/freertos.c ****         state.bally = mv_rx[(index + 4) % MV_LEN];
+ 504              		.loc 1 221 41 view .LVU79
+ 505 01ee 464B     		ldr	r3, .L24+32
+ 506 01f0 83FB0102 		smull	r0, r2, r3, r1
+ 507 01f4 5018     		adds	r0, r2, r1
+ 508 01f6 CA17     		asrs	r2, r1, #31
+ 509 01f8 C2EBA002 		rsb	r2, r2, r0, asr #2
+ 510 01fc C2EBC202 		rsb	r2, r2, r2, lsl #3
+ 511 0200 8A1A     		subs	r2, r1, r2
+ 221:Core/Src/freertos.c ****         state.bally = mv_rx[(index + 4) % MV_LEN];
+ 512              		.loc 1 221 28 view .LVU80
+ 513 0202 4049     		ldr	r1, .L24+28
+ 514 0204 8A5C     		ldrb	r2, [r1, r2]	@ zero_extendqisi2
+ 221:Core/Src/freertos.c ****         state.bally = mv_rx[(index + 4) % MV_LEN];
+ 515              		.loc 1 221 21 view .LVU81
+ 516 0206 4148     		ldr	r0, .L24+36
+ 517 0208 C271     		strb	r2, [r0, #7]
+ 222:Core/Src/freertos.c ****         state.ballpix = mv_rx[(index + 5) % MV_LEN] + (mv_rx[(index + 6) % MV_LEN] << 8);
+ 518              		.loc 1 222 9 is_stmt 1 view .LVU82
+ 222:Core/Src/freertos.c ****         state.ballpix = mv_rx[(index + 5) % MV_LEN] + (mv_rx[(index + 6) % MV_LEN] << 8);
+ 519              		.loc 1 222 36 is_stmt 0 view .LVU83
+ 520 020a 251D     		adds	r5, r4, #4
+ 222:Core/Src/freertos.c ****         state.ballpix = mv_rx[(index + 5) % MV_LEN] + (mv_rx[(index + 6) % MV_LEN] << 8);
+ 521              		.loc 1 222 41 view .LVU84
+ 522 020c 83FB05C2 		smull	ip, r2, r3, r5
+ 523 0210 02EB050C 		add	ip, r2, r5
+ 524 0214 EA17     		asrs	r2, r5, #31
+ 525 0216 C2EBAC02 		rsb	r2, r2, ip, asr #2
+ 526 021a C2EBC202 		rsb	r2, r2, r2, lsl #3
+ 527 021e AA1A     		subs	r2, r5, r2
+ 222:Core/Src/freertos.c ****         state.ballpix = mv_rx[(index + 5) % MV_LEN] + (mv_rx[(index + 6) % MV_LEN] << 8);
+ 528              		.loc 1 222 28 view .LVU85
+ 529 0220 8A5C     		ldrb	r2, [r1, r2]	@ zero_extendqisi2
+ 222:Core/Src/freertos.c ****         state.ballpix = mv_rx[(index + 5) % MV_LEN] + (mv_rx[(index + 6) % MV_LEN] << 8);
+ 530              		.loc 1 222 21 view .LVU86
+ 531 0222 0272     		strb	r2, [r0, #8]
+ 223:Core/Src/freertos.c ****         TFT_DrawStr(122, 30, "FIND    ", RGB2565(0, 255, 0));
+ 532              		.loc 1 223 9 is_stmt 1 view .LVU87
+ 223:Core/Src/freertos.c ****         TFT_DrawStr(122, 30, "FIND    ", RGB2565(0, 255, 0));
+ 533              		.loc 1 223 38 is_stmt 0 view .LVU88
+ 534 0224 651D     		adds	r5, r4, #5
+ 223:Core/Src/freertos.c ****         TFT_DrawStr(122, 30, "FIND    ", RGB2565(0, 255, 0));
+ 535              		.loc 1 223 43 view .LVU89
+ 536 0226 83FB05C2 		smull	ip, r2, r3, r5
+ 537 022a 02EB050C 		add	ip, r2, r5
+ 538 022e EA17     		asrs	r2, r5, #31
+ 539 0230 C2EBAC02 		rsb	r2, r2, ip, asr #2
+ 540 0234 C2EBC202 		rsb	r2, r2, r2, lsl #3
+ 541 0238 AA1A     		subs	r2, r5, r2
+ 223:Core/Src/freertos.c ****         TFT_DrawStr(122, 30, "FIND    ", RGB2565(0, 255, 0));
+ 542              		.loc 1 223 30 view .LVU90
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s 			page 16
+
+
+ 543 023a 8D5C     		ldrb	r5, [r1, r2]	@ zero_extendqisi2
+ 223:Core/Src/freertos.c ****         TFT_DrawStr(122, 30, "FIND    ", RGB2565(0, 255, 0));
+ 544              		.loc 1 223 69 view .LVU91
+ 545 023c 0634     		adds	r4, r4, #6
+ 546              	.LVL49:
+ 223:Core/Src/freertos.c ****         TFT_DrawStr(122, 30, "FIND    ", RGB2565(0, 255, 0));
+ 547              		.loc 1 223 74 view .LVU92
+ 548 023e 83FB0423 		smull	r2, r3, r3, r4
+ 549 0242 1A19     		adds	r2, r3, r4
+ 550 0244 E317     		asrs	r3, r4, #31
+ 551 0246 C3EBA203 		rsb	r3, r3, r2, asr #2
+ 552 024a C3EBC303 		rsb	r3, r3, r3, lsl #3
+ 553 024e E31A     		subs	r3, r4, r3
+ 223:Core/Src/freertos.c ****         TFT_DrawStr(122, 30, "FIND    ", RGB2565(0, 255, 0));
+ 554              		.loc 1 223 61 view .LVU93
+ 555 0250 CB5C     		ldrb	r3, [r1, r3]	@ zero_extendqisi2
+ 223:Core/Src/freertos.c ****         TFT_DrawStr(122, 30, "FIND    ", RGB2565(0, 255, 0));
+ 556              		.loc 1 223 53 view .LVU94
+ 557 0252 05EB0323 		add	r3, r5, r3, lsl #8
+ 223:Core/Src/freertos.c ****         TFT_DrawStr(122, 30, "FIND    ", RGB2565(0, 255, 0));
+ 558              		.loc 1 223 23 view .LVU95
+ 559 0256 4381     		strh	r3, [r0, #10]	@ movhi
+ 224:Core/Src/freertos.c ****         break;
+ 560              		.loc 1 224 9 is_stmt 1 view .LVU96
+ 561 0258 0022     		movs	r2, #0
+ 562 025a FF21     		movs	r1, #255
+ 563 025c 1046     		mov	r0, r2
+ 564 025e FFF7FEFF 		bl	RGB2565
+ 565              	.LVL50:
+ 566 0262 0346     		mov	r3, r0
+ 567 0264 2E4A     		ldr	r2, .L24+56
+ 568 0266 1E21     		movs	r1, #30
+ 569 0268 7A20     		movs	r0, #122
+ 570 026a FFF7FEFF 		bl	TFT_DrawStr
+ 571              	.LVL51:
+ 225:Core/Src/freertos.c ****       case 'N':
+ 572              		.loc 1 225 9 view .LVU97
+ 573 026e 63E7     		b	.L15
+ 574              	.LVL52:
+ 575              	.L14:
+ 228:Core/Src/freertos.c ****         state.bally = 0;
+ 576              		.loc 1 228 9 view .LVU98
+ 228:Core/Src/freertos.c ****         state.bally = 0;
+ 577              		.loc 1 228 21 is_stmt 0 view .LVU99
+ 578 0270 264B     		ldr	r3, .L24+36
+ 579 0272 0022     		movs	r2, #0
+ 580 0274 DA71     		strb	r2, [r3, #7]
+ 229:Core/Src/freertos.c ****         state.ballpix = 0;
+ 581              		.loc 1 229 9 is_stmt 1 view .LVU100
+ 229:Core/Src/freertos.c ****         state.ballpix = 0;
+ 582              		.loc 1 229 21 is_stmt 0 view .LVU101
+ 583 0276 1A72     		strb	r2, [r3, #8]
+ 230:Core/Src/freertos.c ****         TFT_DrawStr(122, 30, "NOT FIND", RGB2565(255, 30, 30));
+ 584              		.loc 1 230 9 is_stmt 1 view .LVU102
+ 230:Core/Src/freertos.c ****         TFT_DrawStr(122, 30, "NOT FIND", RGB2565(255, 30, 30));
+ 585              		.loc 1 230 23 is_stmt 0 view .LVU103
+ 586 0278 5A81     		strh	r2, [r3, #10]	@ movhi
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s 			page 17
+
+
+ 231:Core/Src/freertos.c ****         break;
+ 587              		.loc 1 231 9 is_stmt 1 view .LVU104
+ 588 027a 1E22     		movs	r2, #30
+ 589 027c 1146     		mov	r1, r2
+ 590 027e FF20     		movs	r0, #255
+ 591 0280 FFF7FEFF 		bl	RGB2565
+ 592              	.LVL53:
+ 593 0284 0346     		mov	r3, r0
+ 594 0286 274A     		ldr	r2, .L24+60
+ 595 0288 1E21     		movs	r1, #30
+ 596 028a 7A20     		movs	r0, #122
+ 597 028c FFF7FEFF 		bl	TFT_DrawStr
+ 598              	.LVL54:
+ 232:Core/Src/freertos.c ****       }
+ 599              		.loc 1 232 9 view .LVU105
+ 600 0290 52E7     		b	.L15
+ 601              	.L13:
+ 237:Core/Src/freertos.c ****       state.ballx = 0;
+ 602              		.loc 1 237 7 view .LVU106
+ 237:Core/Src/freertos.c ****       state.ballx = 0;
+ 603              		.loc 1 237 21 is_stmt 0 view .LVU107
+ 604 0292 1E4B     		ldr	r3, .L24+36
+ 605 0294 0222     		movs	r2, #2
+ 606 0296 9A70     		strb	r2, [r3, #2]
+ 238:Core/Src/freertos.c ****       state.bally = 0;
+ 607              		.loc 1 238 7 is_stmt 1 view .LVU108
+ 238:Core/Src/freertos.c ****       state.bally = 0;
+ 608              		.loc 1 238 19 is_stmt 0 view .LVU109
+ 609 0298 0022     		movs	r2, #0
+ 610 029a DA71     		strb	r2, [r3, #7]
+ 239:Core/Src/freertos.c ****       state.ballpix = 0;
+ 611              		.loc 1 239 7 is_stmt 1 view .LVU110
+ 239:Core/Src/freertos.c ****       state.ballpix = 0;
+ 612              		.loc 1 239 19 is_stmt 0 view .LVU111
+ 613 029c 1A72     		strb	r2, [r3, #8]
+ 240:Core/Src/freertos.c ****       TFT_DrawStr(122, 10, "FAILED ", RGB2565(255, 30, 30));
+ 614              		.loc 1 240 7 is_stmt 1 view .LVU112
+ 240:Core/Src/freertos.c ****       TFT_DrawStr(122, 10, "FAILED ", RGB2565(255, 30, 30));
+ 615              		.loc 1 240 21 is_stmt 0 view .LVU113
+ 616 029e 5A81     		strh	r2, [r3, #10]	@ movhi
+ 241:Core/Src/freertos.c ****     }
+ 617              		.loc 1 241 7 is_stmt 1 view .LVU114
+ 618 02a0 1E22     		movs	r2, #30
+ 619 02a2 1146     		mov	r1, r2
+ 620 02a4 FF20     		movs	r0, #255
+ 621 02a6 FFF7FEFF 		bl	RGB2565
+ 622              	.LVL55:
+ 623 02aa 0346     		mov	r3, r0
+ 624 02ac 1E4A     		ldr	r2, .L24+64
+ 625 02ae 0A21     		movs	r1, #10
+ 626 02b0 7A20     		movs	r0, #122
+ 627 02b2 FFF7FEFF 		bl	TFT_DrawStr
+ 628              	.LVL56:
+ 629 02b6 3FE7     		b	.L15
+ 630              	.LVL57:
+ 631              	.L16:
+ 246:Core/Src/freertos.c **** 
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s 			page 18
+
+
+ 632              		.loc 1 246 10 view .LVU115
+ 633 02b8 3522     		movs	r2, #53
+ 634 02ba D121     		movs	r1, #209
+ 635 02bc FF20     		movs	r0, #255
+ 636 02be FFF7FEFF 		bl	RGB2565
+ 637              	.LVL58:
+ 638 02c2 0346     		mov	r3, r0
+ 639 02c4 194A     		ldr	r2, .L24+68
+ 640 02c6 3221     		movs	r1, #50
+ 641 02c8 7A20     		movs	r0, #122
+ 642 02ca FFF7FEFF 		bl	TFT_DrawStr
+ 643              	.LVL59:
+ 644 02ce 43E7     		b	.L17
+ 645              	.L18:
+ 253:Core/Src/freertos.c ****     
+ 646              		.loc 1 253 10 view .LVU116
+ 647 02d0 3522     		movs	r2, #53
+ 648 02d2 D121     		movs	r1, #209
+ 649 02d4 FF20     		movs	r0, #255
+ 650 02d6 FFF7FEFF 		bl	RGB2565
+ 651              	.LVL60:
+ 652 02da 0346     		mov	r3, r0
+ 653 02dc 144A     		ldr	r2, .L24+72
+ 654 02de 8221     		movs	r1, #130
+ 655 02e0 7A20     		movs	r0, #122
+ 656 02e2 FFF7FEFF 		bl	TFT_DrawStr
+ 657              	.LVL61:
+ 658 02e6 77E7     		b	.L19
+ 659              	.L25:
+ 660              		.align	2
+ 661              	.L24:
+ 662 02e8 00000000 		.word	.LC8
+ 663 02ec 0C000000 		.word	.LC9
+ 664 02f0 14000000 		.word	.LC10
+ 665 02f4 20000000 		.word	.LC11
+ 666 02f8 2C000000 		.word	.LC12
+ 667 02fc 38000000 		.word	.LC13
+ 668 0300 44000000 		.word	.LC14
+ 669 0304 00000000 		.word	.LANCHOR1
+ 670 0308 93244992 		.word	-1840700269
+ 671 030c 00000000 		.word	.LANCHOR0
+ 672 0310 4C000000 		.word	.LC15
+ 673 0314 74000000 		.word	.LC19
+ 674 0318 84000000 		.word	.LC21
+ 675 031c 00000000 		.word	huart3
+ 676 0320 54000000 		.word	.LC16
+ 677 0324 60000000 		.word	.LC17
+ 678 0328 6C000000 		.word	.LC18
+ 679 032c 7C000000 		.word	.LC20
+ 680 0330 8C000000 		.word	.LC22
+ 681              	.LBE5:
+ 682              		.cfi_endproc
+ 683              	.LFE76:
+ 685              		.section	.text.StartPS2Task,"ax",%progbits
+ 686              		.align	1
+ 687              		.global	StartPS2Task
+ 688              		.syntax unified
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s 			page 19
+
+
+ 689              		.thumb
+ 690              		.thumb_func
+ 692              	StartPS2Task:
+ 693              	.LFB77:
+ 256:Core/Src/freertos.c ****   }
+ 257:Core/Src/freertos.c ****   /* USER CODE END StartImageTask */
+ 258:Core/Src/freertos.c **** }
+ 259:Core/Src/freertos.c **** 
+ 260:Core/Src/freertos.c **** /* USER CODE BEGIN Header_StartPS2Task */
+ 261:Core/Src/freertos.c **** /**
+ 262:Core/Src/freertos.c **** * @brief Function implementing the PS2_Recv_Task thread.
+ 263:Core/Src/freertos.c **** * @param argument: Not used
+ 264:Core/Src/freertos.c **** * @retval None
+ 265:Core/Src/freertos.c **** */
+ 266:Core/Src/freertos.c **** /* USER CODE END Header_StartPS2Task */
+ 267:Core/Src/freertos.c **** void StartPS2Task(void const * argument)
+ 268:Core/Src/freertos.c **** {
+ 694              		.loc 1 268 1 view -0
+ 695              		.cfi_startproc
+ 696              		@ Volatile: function does not return.
+ 697              		@ args = 0, pretend = 0, frame = 0
+ 698              		@ frame_needed = 0, uses_anonymous_args = 0
+ 699              	.LVL62:
+ 700              		.loc 1 268 1 is_stmt 0 view .LVU118
+ 701 0000 08B5     		push	{r3, lr}
+ 702              	.LCFI4:
+ 703              		.cfi_def_cfa_offset 8
+ 704              		.cfi_offset 3, -8
+ 705              		.cfi_offset 14, -4
+ 706              	.LVL63:
+ 707              	.L27:
+ 269:Core/Src/freertos.c ****   /* USER CODE BEGIN StartPS2Task */
+ 270:Core/Src/freertos.c ****   /* Infinite loop */
+ 271:Core/Src/freertos.c ****   for(;;)
+ 708              		.loc 1 271 3 is_stmt 1 discriminator 1 view .LVU119
+ 272:Core/Src/freertos.c ****   {
+ 273:Core/Src/freertos.c ****     PS2_ReadData(ps2_rx);
+ 709              		.loc 1 273 5 discriminator 1 view .LVU120
+ 710 0002 064C     		ldr	r4, .L29
+ 711 0004 2046     		mov	r0, r4
+ 712 0006 FFF7FEFF 		bl	PS2_ReadData
+ 713              	.LVL64:
+ 274:Core/Src/freertos.c ****     PS2_Solve(&state, ps2_rx);
+ 714              		.loc 1 274 5 discriminator 1 view .LVU121
+ 715 000a 2146     		mov	r1, r4
+ 716 000c 0448     		ldr	r0, .L29+4
+ 717 000e FFF7FEFF 		bl	PS2_Solve
+ 718              	.LVL65:
+ 275:Core/Src/freertos.c ****     osDelay(1);
+ 719              		.loc 1 275 5 discriminator 1 view .LVU122
+ 720 0012 0120     		movs	r0, #1
+ 721 0014 FFF7FEFF 		bl	osDelay
+ 722              	.LVL66:
+ 271:Core/Src/freertos.c ****   {
+ 723              		.loc 1 271 8 discriminator 1 view .LVU123
+ 724 0018 F3E7     		b	.L27
+ 725              	.L30:
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s 			page 20
+
+
+ 726 001a 00BF     		.align	2
+ 727              	.L29:
+ 728 001c 00000000 		.word	.LANCHOR2
+ 729 0020 00000000 		.word	.LANCHOR0
+ 730              		.cfi_endproc
+ 731              	.LFE77:
+ 733              		.global	__aeabi_ui2d
+ 734              		.global	__aeabi_dmul
+ 735              		.global	__aeabi_d2uiz
+ 736              		.section	.text.StartMotorServoTask,"ax",%progbits
+ 737              		.align	1
+ 738              		.global	StartMotorServoTask
+ 739              		.syntax unified
+ 740              		.thumb
+ 741              		.thumb_func
+ 743              	StartMotorServoTask:
+ 744              	.LVL67:
+ 745              	.LFB78:
+ 276:Core/Src/freertos.c ****   }
+ 277:Core/Src/freertos.c ****   /* USER CODE END StartPS2Task */
+ 278:Core/Src/freertos.c **** }
+ 279:Core/Src/freertos.c **** 
+ 280:Core/Src/freertos.c **** /* USER CODE BEGIN Header_StartMotorServoTask */
+ 281:Core/Src/freertos.c **** /**
+ 282:Core/Src/freertos.c **** * @brief Function implementing the MotorServo_Task thread.
+ 283:Core/Src/freertos.c **** * @param argument: Not used
+ 284:Core/Src/freertos.c **** * @retval None
+ 285:Core/Src/freertos.c **** */
+ 286:Core/Src/freertos.c **** /* USER CODE END Header_StartMotorServoTask */
+ 287:Core/Src/freertos.c **** void StartMotorServoTask(void const * argument)
+ 288:Core/Src/freertos.c **** {
+ 746              		.loc 1 288 1 view -0
+ 747              		.cfi_startproc
+ 748              		@ Volatile: function does not return.
+ 749              		@ args = 0, pretend = 0, frame = 0
+ 750              		@ frame_needed = 0, uses_anonymous_args = 0
+ 751              		.loc 1 288 1 is_stmt 0 view .LVU125
+ 752 0000 80B5     		push	{r7, lr}
+ 753              	.LCFI5:
+ 754              		.cfi_def_cfa_offset 8
+ 755              		.cfi_offset 7, -8
+ 756              		.cfi_offset 14, -4
+ 757 0002 82B0     		sub	sp, sp, #8
+ 758              	.LCFI6:
+ 759              		.cfi_def_cfa_offset 16
+ 289:Core/Src/freertos.c ****   /* USER CODE BEGIN StartMotorServoTask */
+ 290:Core/Src/freertos.c ****   HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
+ 760              		.loc 1 290 3 is_stmt 1 view .LVU126
+ 761 0004 584C     		ldr	r4, .L37+32
+ 762 0006 0021     		movs	r1, #0
+ 763 0008 2046     		mov	r0, r4
+ 764              	.LVL68:
+ 765              		.loc 1 290 3 is_stmt 0 view .LVU127
+ 766 000a FFF7FEFF 		bl	HAL_TIM_PWM_Start
+ 767              	.LVL69:
+ 291:Core/Src/freertos.c ****   HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
+ 768              		.loc 1 291 3 is_stmt 1 view .LVU128
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s 			page 21
+
+
+ 769 000e 0421     		movs	r1, #4
+ 770 0010 2046     		mov	r0, r4
+ 771 0012 FFF7FEFF 		bl	HAL_TIM_PWM_Start
+ 772              	.LVL70:
+ 292:Core/Src/freertos.c ****   HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_3);
+ 773              		.loc 1 292 3 view .LVU129
+ 774 0016 0821     		movs	r1, #8
+ 775 0018 2046     		mov	r0, r4
+ 776 001a FFF7FEFF 		bl	HAL_TIM_PWM_Start
+ 777              	.LVL71:
+ 293:Core/Src/freertos.c ****   HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_4);
+ 778              		.loc 1 293 3 view .LVU130
+ 779 001e 0C21     		movs	r1, #12
+ 780 0020 2046     		mov	r0, r4
+ 781 0022 FFF7FEFF 		bl	HAL_TIM_PWM_Start
+ 782              	.LVL72:
+ 294:Core/Src/freertos.c **** 
+ 295:Core/Src/freertos.c ****   motor_lf = (motor*)malloc(sizeof(motor));
+ 783              		.loc 1 295 3 view .LVU131
+ 784              		.loc 1 295 22 is_stmt 0 view .LVU132
+ 785 0026 0C20     		movs	r0, #12
+ 786 0028 FFF7FEFF 		bl	malloc
+ 787              	.LVL73:
+ 788 002c 0446     		mov	r4, r0
+ 789              		.loc 1 295 12 view .LVU133
+ 790 002e 4F4B     		ldr	r3, .L37+36
+ 791 0030 1860     		str	r0, [r3]
+ 296:Core/Src/freertos.c ****   motor_rf = (motor*)malloc(sizeof(motor));
+ 792              		.loc 1 296 3 is_stmt 1 view .LVU134
+ 793              		.loc 1 296 22 is_stmt 0 view .LVU135
+ 794 0032 0C20     		movs	r0, #12
+ 795 0034 FFF7FEFF 		bl	malloc
+ 796              	.LVL74:
+ 797              		.loc 1 296 12 view .LVU136
+ 798 0038 4D4F     		ldr	r7, .L37+40
+ 799 003a 3860     		str	r0, [r7]
+ 297:Core/Src/freertos.c ****   motor_rb = (motor*)malloc(sizeof(motor));
+ 800              		.loc 1 297 3 is_stmt 1 view .LVU137
+ 801              		.loc 1 297 22 is_stmt 0 view .LVU138
+ 802 003c 0C20     		movs	r0, #12
+ 803 003e FFF7FEFF 		bl	malloc
+ 804              	.LVL75:
+ 805              		.loc 1 297 12 view .LVU139
+ 806 0042 4C4E     		ldr	r6, .L37+44
+ 807 0044 3060     		str	r0, [r6]
+ 298:Core/Src/freertos.c ****   motor_lb = (motor*)malloc(sizeof(motor));
+ 808              		.loc 1 298 3 is_stmt 1 view .LVU140
+ 809              		.loc 1 298 22 is_stmt 0 view .LVU141
+ 810 0046 0C20     		movs	r0, #12
+ 811 0048 FFF7FEFF 		bl	malloc
+ 812              	.LVL76:
+ 813              		.loc 1 298 12 view .LVU142
+ 814 004c 4A4D     		ldr	r5, .L37+48
+ 815 004e 2860     		str	r0, [r5]
+ 299:Core/Src/freertos.c **** 
+ 300:Core/Src/freertos.c ****   Motor_Init(motor_lf, &TIM2->CCR1, GPIOA, GPIO_PIN_8, GPIO_PIN_9);
+ 816              		.loc 1 300 3 is_stmt 1 view .LVU143
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s 			page 22
+
+
+ 817 0050 DFF82881 		ldr	r8, .L37+52
+ 818 0054 4FF40073 		mov	r3, #512
+ 819 0058 0093     		str	r3, [sp]
+ 820 005a 4FF48073 		mov	r3, #256
+ 821 005e 4246     		mov	r2, r8
+ 822 0060 4749     		ldr	r1, .L37+56
+ 823 0062 2046     		mov	r0, r4
+ 824 0064 FFF7FEFF 		bl	Motor_Init
+ 825              	.LVL77:
+ 301:Core/Src/freertos.c ****   Motor_Init(motor_rf, &TIM2->CCR2, GPIOA, GPIO_PIN_11, GPIO_PIN_10);
+ 826              		.loc 1 301 3 view .LVU144
+ 827 0068 4FF48064 		mov	r4, #1024
+ 828 006c 0094     		str	r4, [sp]
+ 829 006e 4FF40063 		mov	r3, #2048
+ 830 0072 4246     		mov	r2, r8
+ 831 0074 4349     		ldr	r1, .L37+60
+ 832 0076 3868     		ldr	r0, [r7]
+ 833 0078 FFF7FEFF 		bl	Motor_Init
+ 834              	.LVL78:
+ 302:Core/Src/freertos.c ****   Motor_Init(motor_rb, &TIM2->CCR3, GPIOC, GPIO_PIN_11, GPIO_PIN_10);
+ 835              		.loc 1 302 3 view .LVU145
+ 836 007c 0094     		str	r4, [sp]
+ 837 007e 4FF40063 		mov	r3, #2048
+ 838 0082 414A     		ldr	r2, .L37+64
+ 839 0084 4149     		ldr	r1, .L37+68
+ 840 0086 3068     		ldr	r0, [r6]
+ 841 0088 FFF7FEFF 		bl	Motor_Init
+ 842              	.LVL79:
+ 303:Core/Src/freertos.c ****   Motor_Init(motor_lb, &TIM2->CCR4, GPIOB, GPIO_PIN_5, GPIO_PIN_4);
+ 843              		.loc 1 303 3 view .LVU146
+ 844 008c 1023     		movs	r3, #16
+ 845 008e 0093     		str	r3, [sp]
+ 846 0090 2023     		movs	r3, #32
+ 847 0092 3F4A     		ldr	r2, .L37+72
+ 848 0094 3F49     		ldr	r1, .L37+76
+ 849 0096 2868     		ldr	r0, [r5]
+ 850 0098 FFF7FEFF 		bl	Motor_Init
+ 851              	.LVL80:
+ 304:Core/Src/freertos.c **** 
+ 305:Core/Src/freertos.c ****   HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);
+ 852              		.loc 1 305 3 view .LVU147
+ 853 009c 3E4C     		ldr	r4, .L37+80
+ 854 009e 0021     		movs	r1, #0
+ 855 00a0 2046     		mov	r0, r4
+ 856 00a2 FFF7FEFF 		bl	HAL_TIM_PWM_Start
+ 857              	.LVL81:
+ 306:Core/Src/freertos.c ****   HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_2);
+ 858              		.loc 1 306 3 view .LVU148
+ 859 00a6 0421     		movs	r1, #4
+ 860 00a8 2046     		mov	r0, r4
+ 861 00aa FFF7FEFF 		bl	HAL_TIM_PWM_Start
+ 862              	.LVL82:
+ 307:Core/Src/freertos.c **** 
+ 308:Core/Src/freertos.c ****   state.frame = UP;
+ 863              		.loc 1 308 3 view .LVU149
+ 864              		.loc 1 308 15 is_stmt 0 view .LVU150
+ 865 00ae 3B4B     		ldr	r3, .L37+84
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s 			page 23
+
+
+ 866 00b0 0121     		movs	r1, #1
+ 867 00b2 5970     		strb	r1, [r3, #1]
+ 309:Core/Src/freertos.c ****   state.vx = 0;
+ 868              		.loc 1 309 3 is_stmt 1 view .LVU151
+ 869              		.loc 1 309 12 is_stmt 0 view .LVU152
+ 870 00b4 0022     		movs	r2, #0
+ 871 00b6 1A71     		strb	r2, [r3, #4]
+ 310:Core/Src/freertos.c ****   state.vy = 0;
+ 872              		.loc 1 310 3 is_stmt 1 view .LVU153
+ 873              		.loc 1 310 12 is_stmt 0 view .LVU154
+ 874 00b8 5A71     		strb	r2, [r3, #5]
+ 311:Core/Src/freertos.c ****   state.rorate = 0;
+ 875              		.loc 1 311 3 is_stmt 1 view .LVU155
+ 876              		.loc 1 311 16 is_stmt 0 view .LVU156
+ 877 00ba 9A71     		strb	r2, [r3, #6]
+ 312:Core/Src/freertos.c ****   state.direct = RIGHT;
+ 878              		.loc 1 312 3 is_stmt 1 view .LVU157
+ 879              		.loc 1 312 16 is_stmt 0 view .LVU158
+ 880 00bc D970     		strb	r1, [r3, #3]
+ 881 00be 19E0     		b	.L34
+ 882              	.L36:
+ 313:Core/Src/freertos.c ****   /* Infinite loop */
+ 314:Core/Src/freertos.c ****   for(;;)
+ 315:Core/Src/freertos.c ****   {
+ 316:Core/Src/freertos.c ****     Motor_Control(motor_lf, motor_rf, motor_rb, motor_lb, &state);
+ 317:Core/Src/freertos.c **** 
+ 318:Core/Src/freertos.c ****     if(state.frame == UP)
+ 319:Core/Src/freertos.c ****     {
+ 320:Core/Src/freertos.c ****       TIM4->CCR1 = TIM4-> ARR * 0.06;
+ 883              		.loc 1 320 7 is_stmt 1 view .LVU159
+ 884              		.loc 1 320 24 is_stmt 0 view .LVU160
+ 885 00c0 374C     		ldr	r4, .L37+88
+ 886 00c2 E06A     		ldr	r0, [r4, #44]
+ 887              		.loc 1 320 31 view .LVU161
+ 888 00c4 FFF7FEFF 		bl	__aeabi_ui2d
+ 889              	.LVL83:
+ 890 00c8 1FA3     		adr	r3, .L37
+ 891 00ca D3E90023 		ldrd	r2, [r3]
+ 892 00ce FFF7FEFF 		bl	__aeabi_dmul
+ 893              	.LVL84:
+ 894              		.loc 1 320 18 view .LVU162
+ 895 00d2 FFF7FEFF 		bl	__aeabi_d2uiz
+ 896              	.LVL85:
+ 897 00d6 6063     		str	r0, [r4, #52]
+ 321:Core/Src/freertos.c ****       TIM4->CCR2 = TIM4-> ARR * 0.09;
+ 898              		.loc 1 321 7 is_stmt 1 view .LVU163
+ 899              		.loc 1 321 24 is_stmt 0 view .LVU164
+ 900 00d8 E06A     		ldr	r0, [r4, #44]
+ 901              		.loc 1 321 31 view .LVU165
+ 902 00da FFF7FEFF 		bl	__aeabi_ui2d
+ 903              	.LVL86:
+ 904 00de 1CA3     		adr	r3, .L37+8
+ 905 00e0 D3E90023 		ldrd	r2, [r3]
+ 906 00e4 FFF7FEFF 		bl	__aeabi_dmul
+ 907              	.LVL87:
+ 908              		.loc 1 321 18 view .LVU166
+ 909 00e8 FFF7FEFF 		bl	__aeabi_d2uiz
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s 			page 24
+
+
+ 910              	.LVL88:
+ 911 00ec A063     		str	r0, [r4, #56]
+ 912              	.L33:
+ 322:Core/Src/freertos.c ****     }
+ 323:Core/Src/freertos.c ****     else if(state.frame == DOWN)
+ 324:Core/Src/freertos.c ****     {
+ 325:Core/Src/freertos.c ****       TIM4->CCR1 = TIM4-> ARR * 0.03;
+ 326:Core/Src/freertos.c ****       TIM4->CCR2 = TIM4-> ARR * 0.12;
+ 327:Core/Src/freertos.c ****     }
+ 328:Core/Src/freertos.c **** 
+ 329:Core/Src/freertos.c ****     osDelay(1);
+ 913              		.loc 1 329 5 is_stmt 1 view .LVU167
+ 914 00ee 0120     		movs	r0, #1
+ 915 00f0 FFF7FEFF 		bl	osDelay
+ 916              	.LVL89:
+ 314:Core/Src/freertos.c ****   {
+ 917              		.loc 1 314 8 view .LVU168
+ 918              	.L34:
+ 314:Core/Src/freertos.c ****   {
+ 919              		.loc 1 314 3 view .LVU169
+ 316:Core/Src/freertos.c **** 
+ 920              		.loc 1 316 5 view .LVU170
+ 921 00f4 294C     		ldr	r4, .L37+84
+ 922 00f6 0094     		str	r4, [sp]
+ 923 00f8 1F4B     		ldr	r3, .L37+48
+ 924 00fa 1B68     		ldr	r3, [r3]
+ 925 00fc 1D4A     		ldr	r2, .L37+44
+ 926 00fe 1268     		ldr	r2, [r2]
+ 927 0100 1B49     		ldr	r1, .L37+40
+ 928 0102 0968     		ldr	r1, [r1]
+ 929 0104 1948     		ldr	r0, .L37+36
+ 930 0106 0068     		ldr	r0, [r0]
+ 931 0108 FFF7FEFF 		bl	Motor_Control
+ 932              	.LVL90:
+ 318:Core/Src/freertos.c ****     {
+ 933              		.loc 1 318 5 view .LVU171
+ 318:Core/Src/freertos.c ****     {
+ 934              		.loc 1 318 13 is_stmt 0 view .LVU172
+ 935 010c 6378     		ldrb	r3, [r4, #1]	@ zero_extendqisi2
+ 318:Core/Src/freertos.c ****     {
+ 936              		.loc 1 318 7 view .LVU173
+ 937 010e 012B     		cmp	r3, #1
+ 938 0110 D6D0     		beq	.L36
+ 323:Core/Src/freertos.c ****     {
+ 939              		.loc 1 323 10 is_stmt 1 view .LVU174
+ 323:Core/Src/freertos.c ****     {
+ 940              		.loc 1 323 12 is_stmt 0 view .LVU175
+ 941 0112 002B     		cmp	r3, #0
+ 942 0114 EBD1     		bne	.L33
+ 325:Core/Src/freertos.c ****       TIM4->CCR2 = TIM4-> ARR * 0.12;
+ 943              		.loc 1 325 7 is_stmt 1 view .LVU176
+ 325:Core/Src/freertos.c ****       TIM4->CCR2 = TIM4-> ARR * 0.12;
+ 944              		.loc 1 325 24 is_stmt 0 view .LVU177
+ 945 0116 224C     		ldr	r4, .L37+88
+ 946 0118 E06A     		ldr	r0, [r4, #44]
+ 325:Core/Src/freertos.c ****       TIM4->CCR2 = TIM4-> ARR * 0.12;
+ 947              		.loc 1 325 31 view .LVU178
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s 			page 25
+
+
+ 948 011a FFF7FEFF 		bl	__aeabi_ui2d
+ 949              	.LVL91:
+ 950 011e 0EA3     		adr	r3, .L37+16
+ 951 0120 D3E90023 		ldrd	r2, [r3]
+ 952 0124 FFF7FEFF 		bl	__aeabi_dmul
+ 953              	.LVL92:
+ 325:Core/Src/freertos.c ****       TIM4->CCR2 = TIM4-> ARR * 0.12;
+ 954              		.loc 1 325 18 view .LVU179
+ 955 0128 FFF7FEFF 		bl	__aeabi_d2uiz
+ 956              	.LVL93:
+ 957 012c 6063     		str	r0, [r4, #52]
+ 326:Core/Src/freertos.c ****     }
+ 958              		.loc 1 326 7 is_stmt 1 view .LVU180
+ 326:Core/Src/freertos.c ****     }
+ 959              		.loc 1 326 24 is_stmt 0 view .LVU181
+ 960 012e E06A     		ldr	r0, [r4, #44]
+ 326:Core/Src/freertos.c ****     }
+ 961              		.loc 1 326 31 view .LVU182
+ 962 0130 FFF7FEFF 		bl	__aeabi_ui2d
+ 963              	.LVL94:
+ 964 0134 0AA3     		adr	r3, .L37+24
+ 965 0136 D3E90023 		ldrd	r2, [r3]
+ 966 013a FFF7FEFF 		bl	__aeabi_dmul
+ 967              	.LVL95:
+ 326:Core/Src/freertos.c ****     }
+ 968              		.loc 1 326 18 view .LVU183
+ 969 013e FFF7FEFF 		bl	__aeabi_d2uiz
+ 970              	.LVL96:
+ 971 0142 A063     		str	r0, [r4, #56]
+ 972 0144 D3E7     		b	.L33
+ 973              	.L38:
+ 974 0146 00BF     		.align	3
+ 975              	.L37:
+ 976 0148 B81E85EB 		.word	-343597384
+ 977 014c 51B8AE3F 		.word	1068415057
+ 978 0150 0AD7A370 		.word	1889785610
+ 979 0154 3D0AB73F 		.word	1068960317
+ 980 0158 B81E85EB 		.word	-343597384
+ 981 015c 51B89E3F 		.word	1067366481
+ 982 0160 B81E85EB 		.word	-343597384
+ 983 0164 51B8BE3F 		.word	1069463633
+ 984 0168 00000000 		.word	htim2
+ 985 016c 00000000 		.word	.LANCHOR3
+ 986 0170 00000000 		.word	.LANCHOR4
+ 987 0174 00000000 		.word	.LANCHOR5
+ 988 0178 00000000 		.word	.LANCHOR6
+ 989 017c 00080140 		.word	1073809408
+ 990 0180 34000040 		.word	1073741876
+ 991 0184 38000040 		.word	1073741880
+ 992 0188 00100140 		.word	1073811456
+ 993 018c 3C000040 		.word	1073741884
+ 994 0190 000C0140 		.word	1073810432
+ 995 0194 40000040 		.word	1073741888
+ 996 0198 00000000 		.word	htim4
+ 997 019c 00000000 		.word	.LANCHOR0
+ 998 01a0 00080040 		.word	1073743872
+ 999              		.cfi_endproc
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s 			page 26
+
+
+ 1000              	.LFE78:
+ 1002              		.section	.text.vApplicationGetIdleTaskMemory,"ax",%progbits
+ 1003              		.align	1
+ 1004              		.global	vApplicationGetIdleTaskMemory
+ 1005              		.syntax unified
+ 1006              		.thumb
+ 1007              		.thumb_func
+ 1009              	vApplicationGetIdleTaskMemory:
+ 1010              	.LVL97:
+ 1011              	.LFB73:
+  90:Core/Src/freertos.c ****   *ppxIdleTaskTCBBuffer = &xIdleTaskTCBBuffer;
+ 1012              		.loc 1 90 1 is_stmt 1 view -0
+ 1013              		.cfi_startproc
+ 1014              		@ args = 0, pretend = 0, frame = 0
+ 1015              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1016              		@ link register save eliminated.
+  91:Core/Src/freertos.c ****   *ppxIdleTaskStackBuffer = &xIdleStack[0];
+ 1017              		.loc 1 91 3 view .LVU185
+  91:Core/Src/freertos.c ****   *ppxIdleTaskStackBuffer = &xIdleStack[0];
+ 1018              		.loc 1 91 25 is_stmt 0 view .LVU186
+ 1019 0000 034B     		ldr	r3, .L40
+ 1020 0002 0360     		str	r3, [r0]
+  92:Core/Src/freertos.c ****   *pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
+ 1021              		.loc 1 92 3 is_stmt 1 view .LVU187
+  92:Core/Src/freertos.c ****   *pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
+ 1022              		.loc 1 92 27 is_stmt 0 view .LVU188
+ 1023 0004 034B     		ldr	r3, .L40+4
+ 1024 0006 0B60     		str	r3, [r1]
+  93:Core/Src/freertos.c ****   /* place for user code */
+ 1025              		.loc 1 93 3 is_stmt 1 view .LVU189
+  93:Core/Src/freertos.c ****   /* place for user code */
+ 1026              		.loc 1 93 25 is_stmt 0 view .LVU190
+ 1027 0008 8023     		movs	r3, #128
+ 1028 000a 1360     		str	r3, [r2]
+  95:Core/Src/freertos.c **** /* USER CODE END GET_IDLE_TASK_MEMORY */
+ 1029              		.loc 1 95 1 view .LVU191
+ 1030 000c 7047     		bx	lr
+ 1031              	.L41:
+ 1032 000e 00BF     		.align	2
+ 1033              	.L40:
+ 1034 0010 00000000 		.word	.LANCHOR7
+ 1035 0014 00000000 		.word	.LANCHOR8
+ 1036              		.cfi_endproc
+ 1037              	.LFE73:
+ 1039              		.section	.text.MX_FREERTOS_Init,"ax",%progbits
+ 1040              		.align	1
+ 1041              		.global	MX_FREERTOS_Init
+ 1042              		.syntax unified
+ 1043              		.thumb
+ 1044              		.thumb_func
+ 1046              	MX_FREERTOS_Init:
+ 1047              	.LFB74:
+ 103:Core/Src/freertos.c ****   /* USER CODE BEGIN Init */
+ 1048              		.loc 1 103 29 is_stmt 1 view -0
+ 1049              		.cfi_startproc
+ 1050              		@ args = 0, pretend = 0, frame = 112
+ 1051              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s 			page 27
+
+
+ 1052 0000 10B5     		push	{r4, lr}
+ 1053              	.LCFI7:
+ 1054              		.cfi_def_cfa_offset 8
+ 1055              		.cfi_offset 4, -8
+ 1056              		.cfi_offset 14, -4
+ 1057 0002 9CB0     		sub	sp, sp, #112
+ 1058              	.LCFI8:
+ 1059              		.cfi_def_cfa_offset 120
+ 126:Core/Src/freertos.c ****   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
+ 1060              		.loc 1 126 3 view .LVU193
+ 1061 0004 244C     		ldr	r4, .L44
+ 1062 0006 0DF1540C 		add	ip, sp, #84
+ 1063 000a A646     		mov	lr, r4
+ 1064 000c BEE80F00 		ldmia	lr!, {r0, r1, r2, r3}
+ 1065 0010 ACE80F00 		stmia	ip!, {r0, r1, r2, r3}
+ 1066 0014 9EE80700 		ldm	lr, {r0, r1, r2}
+ 1067 0018 8CE80700 		stm	ip, {r0, r1, r2}
+ 127:Core/Src/freertos.c **** 
+ 1068              		.loc 1 127 3 view .LVU194
+ 127:Core/Src/freertos.c **** 
+ 1069              		.loc 1 127 23 is_stmt 0 view .LVU195
+ 1070 001c 0021     		movs	r1, #0
+ 1071 001e 15A8     		add	r0, sp, #84
+ 1072 0020 FFF7FEFF 		bl	osThreadCreate
+ 1073              	.LVL98:
+ 127:Core/Src/freertos.c **** 
+ 1074              		.loc 1 127 21 view .LVU196
+ 1075 0024 1D4B     		ldr	r3, .L44+4
+ 1076 0026 1860     		str	r0, [r3]
+ 130:Core/Src/freertos.c ****   Image_TaskHandle = osThreadCreate(osThread(Image_Task), NULL);
+ 1077              		.loc 1 130 3 is_stmt 1 view .LVU197
+ 1078 0028 0DF1380C 		add	ip, sp, #56
+ 1079 002c 04F11C0E 		add	lr, r4, #28
+ 1080 0030 BEE80F00 		ldmia	lr!, {r0, r1, r2, r3}
+ 1081 0034 ACE80F00 		stmia	ip!, {r0, r1, r2, r3}
+ 1082 0038 9EE80700 		ldm	lr, {r0, r1, r2}
+ 1083 003c 8CE80700 		stm	ip, {r0, r1, r2}
+ 131:Core/Src/freertos.c **** 
+ 1084              		.loc 1 131 3 view .LVU198
+ 131:Core/Src/freertos.c **** 
+ 1085              		.loc 1 131 22 is_stmt 0 view .LVU199
+ 1086 0040 0021     		movs	r1, #0
+ 1087 0042 0EA8     		add	r0, sp, #56
+ 1088 0044 FFF7FEFF 		bl	osThreadCreate
+ 1089              	.LVL99:
+ 131:Core/Src/freertos.c **** 
+ 1090              		.loc 1 131 20 view .LVU200
+ 1091 0048 154B     		ldr	r3, .L44+8
+ 1092 004a 1860     		str	r0, [r3]
+ 134:Core/Src/freertos.c ****   PS2_Recv_TaskHandle = osThreadCreate(osThread(PS2_Recv_Task), NULL);
+ 1093              		.loc 1 134 3 is_stmt 1 view .LVU201
+ 1094 004c 0DF11C0C 		add	ip, sp, #28
+ 1095 0050 04F1380E 		add	lr, r4, #56
+ 1096 0054 BEE80F00 		ldmia	lr!, {r0, r1, r2, r3}
+ 1097 0058 ACE80F00 		stmia	ip!, {r0, r1, r2, r3}
+ 1098 005c 9EE80700 		ldm	lr, {r0, r1, r2}
+ 1099 0060 8CE80700 		stm	ip, {r0, r1, r2}
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s 			page 28
+
+
+ 135:Core/Src/freertos.c **** 
+ 1100              		.loc 1 135 3 view .LVU202
+ 135:Core/Src/freertos.c **** 
+ 1101              		.loc 1 135 25 is_stmt 0 view .LVU203
+ 1102 0064 0021     		movs	r1, #0
+ 1103 0066 07A8     		add	r0, sp, #28
+ 1104 0068 FFF7FEFF 		bl	osThreadCreate
+ 1105              	.LVL100:
+ 135:Core/Src/freertos.c **** 
+ 1106              		.loc 1 135 23 view .LVU204
+ 1107 006c 0D4B     		ldr	r3, .L44+12
+ 1108 006e 1860     		str	r0, [r3]
+ 138:Core/Src/freertos.c ****   MotorServo_TaskHandle = osThreadCreate(osThread(MotorServo_Task), NULL);
+ 1109              		.loc 1 138 3 is_stmt 1 view .LVU205
+ 1110 0070 EE46     		mov	lr, sp
+ 1111 0072 04F1540C 		add	ip, r4, #84
+ 1112 0076 BCE80F00 		ldmia	ip!, {r0, r1, r2, r3}
+ 1113 007a AEE80F00 		stmia	lr!, {r0, r1, r2, r3}
+ 1114 007e 9CE80700 		ldm	ip, {r0, r1, r2}
+ 1115 0082 8EE80700 		stm	lr, {r0, r1, r2}
+ 139:Core/Src/freertos.c **** 
+ 1116              		.loc 1 139 3 view .LVU206
+ 139:Core/Src/freertos.c **** 
+ 1117              		.loc 1 139 27 is_stmt 0 view .LVU207
+ 1118 0086 0021     		movs	r1, #0
+ 1119 0088 6846     		mov	r0, sp
+ 1120 008a FFF7FEFF 		bl	osThreadCreate
+ 1121              	.LVL101:
+ 139:Core/Src/freertos.c **** 
+ 1122              		.loc 1 139 25 view .LVU208
+ 1123 008e 064B     		ldr	r3, .L44+16
+ 1124 0090 1860     		str	r0, [r3]
+ 145:Core/Src/freertos.c **** 
+ 1125              		.loc 1 145 1 view .LVU209
+ 1126 0092 1CB0     		add	sp, sp, #112
+ 1127              	.LCFI9:
+ 1128              		.cfi_def_cfa_offset 8
+ 1129              		@ sp needed
+ 1130 0094 10BD     		pop	{r4, pc}
+ 1131              	.L45:
+ 1132 0096 00BF     		.align	2
+ 1133              	.L44:
+ 1134 0098 00000000 		.word	.LANCHOR9
+ 1135 009c 00000000 		.word	.LANCHOR10
+ 1136 00a0 00000000 		.word	.LANCHOR11
+ 1137 00a4 00000000 		.word	.LANCHOR12
+ 1138 00a8 00000000 		.word	.LANCHOR13
+ 1139              		.cfi_endproc
+ 1140              	.LFE74:
+ 1142              		.global	MotorServo_TaskHandle
+ 1143              		.global	PS2_Recv_TaskHandle
+ 1144              		.global	Image_TaskHandle
+ 1145              		.global	defaultTaskHandle
+ 1146              		.global	state
+ 1147              		.global	motor_rb
+ 1148              		.global	motor_rf
+ 1149              		.global	motor_lb
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s 			page 29
+
+
+ 1150              		.global	motor_lf
+ 1151              		.global	mv_rx
+ 1152              		.global	ps2_rx
+ 1153              		.section	.rodata
+ 1154              		.align	2
+ 1155              		.set	.LANCHOR9,. + 0
+ 1156              	.LC23:
+ 1157 0000 00000000 		.word	.LC0
+ 1158 0004 00000000 		.word	StartDefaultTask
+ 1159 0008 0000     		.short	0
+ 1160 000a 0000     		.space	2
+ 1161 000c 00000000 		.word	0
+ 1162 0010 80000000 		.word	128
+ 1163 0014 00000000 		.word	0
+ 1164 0018 00000000 		.word	0
+ 1165              	.LC24:
+ 1166 001c 0C000000 		.word	.LC2
+ 1167 0020 00000000 		.word	StartImageTask
+ 1168 0024 0000     		.short	0
+ 1169 0026 0000     		.space	2
+ 1170 0028 00000000 		.word	0
+ 1171 002c 80000000 		.word	128
+ 1172 0030 00000000 		.word	0
+ 1173 0034 00000000 		.word	0
+ 1174              	.LC25:
+ 1175 0038 18000000 		.word	.LC4
+ 1176 003c 00000000 		.word	StartPS2Task
+ 1177 0040 0000     		.short	0
+ 1178 0042 0000     		.space	2
+ 1179 0044 00000000 		.word	0
+ 1180 0048 80000000 		.word	128
+ 1181 004c 00000000 		.word	0
+ 1182 0050 00000000 		.word	0
+ 1183              	.LC26:
+ 1184 0054 28000000 		.word	.LC6
+ 1185 0058 00000000 		.word	StartMotorServoTask
+ 1186 005c 0000     		.short	0
+ 1187 005e 0000     		.space	2
+ 1188 0060 00000000 		.word	0
+ 1189 0064 80000000 		.word	128
+ 1190 0068 00000000 		.word	0
+ 1191 006c 00000000 		.word	0
+ 1192              		.section	.bss.Image_TaskHandle,"aw",%nobits
+ 1193              		.align	2
+ 1194              		.set	.LANCHOR11,. + 0
+ 1197              	Image_TaskHandle:
+ 1198 0000 00000000 		.space	4
+ 1199              		.section	.bss.MotorServo_TaskHandle,"aw",%nobits
+ 1200              		.align	2
+ 1201              		.set	.LANCHOR13,. + 0
+ 1204              	MotorServo_TaskHandle:
+ 1205 0000 00000000 		.space	4
+ 1206              		.section	.bss.PS2_Recv_TaskHandle,"aw",%nobits
+ 1207              		.align	2
+ 1208              		.set	.LANCHOR12,. + 0
+ 1211              	PS2_Recv_TaskHandle:
+ 1212 0000 00000000 		.space	4
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s 			page 30
+
+
+ 1213              		.section	.bss.defaultTaskHandle,"aw",%nobits
+ 1214              		.align	2
+ 1215              		.set	.LANCHOR10,. + 0
+ 1218              	defaultTaskHandle:
+ 1219 0000 00000000 		.space	4
+ 1220              		.section	.bss.motor_lb,"aw",%nobits
+ 1221              		.align	2
+ 1222              		.set	.LANCHOR6,. + 0
+ 1225              	motor_lb:
+ 1226 0000 00000000 		.space	4
+ 1227              		.section	.bss.motor_lf,"aw",%nobits
+ 1228              		.align	2
+ 1229              		.set	.LANCHOR3,. + 0
+ 1232              	motor_lf:
+ 1233 0000 00000000 		.space	4
+ 1234              		.section	.bss.motor_rb,"aw",%nobits
+ 1235              		.align	2
+ 1236              		.set	.LANCHOR5,. + 0
+ 1239              	motor_rb:
+ 1240 0000 00000000 		.space	4
+ 1241              		.section	.bss.motor_rf,"aw",%nobits
+ 1242              		.align	2
+ 1243              		.set	.LANCHOR4,. + 0
+ 1246              	motor_rf:
+ 1247 0000 00000000 		.space	4
+ 1248              		.section	.bss.mv_rx,"aw",%nobits
+ 1249              		.align	2
+ 1250              		.set	.LANCHOR1,. + 0
+ 1253              	mv_rx:
+ 1254 0000 00000000 		.space	7
+ 1254      000000
+ 1255              		.section	.bss.ps2_rx,"aw",%nobits
+ 1256              		.align	2
+ 1257              		.set	.LANCHOR2,. + 0
+ 1260              	ps2_rx:
+ 1261 0000 00000000 		.space	9
+ 1261      00000000 
+ 1261      00
+ 1262              		.section	.bss.state,"aw",%nobits
+ 1263              		.align	2
+ 1264              		.set	.LANCHOR0,. + 0
+ 1267              	state:
+ 1268 0000 00000000 		.space	14
+ 1268      00000000 
+ 1268      00000000 
+ 1268      0000
+ 1269              		.section	.bss.xIdleStack,"aw",%nobits
+ 1270              		.align	2
+ 1271              		.set	.LANCHOR8,. + 0
+ 1274              	xIdleStack:
+ 1275 0000 00000000 		.space	512
+ 1275      00000000 
+ 1275      00000000 
+ 1275      00000000 
+ 1275      00000000 
+ 1276              		.section	.bss.xIdleTaskTCBBuffer,"aw",%nobits
+ 1277              		.align	2
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s 			page 31
+
+
+ 1278              		.set	.LANCHOR7,. + 0
+ 1281              	xIdleTaskTCBBuffer:
+ 1282 0000 00000000 		.space	84
+ 1282      00000000 
+ 1282      00000000 
+ 1282      00000000 
+ 1282      00000000 
+ 1283              		.text
+ 1284              	.Letext0:
+ 1285              		.file 2 "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2021.10\\arm-none-eabi\\include\\
+ 1286              		.file 3 "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2021.10\\arm-none-eabi\\include\\
+ 1287              		.file 4 "Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM3/portmacro.h"
+ 1288              		.file 5 "Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h"
+ 1289              		.file 6 "Middlewares/Third_Party/FreeRTOS/Source/include/task.h"
+ 1290              		.file 7 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xe.h"
+ 1291              		.file 8 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h"
+ 1292              		.file 9 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma.h"
+ 1293              		.file 10 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h"
+ 1294              		.file 11 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h"
+ 1295              		.file 12 "Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h"
+ 1296              		.file 13 "Core/Inc/tim.h"
+ 1297              		.file 14 "Core/Inc/ps2.h"
+ 1298              		.file 15 "Core/Inc/motor.h"
+ 1299              		.file 16 "Core/Inc/beep.h"
+ 1300              		.file 17 "Core/Inc/usart.h"
+ 1301              		.file 18 "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2021.10\\arm-none-eabi\\include\
+ 1302              		.file 19 "Core/Inc/tft.h"
+ 1303              		.file 20 "<built-in>"
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s 			page 32
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 freertos.c
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:15     .rodata.str1.4:00000000 $d
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:31     .text.StartDefaultTask:00000000 $t
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:37     .text.StartDefaultTask:00000000 StartDefaultTask
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:118    .text.StartDefaultTask:00000060 $d
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:128    .rodata.StartImageTask.str1.4:00000000 $d
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:174    .text.StartImageTask:00000000 $t
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:180    .text.StartImageTask:00000000 StartImageTask
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:662    .text.StartImageTask:000002e8 $d
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:686    .text.StartPS2Task:00000000 $t
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:692    .text.StartPS2Task:00000000 StartPS2Task
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:728    .text.StartPS2Task:0000001c $d
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:737    .text.StartMotorServoTask:00000000 $t
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:743    .text.StartMotorServoTask:00000000 StartMotorServoTask
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:976    .text.StartMotorServoTask:00000148 $d
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:1003   .text.vApplicationGetIdleTaskMemory:00000000 $t
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:1009   .text.vApplicationGetIdleTaskMemory:00000000 vApplicationGetIdleTaskMemory
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:1034   .text.vApplicationGetIdleTaskMemory:00000010 $d
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:1040   .text.MX_FREERTOS_Init:00000000 $t
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:1046   .text.MX_FREERTOS_Init:00000000 MX_FREERTOS_Init
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:1134   .text.MX_FREERTOS_Init:00000098 $d
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:1204   .bss.MotorServo_TaskHandle:00000000 MotorServo_TaskHandle
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:1211   .bss.PS2_Recv_TaskHandle:00000000 PS2_Recv_TaskHandle
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:1197   .bss.Image_TaskHandle:00000000 Image_TaskHandle
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:1218   .bss.defaultTaskHandle:00000000 defaultTaskHandle
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:1267   .bss.state:00000000 state
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:1239   .bss.motor_rb:00000000 motor_rb
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:1246   .bss.motor_rf:00000000 motor_rf
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:1225   .bss.motor_lb:00000000 motor_lb
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:1232   .bss.motor_lf:00000000 motor_lf
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:1253   .bss.mv_rx:00000000 mv_rx
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:1260   .bss.ps2_rx:00000000 ps2_rx
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:1154   .rodata:00000000 $d
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:1193   .bss.Image_TaskHandle:00000000 $d
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:1200   .bss.MotorServo_TaskHandle:00000000 $d
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:1207   .bss.PS2_Recv_TaskHandle:00000000 $d
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:1214   .bss.defaultTaskHandle:00000000 $d
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:1221   .bss.motor_lb:00000000 $d
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:1228   .bss.motor_lf:00000000 $d
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:1235   .bss.motor_rb:00000000 $d
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:1242   .bss.motor_rf:00000000 $d
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:1249   .bss.mv_rx:00000000 $d
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:1256   .bss.ps2_rx:00000000 $d
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:1263   .bss.state:00000000 $d
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:1270   .bss.xIdleStack:00000000 $d
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:1274   .bss.xIdleStack:00000000 xIdleStack
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:1277   .bss.xIdleTaskTCBBuffer:00000000 $d
+C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s:1281   .bss.xIdleTaskTCBBuffer:00000000 xIdleTaskTCBBuffer
+
+UNDEFINED SYMBOLS
+HAL_TIM_Base_Start
+HAL_TIM_PWM_Start
+memcpy
+Beep_Play
+osDelay
+htim5
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccaHUWqw.s 			page 33
+
+
+htim8
+music_ready
+music_thank
+TFT_Init
+TFT_Fill
+TFT_Test
+RGB2565
+TFT_DrawStr
+TFT_Itoa
+HAL_UART_Receive_DMA
+huart3
+PS2_ReadData
+PS2_Solve
+__aeabi_ui2d
+__aeabi_dmul
+__aeabi_d2uiz
+malloc
+Motor_Init
+Motor_Control
+htim2
+htim4
+osThreadCreate

@@ -1,0 +1,291 @@
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\cctXJcWz.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"beep.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.global	__aeabi_ui2d
+  18              		.global	__aeabi_dmul
+  19              		.global	__aeabi_d2uiz
+  20              		.section	.text.Beep_Play,"ax",%progbits
+  21              		.align	1
+  22              		.global	Beep_Play
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	Beep_Play:
+  28              	.LFB65:
+  29              		.file 1 "Core/Src/beep.c"
+   1:Core/Src/beep.c **** #include "beep.h"
+   2:Core/Src/beep.c **** 
+   3:Core/Src/beep.c **** //以H_Xi的ARR为基准,通过乘一定比例确定其它音的ARR
+   4:Core/Src/beep.c **** #define BASE 500
+   5:Core/Src/beep.c **** 
+   6:Core/Src/beep.c **** #define L_Do (BASE * 7.553)
+   7:Core/Src/beep.c **** #define L_Re (BASE * 6.739)
+   8:Core/Src/beep.c **** #define L_Mi (BASE * 5.994)
+   9:Core/Src/beep.c **** #define L_Fa (BASE * 5.658)
+  10:Core/Src/beep.c **** #define L_So (BASE * 5.041)
+  11:Core/Src/beep.c **** #define L_La (BASE * 4.490)
+  12:Core/Src/beep.c **** #define L_Xi (BASE * 4)
+  13:Core/Src/beep.c **** #define M_Do (BASE * 3.777)
+  14:Core/Src/beep.c **** #define M_Re (BASE * 3.364)
+  15:Core/Src/beep.c **** #define M_Mi (BASE * 3.016)
+  16:Core/Src/beep.c **** #define M_Fa (BASE * 2.828)
+  17:Core/Src/beep.c **** #define M_So (BASE * 2.519)
+  18:Core/Src/beep.c **** #define M_La (BASE * 2.245)
+  19:Core/Src/beep.c **** #define M_Xi (BASE * 2)
+  20:Core/Src/beep.c **** #define H_Do (BASE * 1.887)
+  21:Core/Src/beep.c **** #define H_Re (BASE * 1.682)
+  22:Core/Src/beep.c **** #define H_Mi (BASE * 1.498)
+  23:Core/Src/beep.c **** #define H_Fa (BASE * 1.413)
+  24:Core/Src/beep.c **** #define H_So (BASE * 1.259)
+  25:Core/Src/beep.c **** #define H_La (BASE * 1.122)
+  26:Core/Src/beep.c **** #define H_Xi (BASE * 1)
+  27:Core/Src/beep.c **** 
+  28:Core/Src/beep.c **** song music_ready = {23, 
+  29:Core/Src/beep.c ****                     {L_So, 0, M_Do, 0, 0, M_Mi, M_Re, 0, M_Do, 0, 0, 0,
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\cctXJcWz.s 			page 2
+
+
+  30:Core/Src/beep.c ****                      M_Mi, 0, M_So, 0, 0, M_La, M_Xi, 0, H_Do, H_Do, H_Do} };
+  31:Core/Src/beep.c **** 
+  32:Core/Src/beep.c **** song music_thank = {34, 
+  33:Core/Src/beep.c ****                     {M_Do, 0, M_Re, 0, M_Mi, 0, M_So, 0, M_Mi, 0, M_Mi, M_Mi, 0, 
+  34:Core/Src/beep.c ****                     M_Re, 0, M_Re, M_Do, 0, M_Re, M_Re, 0, 
+  35:Core/Src/beep.c ****                     M_Do, 0, L_La, 0, M_Do, 0, M_Re, 0, M_Mi, M_Mi, M_Mi, M_Mi, 0} };
+  36:Core/Src/beep.c **** 
+  37:Core/Src/beep.c **** void Beep_Play(song music)
+  38:Core/Src/beep.c **** {
+  30              		.loc 1 38 1 view -0
+  31              		.cfi_startproc
+  32              		@ args = 404, pretend = 16, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34 0000 84B0     		sub	sp, sp, #16
+  35              	.LCFI0:
+  36              		.cfi_def_cfa_offset 16
+  37 0002 38B5     		push	{r3, r4, r5, lr}
+  38              	.LCFI1:
+  39              		.cfi_def_cfa_offset 32
+  40              		.cfi_offset 3, -32
+  41              		.cfi_offset 4, -28
+  42              		.cfi_offset 5, -24
+  43              		.cfi_offset 14, -20
+  44 0004 04AC     		add	r4, sp, #16
+  45 0006 84E80F00 		stm	r4, {r0, r1, r2, r3}
+  39:Core/Src/beep.c ****     for(int i = 0; i <= music.size - 1; i++)
+  46              		.loc 1 39 5 view .LVU1
+  47              	.LBB2:
+  48              		.loc 1 39 9 view .LVU2
+  49              	.LVL0:
+  50              		.loc 1 39 13 is_stmt 0 view .LVU3
+  51 000a 0024     		movs	r4, #0
+  52              		.loc 1 39 5 view .LVU4
+  53 000c 14E0     		b	.L2
+  54              	.LVL1:
+  55              	.L3:
+  40:Core/Src/beep.c ****     {
+  41:Core/Src/beep.c ****         TIM8->ARR = music.buf[i];
+  56              		.loc 1 41 9 is_stmt 1 discriminator 3 view .LVU5
+  57              		.loc 1 41 30 is_stmt 0 discriminator 3 view .LVU6
+  58 000e 04AB     		add	r3, sp, #16
+  59 0010 03EB8403 		add	r3, r3, r4, lsl #2
+  60 0014 5B68     		ldr	r3, [r3, #4]
+  61              		.loc 1 41 19 discriminator 3 view .LVU7
+  62 0016 104D     		ldr	r5, .L5+8
+  63 0018 EB62     		str	r3, [r5, #44]
+  42:Core/Src/beep.c ****         TIM8->CCR3 = TIM8->ARR * 0.1;
+  64              		.loc 1 42 9 is_stmt 1 discriminator 3 view .LVU8
+  65              		.loc 1 42 26 is_stmt 0 discriminator 3 view .LVU9
+  66 001a E86A     		ldr	r0, [r5, #44]
+  67              		.loc 1 42 32 discriminator 3 view .LVU10
+  68 001c FFF7FEFF 		bl	__aeabi_ui2d
+  69              	.LVL2:
+  70 0020 0BA3     		adr	r3, .L5
+  71 0022 D3E90023 		ldrd	r2, [r3]
+  72 0026 FFF7FEFF 		bl	__aeabi_dmul
+  73              	.LVL3:
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\cctXJcWz.s 			page 3
+
+
+  74              		.loc 1 42 20 discriminator 3 view .LVU11
+  75 002a FFF7FEFF 		bl	__aeabi_d2uiz
+  76              	.LVL4:
+  77 002e E863     		str	r0, [r5, #60]
+  43:Core/Src/beep.c ****         HAL_Delay(100);
+  78              		.loc 1 43 9 is_stmt 1 discriminator 3 view .LVU12
+  79 0030 6420     		movs	r0, #100
+  80 0032 FFF7FEFF 		bl	HAL_Delay
+  81              	.LVL5:
+  39:Core/Src/beep.c ****     {
+  82              		.loc 1 39 41 discriminator 3 view .LVU13
+  39:Core/Src/beep.c ****     {
+  83              		.loc 1 39 42 is_stmt 0 discriminator 3 view .LVU14
+  84 0036 0134     		adds	r4, r4, #1
+  85              	.LVL6:
+  86              	.L2:
+  39:Core/Src/beep.c ****     {
+  87              		.loc 1 39 20 is_stmt 1 discriminator 1 view .LVU15
+  39:Core/Src/beep.c ****     {
+  88              		.loc 1 39 30 is_stmt 0 discriminator 1 view .LVU16
+  89 0038 049B     		ldr	r3, [sp, #16]
+  39:Core/Src/beep.c ****     {
+  90              		.loc 1 39 5 discriminator 1 view .LVU17
+  91 003a A342     		cmp	r3, r4
+  92 003c E7DC     		bgt	.L3
+  93              	.LBE2:
+  44:Core/Src/beep.c ****     }
+  45:Core/Src/beep.c ****     TIM8->ARR = 0;
+  94              		.loc 1 45 5 is_stmt 1 view .LVU18
+  95              		.loc 1 45 15 is_stmt 0 view .LVU19
+  96 003e 064B     		ldr	r3, .L5+8
+  97 0040 0022     		movs	r2, #0
+  98 0042 DA62     		str	r2, [r3, #44]
+  46:Core/Src/beep.c ****     TIM8->CCR3 = 0;
+  99              		.loc 1 46 5 is_stmt 1 view .LVU20
+ 100              		.loc 1 46 16 is_stmt 0 view .LVU21
+ 101 0044 DA63     		str	r2, [r3, #60]
+  47:Core/Src/beep.c **** }...
+ 102              		.loc 1 47 1 view .LVU22
+ 103 0046 BDE83840 		pop	{r3, r4, r5, lr}
+ 104              	.LCFI2:
+ 105              		.cfi_restore 14
+ 106              		.cfi_restore 5
+ 107              		.cfi_restore 4
+ 108              		.cfi_restore 3
+ 109              		.cfi_def_cfa_offset 16
+ 110              	.LVL7:
+ 111              		.loc 1 47 1 view .LVU23
+ 112 004a 04B0     		add	sp, sp, #16
+ 113              	.LCFI3:
+ 114              		.cfi_def_cfa_offset 0
+ 115 004c 7047     		bx	lr
+ 116              	.L6:
+ 117 004e 00BF     		.align	3
+ 118              	.L5:
+ 119 0050 9A999999 		.word	-1717986918
+ 120 0054 9999B93F 		.word	1069128089
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\cctXJcWz.s 			page 4
+
+
+ 121 0058 00340140 		.word	1073820672
+ 122              		.cfi_endproc
+ 123              	.LFE65:
+ 125              		.global	music_thank
+ 126              		.global	music_ready
+ 127              		.section	.data.music_ready,"aw"
+ 128              		.align	2
+ 131              	music_ready:
+ 132 0000 17000000 		.word	23
+ 133 0004 D8090000 		.word	2520
+ 134 0008 00000000 		.word	0
+ 135 000c 60070000 		.word	1888
+ 136 0010 00000000 		.word	0
+ 137 0014 00000000 		.word	0
+ 138 0018 E4050000 		.word	1508
+ 139 001c 92060000 		.word	1682
+ 140 0020 00000000 		.word	0
+ 141 0024 60070000 		.word	1888
+ 142 0028 00000000 		.word	0
+ 143 002c 00000000 		.word	0
+ 144 0030 00000000 		.word	0
+ 145 0034 E4050000 		.word	1508
+ 146 0038 00000000 		.word	0
+ 147 003c EB040000 		.word	1259
+ 148 0040 00000000 		.word	0
+ 149 0044 00000000 		.word	0
+ 150 0048 62040000 		.word	1122
+ 151 004c E8030000 		.word	1000
+ 152 0050 00000000 		.word	0
+ 153 0054 AF030000 		.word	943
+ 154 0058 AF030000 		.word	943
+ 155 005c AF030000 		.word	943
+ 156 0060 00000000 		.space	308
+ 156      00000000 
+ 156      00000000 
+ 156      00000000 
+ 156      00000000 
+ 157              		.section	.data.music_thank,"aw"
+ 158              		.align	2
+ 161              	music_thank:
+ 162 0000 22000000 		.word	34
+ 163 0004 60070000 		.word	1888
+ 164 0008 00000000 		.word	0
+ 165 000c 92060000 		.word	1682
+ 166 0010 00000000 		.word	0
+ 167 0014 E4050000 		.word	1508
+ 168 0018 00000000 		.word	0
+ 169 001c EB040000 		.word	1259
+ 170 0020 00000000 		.word	0
+ 171 0024 E4050000 		.word	1508
+ 172 0028 00000000 		.word	0
+ 173 002c E4050000 		.word	1508
+ 174 0030 E4050000 		.word	1508
+ 175 0034 00000000 		.word	0
+ 176 0038 92060000 		.word	1682
+ 177 003c 00000000 		.word	0
+ 178 0040 92060000 		.word	1682
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\cctXJcWz.s 			page 5
+
+
+ 179 0044 60070000 		.word	1888
+ 180 0048 00000000 		.word	0
+ 181 004c 92060000 		.word	1682
+ 182 0050 92060000 		.word	1682
+ 183 0054 00000000 		.word	0
+ 184 0058 60070000 		.word	1888
+ 185 005c 00000000 		.word	0
+ 186 0060 C5080000 		.word	2245
+ 187 0064 00000000 		.word	0
+ 188 0068 60070000 		.word	1888
+ 189 006c 00000000 		.word	0
+ 190 0070 92060000 		.word	1682
+ 191 0074 00000000 		.word	0
+ 192 0078 E4050000 		.word	1508
+ 193 007c E4050000 		.word	1508
+ 194 0080 E4050000 		.word	1508
+ 195 0084 E4050000 		.word	1508
+ 196 0088 00000000 		.word	0
+ 197 008c 00000000 		.space	264
+ 197      00000000 
+ 197      00000000 
+ 197      00000000 
+ 197      00000000 
+ 198              		.text
+ 199              	.Letext0:
+ 200              		.file 2 "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2021.10\\arm-none-eabi\\include\\
+ 201              		.file 3 "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2021.10\\arm-none-eabi\\include\\
+ 202              		.file 4 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xe.h"
+ 203              		.file 5 "Core/Inc/beep.h"
+ 204              		.file 6 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\cctXJcWz.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 beep.c
+C:\Users\LJH\AppData\Local\Temp\cctXJcWz.s:21     .text.Beep_Play:00000000 $t
+C:\Users\LJH\AppData\Local\Temp\cctXJcWz.s:27     .text.Beep_Play:00000000 Beep_Play
+C:\Users\LJH\AppData\Local\Temp\cctXJcWz.s:119    .text.Beep_Play:00000050 $d
+C:\Users\LJH\AppData\Local\Temp\cctXJcWz.s:161    .data.music_thank:00000000 music_thank
+C:\Users\LJH\AppData\Local\Temp\cctXJcWz.s:131    .data.music_ready:00000000 music_ready
+C:\Users\LJH\AppData\Local\Temp\cctXJcWz.s:128    .data.music_ready:00000000 $d
+C:\Users\LJH\AppData\Local\Temp\cctXJcWz.s:158    .data.music_thank:00000000 $d
+
+UNDEFINED SYMBOLS
+__aeabi_ui2d
+__aeabi_dmul
+__aeabi_d2uiz
+HAL_Delay

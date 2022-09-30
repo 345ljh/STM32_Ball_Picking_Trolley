@@ -1,0 +1,132 @@
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccGRV7Wn.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"bsp.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.delay_us,"ax",%progbits
+  18              		.align	1
+  19              		.global	delay_us
+  20              		.syntax unified
+  21              		.thumb
+  22              		.thumb_func
+  24              	delay_us:
+  25              	.LVL0:
+  26              	.LFB68:
+  27              		.file 1 "Core/Src/bsp.c"
+   1:Core/Src/bsp.c **** #include "bsp.h"
+   2:Core/Src/bsp.c **** 
+   3:Core/Src/bsp.c **** void delay_us(int nus)
+   4:Core/Src/bsp.c **** {
+  28              		.loc 1 4 1 view -0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		.loc 1 4 1 is_stmt 0 view .LVU1
+  33 0000 10B5     		push	{r4, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 8
+  36              		.cfi_offset 4, -8
+  37              		.cfi_offset 14, -4
+   5:Core/Src/bsp.c ****     uint16_t differ = 0xffff - nus - 5;
+  38              		.loc 1 5 5 is_stmt 1 view .LVU2
+  39              		.loc 1 5 36 is_stmt 0 view .LVU3
+  40 0002 84B2     		uxth	r4, r0
+  41              		.loc 1 5 14 view .LVU4
+  42 0004 C4F57F44 		rsb	r4, r4, #65280
+  43 0008 FA34     		adds	r4, r4, #250
+  44 000a A4B2     		uxth	r4, r4
+  45              	.LVL1:
+   6:Core/Src/bsp.c **** 
+   7:Core/Src/bsp.c ****     __HAL_TIM_SetCounter(&htim5, differ);
+  46              		.loc 1 7 5 is_stmt 1 view .LVU5
+  47 000c 0848     		ldr	r0, .L5
+  48              	.LVL2:
+  49              		.loc 1 7 5 is_stmt 0 view .LVU6
+  50 000e 0368     		ldr	r3, [r0]
+  51 0010 5C62     		str	r4, [r3, #36]
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccGRV7Wn.s 			page 2
+
+
+   8:Core/Src/bsp.c ****     //开启定时器
+   9:Core/Src/bsp.c ****     HAL_TIM_Base_Start(&htim5);
+  52              		.loc 1 9 5 is_stmt 1 view .LVU7
+  53 0012 FFF7FEFF 		bl	HAL_TIM_Base_Start
+  54              	.LVL3:
+  10:Core/Src/bsp.c ****  
+  11:Core/Src/bsp.c ****     while( differ<0xffff-5)
+  55              		.loc 1 11 5 view .LVU8
+  56              		.loc 1 11 10 is_stmt 0 view .LVU9
+  57 0016 03E0     		b	.L2
+  58              	.L3:
+  12:Core/Src/bsp.c ****     {
+  13:Core/Src/bsp.c ****     differ = __HAL_TIM_GetCounter(&htim5);
+  59              		.loc 1 13 5 is_stmt 1 view .LVU10
+  60              		.loc 1 13 14 is_stmt 0 view .LVU11
+  61 0018 054B     		ldr	r3, .L5
+  62 001a 1B68     		ldr	r3, [r3]
+  63 001c 5C6A     		ldr	r4, [r3, #36]
+  64              	.LVL4:
+  65              		.loc 1 13 12 view .LVU12
+  66 001e A4B2     		uxth	r4, r4
+  67              	.LVL5:
+  68              	.L2:
+  11:Core/Src/bsp.c ****     {
+  69              		.loc 1 11 10 is_stmt 1 view .LVU13
+  70 0020 4FF6F973 		movw	r3, #65529
+  71 0024 9C42     		cmp	r4, r3
+  72 0026 F7D9     		bls	.L3
+  14:Core/Src/bsp.c ****     };
+  73              		.loc 1 14 6 view .LVU14
+  15:Core/Src/bsp.c ****     //关闭定时器
+  16:Core/Src/bsp.c ****     HAL_TIM_Base_Stop(&htim5);
+  74              		.loc 1 16 5 view .LVU15
+  75 0028 0148     		ldr	r0, .L5
+  76 002a FFF7FEFF 		bl	HAL_TIM_Base_Stop
+  77              	.LVL6:
+  17:Core/Src/bsp.c **** }...
+  78              		.loc 1 17 1 is_stmt 0 view .LVU16
+  79 002e 10BD     		pop	{r4, pc}
+  80              	.LVL7:
+  81              	.L6:
+  82              		.loc 1 17 1 view .LVU17
+  83              		.align	2
+  84              	.L5:
+  85 0030 00000000 		.word	htim5
+  86              		.cfi_endproc
+  87              	.LFE68:
+  89              		.text
+  90              	.Letext0:
+  91              		.file 2 "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2021.10\\arm-none-eabi\\include\\
+  92              		.file 3 "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2021.10\\arm-none-eabi\\include\\
+  93              		.file 4 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xe.h"
+  94              		.file 5 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h"
+  95              		.file 6 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma.h"
+  96              		.file 7 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h"
+  97              		.file 8 "Core/Inc/tim.h"
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccGRV7Wn.s 			page 3
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 bsp.c
+C:\Users\LJH\AppData\Local\Temp\ccGRV7Wn.s:18     .text.delay_us:00000000 $t
+C:\Users\LJH\AppData\Local\Temp\ccGRV7Wn.s:24     .text.delay_us:00000000 delay_us
+C:\Users\LJH\AppData\Local\Temp\ccGRV7Wn.s:85     .text.delay_us:00000030 $d
+
+UNDEFINED SYMBOLS
+HAL_TIM_Base_Start
+HAL_TIM_Base_Stop
+htim5
