@@ -1,0 +1,3164 @@
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"tft.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.TFT_WriteData,"ax",%progbits
+  18              		.align	1
+  19              		.global	TFT_WriteData
+  20              		.syntax unified
+  21              		.thumb
+  22              		.thumb_func
+  24              	TFT_WriteData:
+  25              	.LVL0:
+  26              	.LFB68:
+  27              		.file 1 "Core/Src/tft.c"
+   1:Core/Src/tft.c **** #include "tft.h"
+   2:Core/Src/tft.c **** 
+   3:Core/Src/tft.c **** //字符点阵,大小为8*16
+   4:Core/Src/tft.c **** uint8_t TFT_chara[][16] = {
+   5:Core/Src/tft.c **** {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00},/*" ",0*/
+   6:Core/Src/tft.c **** {0x00,0x00,0x00,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0x00,0x00,0x18,0x18,0x00,0x00},/*"!",1*/
+   7:Core/Src/tft.c **** {0x00,0x48,0x6C,0x24,0x12,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00},/*""",2*/
+   8:Core/Src/tft.c **** {0x00,0x00,0x00,0x24,0x24,0x24,0x7F,0x12,0x12,0x12,0x7F,0x12,0x12,0x12,0x00,0x00},/*"#",3*/
+   9:Core/Src/tft.c **** {0x00,0x00,0x08,0x1C,0x2A,0x2A,0x0A,0x0C,0x18,0x28,0x28,0x2A,0x2A,0x1C,0x08,0x08},/*"$",4*/
+  10:Core/Src/tft.c **** {0x00,0x00,0x00,0x22,0x25,0x15,0x15,0x15,0x2A,0x58,0x54,0x54,0x54,0x22,0x00,0x00},/*"%",5*/
+  11:Core/Src/tft.c **** {0x00,0x00,0x00,0x0C,0x12,0x12,0x12,0x0A,0x76,0x25,0x29,0x11,0x91,0x6E,0x00,0x00},/*"&",6*/
+  12:Core/Src/tft.c **** {0x00,0x06,0x06,0x04,0x03,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00},/*"'",7*/
+  13:Core/Src/tft.c **** {0x00,0x40,0x20,0x10,0x10,0x08,0x08,0x08,0x08,0x08,0x08,0x10,0x10,0x20,0x40,0x00},/*"(",8*/
+  14:Core/Src/tft.c **** {0x00,0x02,0x04,0x08,0x08,0x10,0x10,0x10,0x10,0x10,0x10,0x08,0x08,0x04,0x02,0x00},/*")",9*/
+  15:Core/Src/tft.c **** {0x00,0x00,0x00,0x00,0x08,0x08,0x6B,0x1C,0x1C,0x6B,0x08,0x08,0x00,0x00,0x00,0x00},/*"*",10*/
+  16:Core/Src/tft.c **** {0x00,0x00,0x00,0x00,0x08,0x08,0x08,0x08,0x7F,0x08,0x08,0x08,0x08,0x00,0x00,0x00},/*"+",11*/
+  17:Core/Src/tft.c **** {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x06,0x06,0x04,0x03},/*",",12*/
+  18:Core/Src/tft.c **** {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xFE,0x00,0x00,0x00,0x00,0x00,0x00,0x00},/*"-",13*/
+  19:Core/Src/tft.c **** {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x06,0x06,0x00,0x00},/*".",14*/
+  20:Core/Src/tft.c **** {0x00,0x00,0x80,0x40,0x40,0x20,0x20,0x10,0x10,0x08,0x08,0x04,0x04,0x02,0x02,0x00},/*"/",15*/
+  21:Core/Src/tft.c **** {0x00,0x00,0x00,0x18,0x24,0x42,0x42,0x42,0x42,0x42,0x42,0x42,0x24,0x18,0x00,0x00},/*"0",16*/
+  22:Core/Src/tft.c **** {0x00,0x00,0x00,0x08,0x0E,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0x3E,0x00,0x00},/*"1",17*/
+  23:Core/Src/tft.c **** {0x00,0x00,0x00,0x3C,0x42,0x42,0x42,0x20,0x20,0x10,0x08,0x04,0x42,0x7E,0x00,0x00},/*"2",18*/
+  24:Core/Src/tft.c **** {0x00,0x00,0x00,0x3C,0x42,0x42,0x20,0x18,0x20,0x40,0x40,0x42,0x22,0x1C,0x00,0x00},/*"3",19*/
+  25:Core/Src/tft.c **** {0x00,0x00,0x00,0x20,0x30,0x28,0x24,0x24,0x22,0x22,0x7E,0x20,0x20,0x78,0x00,0x00},/*"4",20*/
+  26:Core/Src/tft.c **** {0x00,0x00,0x00,0x7E,0x02,0x02,0x02,0x1A,0x26,0x40,0x40,0x42,0x22,0x1C,0x00,0x00},/*"5",21*/
+  27:Core/Src/tft.c **** {0x00,0x00,0x00,0x38,0x24,0x02,0x02,0x1A,0x26,0x42,0x42,0x42,0x24,0x18,0x00,0x00},/*"6",22*/
+  28:Core/Src/tft.c **** {0x00,0x00,0x00,0x7E,0x22,0x22,0x10,0x10,0x08,0x08,0x08,0x08,0x08,0x08,0x00,0x00},/*"7",23*/
+  29:Core/Src/tft.c **** {0x00,0x00,0x00,0x3C,0x42,0x42,0x42,0x24,0x18,0x24,0x42,0x42,0x42,0x3C,0x00,0x00},/*"8",24*/
+  30:Core/Src/tft.c **** {0x00,0x00,0x00,0x18,0x24,0x42,0x42,0x42,0x64,0x58,0x40,0x40,0x24,0x1C,0x00,0x00},/*"9",25*/
+  31:Core/Src/tft.c **** {0x00,0x00,0x00,0x00,0x00,0x00,0x18,0x18,0x00,0x00,0x00,0x00,0x18,0x18,0x00,0x00},/*":",26*/
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 2
+
+
+  32:Core/Src/tft.c **** {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x08,0x00,0x00,0x00,0x00,0x00,0x08,0x08,0x04},/*";",27*/
+  33:Core/Src/tft.c **** {0x00,0x00,0x00,0x40,0x20,0x10,0x08,0x04,0x02,0x04,0x08,0x10,0x20,0x40,0x00,0x00},/*"<",28*/
+  34:Core/Src/tft.c **** {0x00,0x00,0x00,0x00,0x00,0x00,0x7F,0x00,0x00,0x00,0x7F,0x00,0x00,0x00,0x00,0x00},/*"=",29*/
+  35:Core/Src/tft.c **** {0x00,0x00,0x00,0x02,0x04,0x08,0x10,0x20,0x40,0x20,0x10,0x08,0x04,0x02,0x00,0x00},/*">",30*/
+  36:Core/Src/tft.c **** {0x00,0x00,0x00,0x3C,0x42,0x42,0x46,0x40,0x20,0x10,0x10,0x00,0x18,0x18,0x00,0x00},/*"?",31*/
+  37:Core/Src/tft.c **** {0x00,0x00,0x00,0x1C,0x22,0x5A,0x55,0x55,0x55,0x55,0x2D,0x42,0x22,0x1C,0x00,0x00},/*"@",32*/
+  38:Core/Src/tft.c **** {0x00,0x00,0x00,0x08,0x08,0x18,0x14,0x14,0x24,0x3C,0x22,0x42,0x42,0xE7,0x00,0x00},/*"A",33*/
+  39:Core/Src/tft.c **** {0x00,0x00,0x00,0x1F,0x22,0x22,0x22,0x1E,0x22,0x42,0x42,0x42,0x22,0x1F,0x00,0x00},/*"B",34*/
+  40:Core/Src/tft.c **** {0x00,0x00,0x00,0x7C,0x42,0x42,0x01,0x01,0x01,0x01,0x01,0x42,0x22,0x1C,0x00,0x00},/*"C",35*/
+  41:Core/Src/tft.c **** {0x00,0x00,0x00,0x1F,0x22,0x42,0x42,0x42,0x42,0x42,0x42,0x42,0x22,0x1F,0x00,0x00},/*"D",36*/
+  42:Core/Src/tft.c **** {0x00,0x00,0x00,0x3F,0x42,0x12,0x12,0x1E,0x12,0x12,0x02,0x42,0x42,0x3F,0x00,0x00},/*"E",37*/
+  43:Core/Src/tft.c **** {0x00,0x00,0x00,0x3F,0x42,0x12,0x12,0x1E,0x12,0x12,0x02,0x02,0x02,0x07,0x00,0x00},/*"F",38*/
+  44:Core/Src/tft.c **** {0x00,0x00,0x00,0x3C,0x22,0x22,0x01,0x01,0x01,0x71,0x21,0x22,0x22,0x1C,0x00,0x00},/*"G",39*/
+  45:Core/Src/tft.c **** {0x00,0x00,0x00,0xE7,0x42,0x42,0x42,0x42,0x7E,0x42,0x42,0x42,0x42,0xE7,0x00,0x00},/*"H",40*/
+  46:Core/Src/tft.c **** {0x00,0x00,0x00,0x3E,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0x3E,0x00,0x00},/*"I",41*/
+  47:Core/Src/tft.c **** {0x00,0x00,0x00,0x7C,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x11,0x0F},/*"J",42*/
+  48:Core/Src/tft.c **** {0x00,0x00,0x00,0x77,0x22,0x12,0x0A,0x0E,0x0A,0x12,0x12,0x22,0x22,0x77,0x00,0x00},/*"K",43*/
+  49:Core/Src/tft.c **** {0x00,0x00,0x00,0x07,0x02,0x02,0x02,0x02,0x02,0x02,0x02,0x02,0x42,0x7F,0x00,0x00},/*"L",44*/
+  50:Core/Src/tft.c **** {0x00,0x00,0x00,0x77,0x36,0x36,0x36,0x36,0x2A,0x2A,0x2A,0x2A,0x2A,0x6B,0x00,0x00},/*"M",45*/
+  51:Core/Src/tft.c **** {0x00,0x00,0x00,0xE3,0x46,0x46,0x4A,0x4A,0x52,0x52,0x52,0x62,0x62,0x47,0x00,0x00},/*"N",46*/
+  52:Core/Src/tft.c **** {0x00,0x00,0x00,0x1C,0x22,0x41,0x41,0x41,0x41,0x41,0x41,0x41,0x22,0x1C,0x00,0x00},/*"O",47*/
+  53:Core/Src/tft.c **** {0x00,0x00,0x00,0x3F,0x42,0x42,0x42,0x42,0x3E,0x02,0x02,0x02,0x02,0x07,0x00,0x00},/*"P",48*/
+  54:Core/Src/tft.c **** {0x00,0x00,0x00,0x1C,0x22,0x41,0x41,0x41,0x41,0x41,0x4D,0x53,0x32,0x1C,0x60,0x00},/*"Q",49*/
+  55:Core/Src/tft.c **** {0x00,0x00,0x00,0x3F,0x42,0x42,0x42,0x3E,0x12,0x12,0x22,0x22,0x42,0xC7,0x00,0x00},/*"R",50*/
+  56:Core/Src/tft.c **** {0x00,0x00,0x00,0x7C,0x42,0x42,0x02,0x04,0x18,0x20,0x40,0x42,0x42,0x3E,0x00,0x00},/*"S",51*/
+  57:Core/Src/tft.c **** {0x00,0x00,0x00,0x7F,0x49,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0x1C,0x00,0x00},/*"T",52*/
+  58:Core/Src/tft.c **** {0x00,0x00,0x00,0xE7,0x42,0x42,0x42,0x42,0x42,0x42,0x42,0x42,0x42,0x3C,0x00,0x00},/*"U",53*/
+  59:Core/Src/tft.c **** {0x00,0x00,0x00,0xE7,0x42,0x42,0x22,0x24,0x24,0x14,0x14,0x18,0x08,0x08,0x00,0x00},/*"V",54*/
+  60:Core/Src/tft.c **** {0x00,0x00,0x00,0x6B,0x49,0x49,0x49,0x49,0x55,0x55,0x36,0x22,0x22,0x22,0x00,0x00},/*"W",55*/
+  61:Core/Src/tft.c **** {0x00,0x00,0x00,0xE7,0x42,0x24,0x24,0x18,0x18,0x18,0x24,0x24,0x42,0xE7,0x00,0x00},/*"X",56*/
+  62:Core/Src/tft.c **** {0x00,0x00,0x00,0x77,0x22,0x22,0x14,0x14,0x08,0x08,0x08,0x08,0x08,0x1C,0x00,0x00},/*"Y",57*/
+  63:Core/Src/tft.c **** {0x00,0x00,0x00,0x7E,0x21,0x20,0x10,0x10,0x08,0x04,0x04,0x42,0x42,0x3F,0x00,0x00},/*"Z",58*/
+  64:Core/Src/tft.c **** {0x00,0x78,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0x78,0x00},/*"[",59*/
+  65:Core/Src/tft.c **** {0x00,0x00,0x02,0x02,0x04,0x04,0x08,0x08,0x08,0x10,0x10,0x20,0x20,0x20,0x40,0x40},/*"\",60*/
+  66:Core/Src/tft.c **** {0x00,0x1E,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x1E,0x00},/*"]",61*/
+  67:Core/Src/tft.c **** {0x00,0x38,0x44,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00},/*"^",62*/
+  68:Core/Src/tft.c **** {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xFF},/*"_",63*/
+  69:Core/Src/tft.c **** {0x00,0x06,0x08,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00},/*"`",64*/
+  70:Core/Src/tft.c **** {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x3C,0x42,0x78,0x44,0x42,0x42,0xFC,0x00,0x00},/*"a",65*/
+  71:Core/Src/tft.c **** {0x00,0x00,0x00,0x03,0x02,0x02,0x02,0x1A,0x26,0x42,0x42,0x42,0x26,0x1A,0x00,0x00},/*"b",66*/
+  72:Core/Src/tft.c **** {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x38,0x44,0x02,0x02,0x02,0x44,0x38,0x00,0x00},/*"c",67*/
+  73:Core/Src/tft.c **** {0x00,0x00,0x00,0x60,0x40,0x40,0x40,0x78,0x44,0x42,0x42,0x42,0x64,0xD8,0x00,0x00},/*"d",68*/
+  74:Core/Src/tft.c **** {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x3C,0x42,0x7E,0x02,0x02,0x42,0x3C,0x00,0x00},/*"e",69*/
+  75:Core/Src/tft.c **** {0x00,0x00,0x00,0xF0,0x88,0x08,0x08,0x7E,0x08,0x08,0x08,0x08,0x08,0x3E,0x00,0x00},/*"f",70*/
+  76:Core/Src/tft.c **** {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x7C,0x22,0x22,0x1C,0x02,0x3C,0x42,0x42,0x3C},/*"g",71*/
+  77:Core/Src/tft.c **** {0x00,0x00,0x00,0x03,0x02,0x02,0x02,0x3A,0x46,0x42,0x42,0x42,0x42,0xE7,0x00,0x00},/*"h",72*/
+  78:Core/Src/tft.c **** {0x00,0x00,0x00,0x0C,0x0C,0x00,0x00,0x0E,0x08,0x08,0x08,0x08,0x08,0x3E,0x00,0x00},/*"i",73*/
+  79:Core/Src/tft.c **** {0x00,0x00,0x00,0x30,0x30,0x00,0x00,0x38,0x20,0x20,0x20,0x20,0x20,0x20,0x22,0x1E},/*"j",74*/
+  80:Core/Src/tft.c **** {0x00,0x00,0x00,0x03,0x02,0x02,0x02,0x72,0x12,0x0A,0x16,0x12,0x22,0x77,0x00,0x00},/*"k",75*/
+  81:Core/Src/tft.c **** {0x00,0x00,0x00,0x0E,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0x3E,0x00,0x00},/*"l",76*/
+  82:Core/Src/tft.c **** {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x7F,0x92,0x92,0x92,0x92,0x92,0xB7,0x00,0x00},/*"m",77*/
+  83:Core/Src/tft.c **** {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x3B,0x46,0x42,0x42,0x42,0x42,0xE7,0x00,0x00},/*"n",78*/
+  84:Core/Src/tft.c **** {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x3C,0x42,0x42,0x42,0x42,0x42,0x3C,0x00,0x00},/*"o",79*/
+  85:Core/Src/tft.c **** {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x1B,0x26,0x42,0x42,0x42,0x22,0x1E,0x02,0x07},/*"p",80*/
+  86:Core/Src/tft.c **** {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x78,0x44,0x42,0x42,0x42,0x44,0x78,0x40,0xE0},/*"q",81*/
+  87:Core/Src/tft.c **** {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x77,0x4C,0x04,0x04,0x04,0x04,0x1F,0x00,0x00},/*"r",82*/
+  88:Core/Src/tft.c **** {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x7C,0x42,0x02,0x3C,0x40,0x42,0x3E,0x00,0x00},/*"s",83*/
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 3
+
+
+  89:Core/Src/tft.c **** {0x00,0x00,0x00,0x00,0x00,0x08,0x08,0x3E,0x08,0x08,0x08,0x08,0x08,0x30,0x00,0x00},/*"t",84*/
+  90:Core/Src/tft.c **** {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x63,0x42,0x42,0x42,0x42,0x62,0xDC,0x00,0x00},/*"u",85*/
+  91:Core/Src/tft.c **** {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xE7,0x42,0x24,0x24,0x14,0x08,0x08,0x00,0x00},/*"v",86*/
+  92:Core/Src/tft.c **** {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xEB,0x49,0x49,0x55,0x55,0x22,0x22,0x00,0x00},/*"w",87*/
+  93:Core/Src/tft.c **** {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x76,0x24,0x18,0x18,0x18,0x24,0x6E,0x00,0x00},/*"x",88*/
+  94:Core/Src/tft.c **** {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xE7,0x42,0x24,0x24,0x14,0x18,0x08,0x08,0x07},/*"y",89*/
+  95:Core/Src/tft.c **** {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x7E,0x22,0x10,0x08,0x08,0x44,0x7E,0x00,0x00},/*"z",90*/
+  96:Core/Src/tft.c **** {0x00,0xC0,0x20,0x20,0x20,0x20,0x20,0x10,0x20,0x20,0x20,0x20,0x20,0x20,0xC0,0x00},/*"{",91*/
+  97:Core/Src/tft.c **** {0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10},/*"|",92*/
+  98:Core/Src/tft.c **** {0x00,0x06,0x08,0x08,0x08,0x08,0x08,0x10,0x08,0x08,0x08,0x08,0x08,0x08,0x06,0x00},/*"}",93*/
+  99:Core/Src/tft.c **** {0x0C,0x32,0xC2,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00},/*"~",94*/
+ 100:Core/Src/tft.c **** };
+ 101:Core/Src/tft.c **** 
+ 102:Core/Src/tft.c **** //发送1字节数据
+ 103:Core/Src/tft.c **** void TFT_WriteData(uint8_t data)
+ 104:Core/Src/tft.c **** {
+  28              		.loc 1 104 1 view -0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 8
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		.loc 1 104 1 is_stmt 0 view .LVU1
+  33 0000 10B5     		push	{r4, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 8
+  36              		.cfi_offset 4, -8
+  37              		.cfi_offset 14, -4
+  38 0002 82B0     		sub	sp, sp, #8
+  39              	.LCFI1:
+  40              		.cfi_def_cfa_offset 16
+  41 0004 8DF80700 		strb	r0, [sp, #7]
+ 105:Core/Src/tft.c ****     HAL_GPIO_WritePin(TFT_DC_GPIO_Port, TFT_DC_Pin, GPIO_PIN_SET);
+  42              		.loc 1 105 5 is_stmt 1 view .LVU2
+  43 0008 0C4C     		ldr	r4, .L3
+  44 000a 0122     		movs	r2, #1
+  45 000c 4021     		movs	r1, #64
+  46 000e 2046     		mov	r0, r4
+  47              	.LVL1:
+  48              		.loc 1 105 5 is_stmt 0 view .LVU3
+  49 0010 FFF7FEFF 		bl	HAL_GPIO_WritePin
+  50              	.LVL2:
+ 106:Core/Src/tft.c ****     HAL_GPIO_WritePin(TFT_CS_GPIO_Port, TFT_CS_Pin, GPIO_PIN_RESET);
+  51              		.loc 1 106 5 is_stmt 1 view .LVU4
+  52 0014 0022     		movs	r2, #0
+  53 0016 8021     		movs	r1, #128
+  54 0018 2046     		mov	r0, r4
+  55 001a FFF7FEFF 		bl	HAL_GPIO_WritePin
+  56              	.LVL3:
+ 107:Core/Src/tft.c ****     HAL_SPI_Transmit(&hspi2, &data, 1, 100);
+  57              		.loc 1 107 5 view .LVU5
+  58 001e 6423     		movs	r3, #100
+  59 0020 0122     		movs	r2, #1
+  60 0022 0DF10701 		add	r1, sp, #7
+  61 0026 0648     		ldr	r0, .L3+4
+  62 0028 FFF7FEFF 		bl	HAL_SPI_Transmit
+  63              	.LVL4:
+ 108:Core/Src/tft.c ****     HAL_GPIO_WritePin(TFT_CS_GPIO_Port, TFT_CS_Pin, GPIO_PIN_SET);
+  64              		.loc 1 108 5 view .LVU6
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 4
+
+
+  65 002c 0122     		movs	r2, #1
+  66 002e 8021     		movs	r1, #128
+  67 0030 2046     		mov	r0, r4
+  68 0032 FFF7FEFF 		bl	HAL_GPIO_WritePin
+  69              	.LVL5:
+ 109:Core/Src/tft.c **** }
+  70              		.loc 1 109 1 is_stmt 0 view .LVU7
+  71 0036 02B0     		add	sp, sp, #8
+  72              	.LCFI2:
+  73              		.cfi_def_cfa_offset 8
+  74              		@ sp needed
+  75 0038 10BD     		pop	{r4, pc}
+  76              	.L4:
+  77 003a 00BF     		.align	2
+  78              	.L3:
+  79 003c 00100140 		.word	1073811456
+  80 0040 00000000 		.word	hspi2
+  81              		.cfi_endproc
+  82              	.LFE68:
+  84              		.section	.text.TFT_WriteData16,"ax",%progbits
+  85              		.align	1
+  86              		.global	TFT_WriteData16
+  87              		.syntax unified
+  88              		.thumb
+  89              		.thumb_func
+  91              	TFT_WriteData16:
+  92              	.LVL6:
+  93              	.LFB69:
+ 110:Core/Src/tft.c **** 
+ 111:Core/Src/tft.c **** //发送2字节数据
+ 112:Core/Src/tft.c **** void TFT_WriteData16(uint16_t data)
+ 113:Core/Src/tft.c **** {
+  94              		.loc 1 113 1 is_stmt 1 view -0
+  95              		.cfi_startproc
+  96              		@ args = 0, pretend = 0, frame = 8
+  97              		@ frame_needed = 0, uses_anonymous_args = 0
+  98              		.loc 1 113 1 is_stmt 0 view .LVU9
+  99 0000 30B5     		push	{r4, r5, lr}
+ 100              	.LCFI3:
+ 101              		.cfi_def_cfa_offset 12
+ 102              		.cfi_offset 4, -12
+ 103              		.cfi_offset 5, -8
+ 104              		.cfi_offset 14, -4
+ 105 0002 83B0     		sub	sp, sp, #12
+ 106              	.LCFI4:
+ 107              		.cfi_def_cfa_offset 24
+ 114:Core/Src/tft.c ****     uint8_t high = data >> 8;
+ 108              		.loc 1 114 5 is_stmt 1 view .LVU10
+ 109              		.loc 1 114 13 is_stmt 0 view .LVU11
+ 110 0004 030A     		lsrs	r3, r0, #8
+ 111 0006 8DF80730 		strb	r3, [sp, #7]
+ 115:Core/Src/tft.c ****     uint8_t low = data & 0xFF;
+ 112              		.loc 1 115 5 is_stmt 1 view .LVU12
+ 113              		.loc 1 115 13 is_stmt 0 view .LVU13
+ 114 000a 8DF80600 		strb	r0, [sp, #6]
+ 116:Core/Src/tft.c ****     HAL_GPIO_WritePin(TFT_DC_GPIO_Port, TFT_DC_Pin, GPIO_PIN_SET);
+ 115              		.loc 1 116 5 is_stmt 1 view .LVU14
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 5
+
+
+ 116 000e 154C     		ldr	r4, .L7
+ 117 0010 0122     		movs	r2, #1
+ 118 0012 4021     		movs	r1, #64
+ 119 0014 2046     		mov	r0, r4
+ 120              	.LVL7:
+ 121              		.loc 1 116 5 is_stmt 0 view .LVU15
+ 122 0016 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 123              	.LVL8:
+ 117:Core/Src/tft.c **** 
+ 118:Core/Src/tft.c ****     HAL_GPIO_WritePin(TFT_CS_GPIO_Port, TFT_CS_Pin, GPIO_PIN_RESET);
+ 124              		.loc 1 118 5 is_stmt 1 view .LVU16
+ 125 001a 0022     		movs	r2, #0
+ 126 001c 8021     		movs	r1, #128
+ 127 001e 2046     		mov	r0, r4
+ 128 0020 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 129              	.LVL9:
+ 119:Core/Src/tft.c ****     HAL_SPI_Transmit(&hspi2, &high, 1, 100);
+ 130              		.loc 1 119 5 view .LVU17
+ 131 0024 104D     		ldr	r5, .L7+4
+ 132 0026 6423     		movs	r3, #100
+ 133 0028 0122     		movs	r2, #1
+ 134 002a 0DF10701 		add	r1, sp, #7
+ 135 002e 2846     		mov	r0, r5
+ 136 0030 FFF7FEFF 		bl	HAL_SPI_Transmit
+ 137              	.LVL10:
+ 120:Core/Src/tft.c ****     HAL_GPIO_WritePin(TFT_CS_GPIO_Port, TFT_CS_Pin, GPIO_PIN_SET);
+ 138              		.loc 1 120 5 view .LVU18
+ 139 0034 0122     		movs	r2, #1
+ 140 0036 8021     		movs	r1, #128
+ 141 0038 2046     		mov	r0, r4
+ 142 003a FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 143              	.LVL11:
+ 121:Core/Src/tft.c **** 
+ 122:Core/Src/tft.c ****     HAL_GPIO_WritePin(TFT_CS_GPIO_Port, TFT_CS_Pin, GPIO_PIN_RESET);
+ 144              		.loc 1 122 5 view .LVU19
+ 145 003e 0022     		movs	r2, #0
+ 146 0040 8021     		movs	r1, #128
+ 147 0042 2046     		mov	r0, r4
+ 148 0044 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 149              	.LVL12:
+ 123:Core/Src/tft.c ****     HAL_SPI_Transmit(&hspi2, &low, 1, 100);
+ 150              		.loc 1 123 5 view .LVU20
+ 151 0048 6423     		movs	r3, #100
+ 152 004a 0122     		movs	r2, #1
+ 153 004c 0DF10601 		add	r1, sp, #6
+ 154 0050 2846     		mov	r0, r5
+ 155 0052 FFF7FEFF 		bl	HAL_SPI_Transmit
+ 156              	.LVL13:
+ 124:Core/Src/tft.c ****     HAL_GPIO_WritePin(TFT_CS_GPIO_Port, TFT_CS_Pin, GPIO_PIN_SET);
+ 157              		.loc 1 124 5 view .LVU21
+ 158 0056 0122     		movs	r2, #1
+ 159 0058 8021     		movs	r1, #128
+ 160 005a 2046     		mov	r0, r4
+ 161 005c FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 162              	.LVL14:
+ 125:Core/Src/tft.c **** }
+ 163              		.loc 1 125 1 is_stmt 0 view .LVU22
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 6
+
+
+ 164 0060 03B0     		add	sp, sp, #12
+ 165              	.LCFI5:
+ 166              		.cfi_def_cfa_offset 12
+ 167              		@ sp needed
+ 168 0062 30BD     		pop	{r4, r5, pc}
+ 169              	.L8:
+ 170              		.align	2
+ 171              	.L7:
+ 172 0064 00100140 		.word	1073811456
+ 173 0068 00000000 		.word	hspi2
+ 174              		.cfi_endproc
+ 175              	.LFE69:
+ 177              		.section	.text.TFT_WriteCMD,"ax",%progbits
+ 178              		.align	1
+ 179              		.global	TFT_WriteCMD
+ 180              		.syntax unified
+ 181              		.thumb
+ 182              		.thumb_func
+ 184              	TFT_WriteCMD:
+ 185              	.LVL15:
+ 186              	.LFB70:
+ 126:Core/Src/tft.c **** 
+ 127:Core/Src/tft.c **** //发送命令
+ 128:Core/Src/tft.c **** void TFT_WriteCMD(uint8_t cmd)
+ 129:Core/Src/tft.c **** {
+ 187              		.loc 1 129 1 is_stmt 1 view -0
+ 188              		.cfi_startproc
+ 189              		@ args = 0, pretend = 0, frame = 8
+ 190              		@ frame_needed = 0, uses_anonymous_args = 0
+ 191              		.loc 1 129 1 is_stmt 0 view .LVU24
+ 192 0000 10B5     		push	{r4, lr}
+ 193              	.LCFI6:
+ 194              		.cfi_def_cfa_offset 8
+ 195              		.cfi_offset 4, -8
+ 196              		.cfi_offset 14, -4
+ 197 0002 82B0     		sub	sp, sp, #8
+ 198              	.LCFI7:
+ 199              		.cfi_def_cfa_offset 16
+ 200 0004 8DF80700 		strb	r0, [sp, #7]
+ 130:Core/Src/tft.c ****     HAL_GPIO_WritePin(TFT_DC_GPIO_Port, TFT_DC_Pin, GPIO_PIN_RESET);
+ 201              		.loc 1 130 5 is_stmt 1 view .LVU25
+ 202 0008 0C4C     		ldr	r4, .L11
+ 203 000a 0022     		movs	r2, #0
+ 204 000c 4021     		movs	r1, #64
+ 205 000e 2046     		mov	r0, r4
+ 206              	.LVL16:
+ 207              		.loc 1 130 5 is_stmt 0 view .LVU26
+ 208 0010 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 209              	.LVL17:
+ 131:Core/Src/tft.c ****     HAL_GPIO_WritePin(TFT_CS_GPIO_Port, TFT_CS_Pin, GPIO_PIN_RESET);
+ 210              		.loc 1 131 5 is_stmt 1 view .LVU27
+ 211 0014 0022     		movs	r2, #0
+ 212 0016 8021     		movs	r1, #128
+ 213 0018 2046     		mov	r0, r4
+ 214 001a FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 215              	.LVL18:
+ 132:Core/Src/tft.c ****     HAL_SPI_Transmit(&hspi2, &cmd, 1, 100);
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 7
+
+
+ 216              		.loc 1 132 5 view .LVU28
+ 217 001e 6423     		movs	r3, #100
+ 218 0020 0122     		movs	r2, #1
+ 219 0022 0DF10701 		add	r1, sp, #7
+ 220 0026 0648     		ldr	r0, .L11+4
+ 221 0028 FFF7FEFF 		bl	HAL_SPI_Transmit
+ 222              	.LVL19:
+ 133:Core/Src/tft.c ****     HAL_GPIO_WritePin(TFT_CS_GPIO_Port, TFT_CS_Pin, GPIO_PIN_SET);
+ 223              		.loc 1 133 5 view .LVU29
+ 224 002c 0122     		movs	r2, #1
+ 225 002e 8021     		movs	r1, #128
+ 226 0030 2046     		mov	r0, r4
+ 227 0032 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 228              	.LVL20:
+ 134:Core/Src/tft.c **** }
+ 229              		.loc 1 134 1 is_stmt 0 view .LVU30
+ 230 0036 02B0     		add	sp, sp, #8
+ 231              	.LCFI8:
+ 232              		.cfi_def_cfa_offset 8
+ 233              		@ sp needed
+ 234 0038 10BD     		pop	{r4, pc}
+ 235              	.L12:
+ 236 003a 00BF     		.align	2
+ 237              	.L11:
+ 238 003c 00100140 		.word	1073811456
+ 239 0040 00000000 		.word	hspi2
+ 240              		.cfi_endproc
+ 241              	.LFE70:
+ 243              		.section	.text.TFT_Init,"ax",%progbits
+ 244              		.align	1
+ 245              		.global	TFT_Init
+ 246              		.syntax unified
+ 247              		.thumb
+ 248              		.thumb_func
+ 250              	TFT_Init:
+ 251              	.LFB71:
+ 135:Core/Src/tft.c **** 
+ 136:Core/Src/tft.c **** void TFT_Init()
+ 137:Core/Src/tft.c **** {
+ 252              		.loc 1 137 1 is_stmt 1 view -0
+ 253              		.cfi_startproc
+ 254              		@ args = 0, pretend = 0, frame = 0
+ 255              		@ frame_needed = 0, uses_anonymous_args = 0
+ 256 0000 10B5     		push	{r4, lr}
+ 257              	.LCFI9:
+ 258              		.cfi_def_cfa_offset 8
+ 259              		.cfi_offset 4, -8
+ 260              		.cfi_offset 14, -4
+ 138:Core/Src/tft.c ****     HAL_GPIO_WritePin(TFT_BL_GPIO_Port, TFT_BL_Pin, GPIO_PIN_RESET);
+ 261              		.loc 1 138 5 view .LVU32
+ 262 0002 734C     		ldr	r4, .L15
+ 263 0004 0022     		movs	r2, #0
+ 264 0006 4FF48051 		mov	r1, #4096
+ 265 000a 2046     		mov	r0, r4
+ 266 000c FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 267              	.LVL21:
+ 139:Core/Src/tft.c ****     HAL_GPIO_WritePin(TFT_RESET_GPIO_Port, TFT_RESET_Pin, GPIO_PIN_RESET);
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 8
+
+
+ 268              		.loc 1 139 5 view .LVU33
+ 269 0010 0022     		movs	r2, #0
+ 270 0012 4FF48041 		mov	r1, #16384
+ 271 0016 2046     		mov	r0, r4
+ 272 0018 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 273              	.LVL22:
+ 140:Core/Src/tft.c ****     HAL_Delay(50);
+ 274              		.loc 1 140 5 view .LVU34
+ 275 001c 3220     		movs	r0, #50
+ 276 001e FFF7FEFF 		bl	HAL_Delay
+ 277              	.LVL23:
+ 141:Core/Src/tft.c ****     HAL_GPIO_WritePin(TFT_RESET_GPIO_Port, TFT_RESET_Pin, GPIO_PIN_SET);
+ 278              		.loc 1 141 5 view .LVU35
+ 279 0022 0122     		movs	r2, #1
+ 280 0024 4FF48041 		mov	r1, #16384
+ 281 0028 2046     		mov	r0, r4
+ 282 002a FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 283              	.LVL24:
+ 142:Core/Src/tft.c ****     HAL_Delay(50);
+ 284              		.loc 1 142 5 view .LVU36
+ 285 002e 3220     		movs	r0, #50
+ 286 0030 FFF7FEFF 		bl	HAL_Delay
+ 287              	.LVL25:
+ 143:Core/Src/tft.c ****     HAL_GPIO_WritePin(TFT_BL_GPIO_Port, TFT_BL_Pin, GPIO_PIN_SET);
+ 288              		.loc 1 143 5 view .LVU37
+ 289 0034 0122     		movs	r2, #1
+ 290 0036 4FF48051 		mov	r1, #4096
+ 291 003a 2046     		mov	r0, r4
+ 292 003c FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 293              	.LVL26:
+ 144:Core/Src/tft.c **** 
+ 145:Core/Src/tft.c **** 	TFT_WriteCMD(0x11); 
+ 294              		.loc 1 145 2 view .LVU38
+ 295 0040 1120     		movs	r0, #17
+ 296 0042 FFF7FEFF 		bl	TFT_WriteCMD
+ 297              	.LVL27:
+ 146:Core/Src/tft.c **** 	HAL_Delay(10); 
+ 298              		.loc 1 146 2 view .LVU39
+ 299 0046 0A20     		movs	r0, #10
+ 300 0048 FFF7FEFF 		bl	HAL_Delay
+ 301              	.LVL28:
+ 147:Core/Src/tft.c **** 	
+ 148:Core/Src/tft.c **** 	//display and color format setting
+ 149:Core/Src/tft.c **** 	TFT_WriteCMD(0x36);
+ 302              		.loc 1 149 2 view .LVU40
+ 303 004c 3620     		movs	r0, #54
+ 304 004e FFF7FEFF 		bl	TFT_WriteCMD
+ 305              	.LVL29:
+ 150:Core/Src/tft.c **** 
+ 151:Core/Src/tft.c **** 	if(USE_HORIZONTAL == 0)TFT_WriteData(0x00);
+ 306              		.loc 1 151 2 view .LVU41
+ 307              		.loc 1 151 25 view .LVU42
+ 308 0052 0020     		movs	r0, #0
+ 309 0054 FFF7FEFF 		bl	TFT_WriteData
+ 310              	.LVL30:
+ 152:Core/Src/tft.c **** 	else if(USE_HORIZONTAL == 1)TFT_WriteData(0xC0);
+ 153:Core/Src/tft.c **** 	else if(USE_HORIZONTAL == 2)TFT_WriteData(0x70);
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 9
+
+
+ 154:Core/Src/tft.c **** 	else TFT_WriteData(0xA0);
+ 155:Core/Src/tft.c **** 
+ 156:Core/Src/tft.c **** 	TFT_WriteCMD(0x3A);
+ 311              		.loc 1 156 2 view .LVU43
+ 312 0058 3A20     		movs	r0, #58
+ 313 005a FFF7FEFF 		bl	TFT_WriteCMD
+ 314              	.LVL31:
+ 157:Core/Src/tft.c **** 	TFT_WriteData(0x05);
+ 315              		.loc 1 157 2 view .LVU44
+ 316 005e 0520     		movs	r0, #5
+ 317 0060 FFF7FEFF 		bl	TFT_WriteData
+ 318              	.LVL32:
+ 158:Core/Src/tft.c **** 
+ 159:Core/Src/tft.c **** 	//frame rate setting
+ 160:Core/Src/tft.c **** 	TFT_WriteCMD(0xB2);
+ 319              		.loc 1 160 2 view .LVU45
+ 320 0064 B220     		movs	r0, #178
+ 321 0066 FFF7FEFF 		bl	TFT_WriteCMD
+ 322              	.LVL33:
+ 161:Core/Src/tft.c **** 	TFT_WriteData(0x0C);
+ 323              		.loc 1 161 2 view .LVU46
+ 324 006a 0C20     		movs	r0, #12
+ 325 006c FFF7FEFF 		bl	TFT_WriteData
+ 326              	.LVL34:
+ 162:Core/Src/tft.c **** 	TFT_WriteData(0x0C);
+ 327              		.loc 1 162 2 view .LVU47
+ 328 0070 0C20     		movs	r0, #12
+ 329 0072 FFF7FEFF 		bl	TFT_WriteData
+ 330              	.LVL35:
+ 163:Core/Src/tft.c **** 	TFT_WriteData(0x00);
+ 331              		.loc 1 163 2 view .LVU48
+ 332 0076 0020     		movs	r0, #0
+ 333 0078 FFF7FEFF 		bl	TFT_WriteData
+ 334              	.LVL36:
+ 164:Core/Src/tft.c **** 	TFT_WriteData(0x33);
+ 335              		.loc 1 164 2 view .LVU49
+ 336 007c 3320     		movs	r0, #51
+ 337 007e FFF7FEFF 		bl	TFT_WriteData
+ 338              	.LVL37:
+ 165:Core/Src/tft.c **** 	TFT_WriteData(0x33); 
+ 339              		.loc 1 165 2 view .LVU50
+ 340 0082 3320     		movs	r0, #51
+ 341 0084 FFF7FEFF 		bl	TFT_WriteData
+ 342              	.LVL38:
+ 166:Core/Src/tft.c **** 
+ 167:Core/Src/tft.c **** 	TFT_WriteCMD(0xB7); 
+ 343              		.loc 1 167 2 view .LVU51
+ 344 0088 B720     		movs	r0, #183
+ 345 008a FFF7FEFF 		bl	TFT_WriteCMD
+ 346              	.LVL39:
+ 168:Core/Src/tft.c **** 	TFT_WriteData(0x35);  
+ 347              		.loc 1 168 2 view .LVU52
+ 348 008e 3520     		movs	r0, #53
+ 349 0090 FFF7FEFF 		bl	TFT_WriteData
+ 350              	.LVL40:
+ 169:Core/Src/tft.c **** 
+ 170:Core/Src/tft.c **** 	//power setting
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 10
+
+
+ 171:Core/Src/tft.c **** 	TFT_WriteCMD(0xBB);
+ 351              		.loc 1 171 2 view .LVU53
+ 352 0094 BB20     		movs	r0, #187
+ 353 0096 FFF7FEFF 		bl	TFT_WriteCMD
+ 354              	.LVL41:
+ 172:Core/Src/tft.c **** 	TFT_WriteData(0x35);
+ 355              		.loc 1 172 2 view .LVU54
+ 356 009a 3520     		movs	r0, #53
+ 357 009c FFF7FEFF 		bl	TFT_WriteData
+ 358              	.LVL42:
+ 173:Core/Src/tft.c **** 
+ 174:Core/Src/tft.c **** 	TFT_WriteCMD(0xC0);
+ 359              		.loc 1 174 2 view .LVU55
+ 360 00a0 C020     		movs	r0, #192
+ 361 00a2 FFF7FEFF 		bl	TFT_WriteCMD
+ 362              	.LVL43:
+ 175:Core/Src/tft.c **** 	TFT_WriteData(0x2C);
+ 363              		.loc 1 175 2 view .LVU56
+ 364 00a6 2C20     		movs	r0, #44
+ 365 00a8 FFF7FEFF 		bl	TFT_WriteData
+ 366              	.LVL44:
+ 176:Core/Src/tft.c **** 
+ 177:Core/Src/tft.c **** 	TFT_WriteCMD(0xC2);
+ 367              		.loc 1 177 2 view .LVU57
+ 368 00ac C220     		movs	r0, #194
+ 369 00ae FFF7FEFF 		bl	TFT_WriteCMD
+ 370              	.LVL45:
+ 178:Core/Src/tft.c **** 	TFT_WriteData(0x01);
+ 371              		.loc 1 178 2 view .LVU58
+ 372 00b2 0120     		movs	r0, #1
+ 373 00b4 FFF7FEFF 		bl	TFT_WriteData
+ 374              	.LVL46:
+ 179:Core/Src/tft.c **** 
+ 180:Core/Src/tft.c **** 	TFT_WriteCMD(0xC3);
+ 375              		.loc 1 180 2 view .LVU59
+ 376 00b8 C320     		movs	r0, #195
+ 377 00ba FFF7FEFF 		bl	TFT_WriteCMD
+ 378              	.LVL47:
+ 181:Core/Src/tft.c **** 	TFT_WriteData(0x13);   
+ 379              		.loc 1 181 2 view .LVU60
+ 380 00be 1320     		movs	r0, #19
+ 381 00c0 FFF7FEFF 		bl	TFT_WriteData
+ 382              	.LVL48:
+ 182:Core/Src/tft.c **** 
+ 183:Core/Src/tft.c **** 	TFT_WriteCMD(0xC4);
+ 383              		.loc 1 183 2 view .LVU61
+ 384 00c4 C420     		movs	r0, #196
+ 385 00c6 FFF7FEFF 		bl	TFT_WriteCMD
+ 386              	.LVL49:
+ 184:Core/Src/tft.c **** 	TFT_WriteData(0x20);  
+ 387              		.loc 1 184 2 view .LVU62
+ 388 00ca 2020     		movs	r0, #32
+ 389 00cc FFF7FEFF 		bl	TFT_WriteData
+ 390              	.LVL50:
+ 185:Core/Src/tft.c **** 
+ 186:Core/Src/tft.c **** 	TFT_WriteCMD(0xC6); 
+ 391              		.loc 1 186 2 view .LVU63
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 11
+
+
+ 392 00d0 C620     		movs	r0, #198
+ 393 00d2 FFF7FEFF 		bl	TFT_WriteCMD
+ 394              	.LVL51:
+ 187:Core/Src/tft.c **** 	TFT_WriteData(0x0F);    
+ 395              		.loc 1 187 2 view .LVU64
+ 396 00d6 0F20     		movs	r0, #15
+ 397 00d8 FFF7FEFF 		bl	TFT_WriteData
+ 398              	.LVL52:
+ 188:Core/Src/tft.c **** 
+ 189:Core/Src/tft.c **** 	TFT_WriteCMD(0xCA); 
+ 399              		.loc 1 189 2 view .LVU65
+ 400 00dc CA20     		movs	r0, #202
+ 401 00de FFF7FEFF 		bl	TFT_WriteCMD
+ 402              	.LVL53:
+ 190:Core/Src/tft.c **** 	TFT_WriteData(0x0F);  
+ 403              		.loc 1 190 2 view .LVU66
+ 404 00e2 0F20     		movs	r0, #15
+ 405 00e4 FFF7FEFF 		bl	TFT_WriteData
+ 406              	.LVL54:
+ 191:Core/Src/tft.c **** 
+ 192:Core/Src/tft.c **** 	TFT_WriteCMD(0xC8); 
+ 407              		.loc 1 192 2 view .LVU67
+ 408 00e8 C820     		movs	r0, #200
+ 409 00ea FFF7FEFF 		bl	TFT_WriteCMD
+ 410              	.LVL55:
+ 193:Core/Src/tft.c **** 	TFT_WriteData(0x08);  
+ 411              		.loc 1 193 2 view .LVU68
+ 412 00ee 0820     		movs	r0, #8
+ 413 00f0 FFF7FEFF 		bl	TFT_WriteData
+ 414              	.LVL56:
+ 194:Core/Src/tft.c **** 
+ 195:Core/Src/tft.c **** 	TFT_WriteCMD(0x55); 
+ 415              		.loc 1 195 2 view .LVU69
+ 416 00f4 5520     		movs	r0, #85
+ 417 00f6 FFF7FEFF 		bl	TFT_WriteCMD
+ 418              	.LVL57:
+ 196:Core/Src/tft.c **** 	TFT_WriteData(0x90);  
+ 419              		.loc 1 196 2 view .LVU70
+ 420 00fa 9020     		movs	r0, #144
+ 421 00fc FFF7FEFF 		bl	TFT_WriteData
+ 422              	.LVL58:
+ 197:Core/Src/tft.c **** 
+ 198:Core/Src/tft.c **** 	TFT_WriteCMD(0xD0); 
+ 423              		.loc 1 198 2 view .LVU71
+ 424 0100 D020     		movs	r0, #208
+ 425 0102 FFF7FEFF 		bl	TFT_WriteCMD
+ 426              	.LVL59:
+ 199:Core/Src/tft.c **** 	TFT_WriteData(0xA4);  
+ 427              		.loc 1 199 2 view .LVU72
+ 428 0106 A420     		movs	r0, #164
+ 429 0108 FFF7FEFF 		bl	TFT_WriteData
+ 430              	.LVL60:
+ 200:Core/Src/tft.c **** 	TFT_WriteData(0xA1);  
+ 431              		.loc 1 200 2 view .LVU73
+ 432 010c A120     		movs	r0, #161
+ 433 010e FFF7FEFF 		bl	TFT_WriteData
+ 434              	.LVL61:
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 12
+
+
+ 201:Core/Src/tft.c **** 
+ 202:Core/Src/tft.c **** 	//gamma setting
+ 203:Core/Src/tft.c **** 	TFT_WriteCMD(0xE0);
+ 435              		.loc 1 203 2 view .LVU74
+ 436 0112 E020     		movs	r0, #224
+ 437 0114 FFF7FEFF 		bl	TFT_WriteCMD
+ 438              	.LVL62:
+ 204:Core/Src/tft.c **** 	TFT_WriteData(0xD0);
+ 439              		.loc 1 204 2 view .LVU75
+ 440 0118 D020     		movs	r0, #208
+ 441 011a FFF7FEFF 		bl	TFT_WriteData
+ 442              	.LVL63:
+ 205:Core/Src/tft.c **** 	TFT_WriteData(0x00);
+ 443              		.loc 1 205 2 view .LVU76
+ 444 011e 0020     		movs	r0, #0
+ 445 0120 FFF7FEFF 		bl	TFT_WriteData
+ 446              	.LVL64:
+ 206:Core/Src/tft.c **** 	TFT_WriteData(0x06);
+ 447              		.loc 1 206 2 view .LVU77
+ 448 0124 0620     		movs	r0, #6
+ 449 0126 FFF7FEFF 		bl	TFT_WriteData
+ 450              	.LVL65:
+ 207:Core/Src/tft.c **** 	TFT_WriteData(0x09);
+ 451              		.loc 1 207 2 view .LVU78
+ 452 012a 0920     		movs	r0, #9
+ 453 012c FFF7FEFF 		bl	TFT_WriteData
+ 454              	.LVL66:
+ 208:Core/Src/tft.c **** 	TFT_WriteData(0x0B);
+ 455              		.loc 1 208 2 view .LVU79
+ 456 0130 0B20     		movs	r0, #11
+ 457 0132 FFF7FEFF 		bl	TFT_WriteData
+ 458              	.LVL67:
+ 209:Core/Src/tft.c **** 	TFT_WriteData(0x2A);
+ 459              		.loc 1 209 2 view .LVU80
+ 460 0136 2A20     		movs	r0, #42
+ 461 0138 FFF7FEFF 		bl	TFT_WriteData
+ 462              	.LVL68:
+ 210:Core/Src/tft.c **** 	TFT_WriteData(0x3C);
+ 463              		.loc 1 210 2 view .LVU81
+ 464 013c 3C20     		movs	r0, #60
+ 465 013e FFF7FEFF 		bl	TFT_WriteData
+ 466              	.LVL69:
+ 211:Core/Src/tft.c **** 	TFT_WriteData(0x55);
+ 467              		.loc 1 211 2 view .LVU82
+ 468 0142 5520     		movs	r0, #85
+ 469 0144 FFF7FEFF 		bl	TFT_WriteData
+ 470              	.LVL70:
+ 212:Core/Src/tft.c **** 	TFT_WriteData(0x4B);
+ 471              		.loc 1 212 2 view .LVU83
+ 472 0148 4B20     		movs	r0, #75
+ 473 014a FFF7FEFF 		bl	TFT_WriteData
+ 474              	.LVL71:
+ 213:Core/Src/tft.c **** 	TFT_WriteData(0x08);
+ 475              		.loc 1 213 2 view .LVU84
+ 476 014e 0820     		movs	r0, #8
+ 477 0150 FFF7FEFF 		bl	TFT_WriteData
+ 478              	.LVL72:
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 13
+
+
+ 214:Core/Src/tft.c **** 	TFT_WriteData(0x16);
+ 479              		.loc 1 214 2 view .LVU85
+ 480 0154 1620     		movs	r0, #22
+ 481 0156 FFF7FEFF 		bl	TFT_WriteData
+ 482              	.LVL73:
+ 215:Core/Src/tft.c **** 	TFT_WriteData(0x14);
+ 483              		.loc 1 215 2 view .LVU86
+ 484 015a 1420     		movs	r0, #20
+ 485 015c FFF7FEFF 		bl	TFT_WriteData
+ 486              	.LVL74:
+ 216:Core/Src/tft.c **** 	TFT_WriteData(0x19);
+ 487              		.loc 1 216 2 view .LVU87
+ 488 0160 1920     		movs	r0, #25
+ 489 0162 FFF7FEFF 		bl	TFT_WriteData
+ 490              	.LVL75:
+ 217:Core/Src/tft.c **** 	TFT_WriteData(0x20);
+ 491              		.loc 1 217 2 view .LVU88
+ 492 0166 2020     		movs	r0, #32
+ 493 0168 FFF7FEFF 		bl	TFT_WriteData
+ 494              	.LVL76:
+ 218:Core/Src/tft.c **** 
+ 219:Core/Src/tft.c **** 	TFT_WriteCMD(0xE1);
+ 495              		.loc 1 219 2 view .LVU89
+ 496 016c E120     		movs	r0, #225
+ 497 016e FFF7FEFF 		bl	TFT_WriteCMD
+ 498              	.LVL77:
+ 220:Core/Src/tft.c **** 	TFT_WriteData(0xD0);
+ 499              		.loc 1 220 2 view .LVU90
+ 500 0172 D020     		movs	r0, #208
+ 501 0174 FFF7FEFF 		bl	TFT_WriteData
+ 502              	.LVL78:
+ 221:Core/Src/tft.c **** 	TFT_WriteData(0x00);
+ 503              		.loc 1 221 2 view .LVU91
+ 504 0178 0020     		movs	r0, #0
+ 505 017a FFF7FEFF 		bl	TFT_WriteData
+ 506              	.LVL79:
+ 222:Core/Src/tft.c **** 	TFT_WriteData(0x06);
+ 507              		.loc 1 222 2 view .LVU92
+ 508 017e 0620     		movs	r0, #6
+ 509 0180 FFF7FEFF 		bl	TFT_WriteData
+ 510              	.LVL80:
+ 223:Core/Src/tft.c **** 	TFT_WriteData(0x09);
+ 511              		.loc 1 223 2 view .LVU93
+ 512 0184 0920     		movs	r0, #9
+ 513 0186 FFF7FEFF 		bl	TFT_WriteData
+ 514              	.LVL81:
+ 224:Core/Src/tft.c **** 	TFT_WriteData(0x0B);
+ 515              		.loc 1 224 2 view .LVU94
+ 516 018a 0B20     		movs	r0, #11
+ 517 018c FFF7FEFF 		bl	TFT_WriteData
+ 518              	.LVL82:
+ 225:Core/Src/tft.c **** 	TFT_WriteData(0x29);
+ 519              		.loc 1 225 2 view .LVU95
+ 520 0190 2920     		movs	r0, #41
+ 521 0192 FFF7FEFF 		bl	TFT_WriteData
+ 522              	.LVL83:
+ 226:Core/Src/tft.c **** 	TFT_WriteData(0x36);
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 14
+
+
+ 523              		.loc 1 226 2 view .LVU96
+ 524 0196 3620     		movs	r0, #54
+ 525 0198 FFF7FEFF 		bl	TFT_WriteData
+ 526              	.LVL84:
+ 227:Core/Src/tft.c **** 	TFT_WriteData(0x54);
+ 527              		.loc 1 227 2 view .LVU97
+ 528 019c 5420     		movs	r0, #84
+ 529 019e FFF7FEFF 		bl	TFT_WriteData
+ 530              	.LVL85:
+ 228:Core/Src/tft.c **** 	TFT_WriteData(0x4B);
+ 531              		.loc 1 228 2 view .LVU98
+ 532 01a2 4B20     		movs	r0, #75
+ 533 01a4 FFF7FEFF 		bl	TFT_WriteData
+ 534              	.LVL86:
+ 229:Core/Src/tft.c **** 	TFT_WriteData(0x0D);
+ 535              		.loc 1 229 2 view .LVU99
+ 536 01a8 0D20     		movs	r0, #13
+ 537 01aa FFF7FEFF 		bl	TFT_WriteData
+ 538              	.LVL87:
+ 230:Core/Src/tft.c **** 	TFT_WriteData(0x16);
+ 539              		.loc 1 230 2 view .LVU100
+ 540 01ae 1620     		movs	r0, #22
+ 541 01b0 FFF7FEFF 		bl	TFT_WriteData
+ 542              	.LVL88:
+ 231:Core/Src/tft.c **** 	TFT_WriteData(0x14);
+ 543              		.loc 1 231 2 view .LVU101
+ 544 01b4 1420     		movs	r0, #20
+ 545 01b6 FFF7FEFF 		bl	TFT_WriteData
+ 546              	.LVL89:
+ 232:Core/Src/tft.c **** 	TFT_WriteData(0x21);
+ 547              		.loc 1 232 2 view .LVU102
+ 548 01ba 2120     		movs	r0, #33
+ 549 01bc FFF7FEFF 		bl	TFT_WriteData
+ 550              	.LVL90:
+ 233:Core/Src/tft.c **** 	TFT_WriteData(0x20);
+ 551              		.loc 1 233 2 view .LVU103
+ 552 01c0 2020     		movs	r0, #32
+ 553 01c2 FFF7FEFF 		bl	TFT_WriteData
+ 554              	.LVL91:
+ 234:Core/Src/tft.c **** 
+ 235:Core/Src/tft.c **** 	TFT_WriteCMD(0x29);
+ 555              		.loc 1 235 2 view .LVU104
+ 556 01c6 2920     		movs	r0, #41
+ 557 01c8 FFF7FEFF 		bl	TFT_WriteCMD
+ 558              	.LVL92:
+ 236:Core/Src/tft.c **** 
+ 237:Core/Src/tft.c **** }
+ 559              		.loc 1 237 1 is_stmt 0 view .LVU105
+ 560 01cc 10BD     		pop	{r4, pc}
+ 561              	.L16:
+ 562 01ce 00BF     		.align	2
+ 563              	.L15:
+ 564 01d0 000C0140 		.word	1073810432
+ 565              		.cfi_endproc
+ 566              	.LFE71:
+ 568              		.section	.text.TFT_SetPos,"ax",%progbits
+ 569              		.align	1
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 15
+
+
+ 570              		.global	TFT_SetPos
+ 571              		.syntax unified
+ 572              		.thumb
+ 573              		.thumb_func
+ 575              	TFT_SetPos:
+ 576              	.LVL93:
+ 577              	.LFB72:
+ 238:Core/Src/tft.c **** 
+ 239:Core/Src/tft.c **** void TFT_SetPos(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2)
+ 240:Core/Src/tft.c **** {
+ 578              		.loc 1 240 1 is_stmt 1 view -0
+ 579              		.cfi_startproc
+ 580              		@ args = 0, pretend = 0, frame = 0
+ 581              		@ frame_needed = 0, uses_anonymous_args = 0
+ 582              		.loc 1 240 1 is_stmt 0 view .LVU107
+ 583 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 584              	.LCFI10:
+ 585              		.cfi_def_cfa_offset 24
+ 586              		.cfi_offset 3, -24
+ 587              		.cfi_offset 4, -20
+ 588              		.cfi_offset 5, -16
+ 589              		.cfi_offset 6, -12
+ 590              		.cfi_offset 7, -8
+ 591              		.cfi_offset 14, -4
+ 592 0002 0746     		mov	r7, r0
+ 593 0004 0D46     		mov	r5, r1
+ 594 0006 1646     		mov	r6, r2
+ 595 0008 1C46     		mov	r4, r3
+ 241:Core/Src/tft.c **** 	//x1写0无法更新,需要写1
+ 242:Core/Src/tft.c ****     #if (USE_HORIZONTAL == 0 || USE_HORIZONTAL == 1)
+ 243:Core/Src/tft.c ****         TFT_WriteCMD(0x2A);
+ 596              		.loc 1 243 9 is_stmt 1 view .LVU108
+ 597 000a 2A20     		movs	r0, #42
+ 598              	.LVL94:
+ 599              		.loc 1 243 9 is_stmt 0 view .LVU109
+ 600 000c FFF7FEFF 		bl	TFT_WriteCMD
+ 601              	.LVL95:
+ 244:Core/Src/tft.c ****         TFT_WriteData16(x1);
+ 602              		.loc 1 244 9 is_stmt 1 view .LVU110
+ 603 0010 3846     		mov	r0, r7
+ 604 0012 FFF7FEFF 		bl	TFT_WriteData16
+ 605              	.LVL96:
+ 245:Core/Src/tft.c ****         TFT_WriteData16(x2);
+ 606              		.loc 1 245 9 view .LVU111
+ 607 0016 3046     		mov	r0, r6
+ 608 0018 FFF7FEFF 		bl	TFT_WriteData16
+ 609              	.LVL97:
+ 246:Core/Src/tft.c ****         TFT_WriteCMD(0x2B);
+ 610              		.loc 1 246 9 view .LVU112
+ 611 001c 2B20     		movs	r0, #43
+ 612 001e FFF7FEFF 		bl	TFT_WriteCMD
+ 613              	.LVL98:
+ 247:Core/Src/tft.c ****         TFT_WriteData16(y1);
+ 614              		.loc 1 247 9 view .LVU113
+ 615 0022 2846     		mov	r0, r5
+ 616 0024 FFF7FEFF 		bl	TFT_WriteData16
+ 617              	.LVL99:
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 16
+
+
+ 248:Core/Src/tft.c ****         TFT_WriteData16(y2);
+ 618              		.loc 1 248 9 view .LVU114
+ 619 0028 2046     		mov	r0, r4
+ 620 002a FFF7FEFF 		bl	TFT_WriteData16
+ 621              	.LVL100:
+ 249:Core/Src/tft.c ****         TFT_WriteCMD(0x2C);
+ 622              		.loc 1 249 9 view .LVU115
+ 623 002e 2C20     		movs	r0, #44
+ 624 0030 FFF7FEFF 		bl	TFT_WriteCMD
+ 625              	.LVL101:
+ 250:Core/Src/tft.c ****     #else
+ 251:Core/Src/tft.c ****         TFT_WriteCMD(0x2A);
+ 252:Core/Src/tft.c ****         TFT_WriteData16(x1);
+ 253:Core/Src/tft.c ****         TFT_WriteData16(x2);
+ 254:Core/Src/tft.c ****         TFT_WriteCMD(0x2B);
+ 255:Core/Src/tft.c ****         TFT_WriteData16(y1 + 34);
+ 256:Core/Src/tft.c ****         TFT_WriteData16(y2 + 34);
+ 257:Core/Src/tft.c ****         TFT_WriteCMD(0x2C);
+ 258:Core/Src/tft.c ****     #endif
+ 259:Core/Src/tft.c **** 
+ 260:Core/Src/tft.c **** }
+ 626              		.loc 1 260 1 is_stmt 0 view .LVU116
+ 627 0034 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 628              		.cfi_endproc
+ 629              	.LFE72:
+ 631              		.section	.text.RGB2565,"ax",%progbits
+ 632              		.align	1
+ 633              		.global	RGB2565
+ 634              		.syntax unified
+ 635              		.thumb
+ 636              		.thumb_func
+ 638              	RGB2565:
+ 639              	.LVL102:
+ 640              	.LFB73:
+ 261:Core/Src/tft.c **** 
+ 262:Core/Src/tft.c **** //RGB转565颜色
+ 263:Core/Src/tft.c **** uint16_t RGB2565(uint8_t red, uint8_t green, uint8_t blue)
+ 264:Core/Src/tft.c **** {
+ 641              		.loc 1 264 1 is_stmt 1 view -0
+ 642              		.cfi_startproc
+ 643              		@ args = 0, pretend = 0, frame = 0
+ 644              		@ frame_needed = 0, uses_anonymous_args = 0
+ 645              		@ link register save eliminated.
+ 265:Core/Src/tft.c **** 	return ( (red >> 3 << 11) + (green >> 2 << 5) + (blue >> 3));
+ 646              		.loc 1 265 2 view .LVU118
+ 647              		.loc 1 265 21 is_stmt 0 view .LVU119
+ 648 0000 C308     		lsrs	r3, r0, #3
+ 649              		.loc 1 265 42 view .LVU120
+ 650 0002 8808     		lsrs	r0, r1, #2
+ 651              	.LVL103:
+ 652              		.loc 1 265 42 view .LVU121
+ 653 0004 4001     		lsls	r0, r0, #5
+ 654              		.loc 1 265 28 view .LVU122
+ 655 0006 00EBC320 		add	r0, r0, r3, lsl #11
+ 656 000a 80B2     		uxth	r0, r0
+ 657              		.loc 1 265 48 view .LVU123
+ 658 000c 00EBD200 		add	r0, r0, r2, lsr #3
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 17
+
+
+ 266:Core/Src/tft.c **** }
+ 659              		.loc 1 266 1 view .LVU124
+ 660 0010 80B2     		uxth	r0, r0
+ 661 0012 7047     		bx	lr
+ 662              		.cfi_endproc
+ 663              	.LFE73:
+ 665              		.section	.text.TFT_Fill,"ax",%progbits
+ 666              		.align	1
+ 667              		.global	TFT_Fill
+ 668              		.syntax unified
+ 669              		.thumb
+ 670              		.thumb_func
+ 672              	TFT_Fill:
+ 673              	.LVL104:
+ 674              	.LFB74:
+ 267:Core/Src/tft.c **** 
+ 268:Core/Src/tft.c **** //填充
+ 269:Core/Src/tft.c **** void TFT_Fill(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t color)
+ 270:Core/Src/tft.c **** {
+ 675              		.loc 1 270 1 is_stmt 1 view -0
+ 676              		.cfi_startproc
+ 677              		@ args = 4, pretend = 0, frame = 0
+ 678              		@ frame_needed = 0, uses_anonymous_args = 0
+ 679              		.loc 1 270 1 is_stmt 0 view .LVU126
+ 680 0000 2DE9F843 		push	{r3, r4, r5, r6, r7, r8, r9, lr}
+ 681              	.LCFI11:
+ 682              		.cfi_def_cfa_offset 32
+ 683              		.cfi_offset 3, -32
+ 684              		.cfi_offset 4, -28
+ 685              		.cfi_offset 5, -24
+ 686              		.cfi_offset 6, -20
+ 687              		.cfi_offset 7, -16
+ 688              		.cfi_offset 8, -12
+ 689              		.cfi_offset 9, -8
+ 690              		.cfi_offset 14, -4
+ 691 0004 0746     		mov	r7, r0
+ 692 0006 8846     		mov	r8, r1
+ 693 0008 9146     		mov	r9, r2
+ 694 000a 1D46     		mov	r5, r3
+ 695 000c BDF82060 		ldrh	r6, [sp, #32]
+ 271:Core/Src/tft.c **** 	TFT_SetPos(x1, y1 - 1, x2, y2 - 1);
+ 696              		.loc 1 271 2 is_stmt 1 view .LVU127
+ 697 0010 013B     		subs	r3, r3, #1
+ 698              	.LVL105:
+ 699              		.loc 1 271 2 is_stmt 0 view .LVU128
+ 700 0012 0139     		subs	r1, r1, #1
+ 701              	.LVL106:
+ 702              		.loc 1 271 2 view .LVU129
+ 703 0014 9BB2     		uxth	r3, r3
+ 704 0016 89B2     		uxth	r1, r1
+ 705 0018 FFF7FEFF 		bl	TFT_SetPos
+ 706              	.LVL107:
+ 272:Core/Src/tft.c **** 	for(uint16_t i = x1; i <= x2 - 1; i++)
+ 707              		.loc 1 272 2 is_stmt 1 view .LVU130
+ 708              	.LBB2:
+ 709              		.loc 1 272 6 view .LVU131
+ 710              		.loc 1 272 2 is_stmt 0 view .LVU132
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 18
+
+
+ 711 001c 08E0     		b	.L21
+ 712              	.LVL108:
+ 713              	.L22:
+ 714              	.LBB3:
+ 273:Core/Src/tft.c **** 	{
+ 274:Core/Src/tft.c **** 		for(uint16_t j = y1; j <= y2 - 1; j++)
+ 275:Core/Src/tft.c **** 			TFT_WriteData16(color);
+ 715              		.loc 1 275 4 is_stmt 1 discriminator 3 view .LVU133
+ 716 001e 3046     		mov	r0, r6
+ 717 0020 FFF7FEFF 		bl	TFT_WriteData16
+ 718              	.LVL109:
+ 274:Core/Src/tft.c **** 			TFT_WriteData16(color);
+ 719              		.loc 1 274 37 discriminator 3 view .LVU134
+ 274:Core/Src/tft.c **** 			TFT_WriteData16(color);
+ 720              		.loc 1 274 38 is_stmt 0 discriminator 3 view .LVU135
+ 721 0024 0134     		adds	r4, r4, #1
+ 722              	.LVL110:
+ 274:Core/Src/tft.c **** 			TFT_WriteData16(color);
+ 723              		.loc 1 274 38 discriminator 3 view .LVU136
+ 724 0026 A4B2     		uxth	r4, r4
+ 725              	.LVL111:
+ 726              	.L23:
+ 274:Core/Src/tft.c **** 			TFT_WriteData16(color);
+ 727              		.loc 1 274 24 is_stmt 1 discriminator 1 view .LVU137
+ 274:Core/Src/tft.c **** 			TFT_WriteData16(color);
+ 728              		.loc 1 274 3 is_stmt 0 discriminator 1 view .LVU138
+ 729 0028 AC42     		cmp	r4, r5
+ 730 002a F8D3     		bcc	.L22
+ 731              	.LBE3:
+ 272:Core/Src/tft.c **** 	for(uint16_t i = x1; i <= x2 - 1; i++)
+ 732              		.loc 1 272 36 is_stmt 1 discriminator 2 view .LVU139
+ 272:Core/Src/tft.c **** 	for(uint16_t i = x1; i <= x2 - 1; i++)
+ 733              		.loc 1 272 37 is_stmt 0 discriminator 2 view .LVU140
+ 734 002c 0137     		adds	r7, r7, #1
+ 735              	.LVL112:
+ 272:Core/Src/tft.c **** 	for(uint16_t i = x1; i <= x2 - 1; i++)
+ 736              		.loc 1 272 37 discriminator 2 view .LVU141
+ 737 002e BFB2     		uxth	r7, r7
+ 738              	.LVL113:
+ 739              	.L21:
+ 272:Core/Src/tft.c **** 	for(uint16_t i = x1; i <= x2 - 1; i++)
+ 740              		.loc 1 272 23 is_stmt 1 discriminator 1 view .LVU142
+ 272:Core/Src/tft.c **** 	for(uint16_t i = x1; i <= x2 - 1; i++)
+ 741              		.loc 1 272 2 is_stmt 0 discriminator 1 view .LVU143
+ 742 0030 4F45     		cmp	r7, r9
+ 743 0032 01D2     		bcs	.L26
+ 744              	.LBB4:
+ 274:Core/Src/tft.c **** 			TFT_WriteData16(color);
+ 745              		.loc 1 274 16 view .LVU144
+ 746 0034 4446     		mov	r4, r8
+ 747 0036 F7E7     		b	.L23
+ 748              	.L26:
+ 749              	.LBE4:
+ 750              	.LBE2:
+ 276:Core/Src/tft.c **** 	}
+ 277:Core/Src/tft.c **** }
+ 751              		.loc 1 277 1 view .LVU145
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 19
+
+
+ 752 0038 BDE8F883 		pop	{r3, r4, r5, r6, r7, r8, r9, pc}
+ 753              		.loc 1 277 1 view .LVU146
+ 754              		.cfi_endproc
+ 755              	.LFE74:
+ 757              		.global	__aeabi_i2d
+ 758              		.global	__aeabi_ddiv
+ 759              		.global	__aeabi_d2f
+ 760              		.global	__aeabi_i2f
+ 761              		.global	__aeabi_fmul
+ 762              		.global	__aeabi_fsub
+ 763              		.global	__aeabi_fadd
+ 764              		.global	__aeabi_f2uiz
+ 765              		.section	.text.TFT_DrawLine,"ax",%progbits
+ 766              		.align	1
+ 767              		.global	TFT_DrawLine
+ 768              		.syntax unified
+ 769              		.thumb
+ 770              		.thumb_func
+ 772              	TFT_DrawLine:
+ 773              	.LVL114:
+ 774              	.LFB75:
+ 278:Core/Src/tft.c **** 
+ 279:Core/Src/tft.c **** //画线
+ 280:Core/Src/tft.c **** void TFT_DrawLine(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t color)
+ 281:Core/Src/tft.c **** {
+ 775              		.loc 1 281 1 is_stmt 1 view -0
+ 776              		.cfi_startproc
+ 777              		@ args = 4, pretend = 0, frame = 0
+ 778              		@ frame_needed = 0, uses_anonymous_args = 0
+ 779              		.loc 1 281 1 is_stmt 0 view .LVU148
+ 780 0000 2DE9F047 		push	{r4, r5, r6, r7, r8, r9, r10, lr}
+ 781              	.LCFI12:
+ 782              		.cfi_def_cfa_offset 32
+ 783              		.cfi_offset 4, -32
+ 784              		.cfi_offset 5, -28
+ 785              		.cfi_offset 6, -24
+ 786              		.cfi_offset 7, -20
+ 787              		.cfi_offset 8, -16
+ 788              		.cfi_offset 9, -12
+ 789              		.cfi_offset 10, -8
+ 790              		.cfi_offset 14, -4
+ 791 0004 0446     		mov	r4, r0
+ 792 0006 0E46     		mov	r6, r1
+ 793 0008 1F46     		mov	r7, r3
+ 794 000a BDF820A0 		ldrh	r10, [sp, #32]
+ 282:Core/Src/tft.c **** 	//竖直线
+ 283:Core/Src/tft.c **** 	if(x1 == x2)
+ 795              		.loc 1 283 2 is_stmt 1 view .LVU149
+ 796              		.loc 1 283 4 is_stmt 0 view .LVU150
+ 797 000e 9042     		cmp	r0, r2
+ 798 0010 23D0     		beq	.L39
+ 799 0012 1546     		mov	r5, r2
+ 800              	.LBB5:
+ 284:Core/Src/tft.c **** 	{
+ 285:Core/Src/tft.c **** 		if(y1 <= y2)
+ 286:Core/Src/tft.c **** 		{
+ 287:Core/Src/tft.c **** 			for(uint16_t y = y1; y <= y2 - 1; y++)
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 20
+
+
+ 288:Core/Src/tft.c **** 			{
+ 289:Core/Src/tft.c **** 				TFT_SetPos(x1, y, x1, y);
+ 290:Core/Src/tft.c **** 				TFT_WriteData16(color);
+ 291:Core/Src/tft.c **** 			}
+ 292:Core/Src/tft.c **** 		}
+ 293:Core/Src/tft.c **** 		else
+ 294:Core/Src/tft.c **** 		{
+ 295:Core/Src/tft.c **** 			for(uint16_t y = y2; y <= y1 - 1; y++)
+ 296:Core/Src/tft.c **** 			{
+ 297:Core/Src/tft.c **** 				TFT_SetPos(x1, y, x1, y);
+ 298:Core/Src/tft.c **** 				TFT_WriteData16(color);
+ 299:Core/Src/tft.c **** 			}
+ 300:Core/Src/tft.c **** 		}
+ 301:Core/Src/tft.c **** 	}
+ 302:Core/Src/tft.c **** 	else
+ 303:Core/Src/tft.c **** 	{
+ 304:Core/Src/tft.c **** 		float k = (y2 - y1) * 1.0 / (x2 - x1);
+ 801              		.loc 1 304 3 is_stmt 1 view .LVU151
+ 802              		.loc 1 304 23 is_stmt 0 view .LVU152
+ 803 0014 581A     		subs	r0, r3, r1
+ 804              	.LVL115:
+ 805              		.loc 1 304 23 view .LVU153
+ 806 0016 FFF7FEFF 		bl	__aeabi_i2d
+ 807              	.LVL116:
+ 808              		.loc 1 304 23 view .LVU154
+ 809 001a 8046     		mov	r8, r0
+ 810 001c 8946     		mov	r9, r1
+ 811              		.loc 1 304 29 view .LVU155
+ 812 001e 281B     		subs	r0, r5, r4
+ 813 0020 FFF7FEFF 		bl	__aeabi_i2d
+ 814              	.LVL117:
+ 815 0024 0246     		mov	r2, r0
+ 816 0026 0B46     		mov	r3, r1
+ 817 0028 4046     		mov	r0, r8
+ 818 002a 4946     		mov	r1, r9
+ 819 002c FFF7FEFF 		bl	__aeabi_ddiv
+ 820              	.LVL118:
+ 821              		.loc 1 304 9 view .LVU156
+ 822 0030 FFF7FEFF 		bl	__aeabi_d2f
+ 823              	.LVL119:
+ 824 0034 0746     		mov	r7, r0
+ 825              	.LVL120:
+ 305:Core/Src/tft.c **** 		float b = y1 - k * x1;
+ 826              		.loc 1 305 3 is_stmt 1 view .LVU157
+ 827              		.loc 1 305 16 is_stmt 0 view .LVU158
+ 828 0036 3046     		mov	r0, r6
+ 829              	.LVL121:
+ 830              		.loc 1 305 16 view .LVU159
+ 831 0038 FFF7FEFF 		bl	__aeabi_i2f
+ 832              	.LVL122:
+ 833 003c 0646     		mov	r6, r0
+ 834              		.loc 1 305 20 view .LVU160
+ 835 003e 2046     		mov	r0, r4
+ 836 0040 FFF7FEFF 		bl	__aeabi_i2f
+ 837              	.LVL123:
+ 838 0044 3946     		mov	r1, r7
+ 839 0046 FFF7FEFF 		bl	__aeabi_fmul
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 21
+
+
+ 840              	.LVL124:
+ 841 004a 0146     		mov	r1, r0
+ 842              		.loc 1 305 9 view .LVU161
+ 843 004c 3046     		mov	r0, r6
+ 844 004e FFF7FEFF 		bl	__aeabi_fsub
+ 845              	.LVL125:
+ 846 0052 0646     		mov	r6, r0
+ 847              	.LVL126:
+ 306:Core/Src/tft.c **** 		if(x1 <= x2)
+ 848              		.loc 1 306 3 is_stmt 1 view .LVU162
+ 849              		.loc 1 306 5 is_stmt 0 view .LVU163
+ 850 0054 AC42     		cmp	r4, r5
+ 851 0056 35D9     		bls	.L34
+ 852 0058 4EE0     		b	.L35
+ 853              	.LVL127:
+ 854              	.L39:
+ 855              		.loc 1 306 5 view .LVU164
+ 856              	.LBE5:
+ 285:Core/Src/tft.c **** 		{
+ 857              		.loc 1 285 3 is_stmt 1 view .LVU165
+ 285:Core/Src/tft.c **** 		{
+ 858              		.loc 1 285 5 is_stmt 0 view .LVU166
+ 859 005a 8B42     		cmp	r3, r1
+ 860 005c 0BD2     		bcs	.L29
+ 861 005e 18E0     		b	.L30
+ 862              	.LVL128:
+ 863              	.L31:
+ 864              	.LBB10:
+ 289:Core/Src/tft.c **** 				TFT_WriteData16(color);
+ 865              		.loc 1 289 5 is_stmt 1 discriminator 3 view .LVU167
+ 866 0060 3346     		mov	r3, r6
+ 867 0062 2246     		mov	r2, r4
+ 868 0064 3146     		mov	r1, r6
+ 869 0066 2046     		mov	r0, r4
+ 870 0068 FFF7FEFF 		bl	TFT_SetPos
+ 871              	.LVL129:
+ 290:Core/Src/tft.c **** 			}
+ 872              		.loc 1 290 5 discriminator 3 view .LVU168
+ 873 006c 5046     		mov	r0, r10
+ 874 006e FFF7FEFF 		bl	TFT_WriteData16
+ 875              	.LVL130:
+ 287:Core/Src/tft.c **** 			{
+ 876              		.loc 1 287 38 discriminator 3 view .LVU169
+ 287:Core/Src/tft.c **** 			{
+ 877              		.loc 1 287 39 is_stmt 0 discriminator 3 view .LVU170
+ 878 0072 0136     		adds	r6, r6, #1
+ 879              	.LVL131:
+ 287:Core/Src/tft.c **** 			{
+ 880              		.loc 1 287 39 discriminator 3 view .LVU171
+ 881 0074 B6B2     		uxth	r6, r6
+ 882              	.LVL132:
+ 883              	.L29:
+ 287:Core/Src/tft.c **** 			{
+ 884              		.loc 1 287 25 is_stmt 1 discriminator 1 view .LVU172
+ 287:Core/Src/tft.c **** 			{
+ 885              		.loc 1 287 4 is_stmt 0 discriminator 1 view .LVU173
+ 886 0076 BE42     		cmp	r6, r7
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 22
+
+
+ 887 0078 F2D3     		bcc	.L31
+ 888 007a 25E0     		b	.L27
+ 889              	.LVL133:
+ 890              	.L33:
+ 287:Core/Src/tft.c **** 			{
+ 891              		.loc 1 287 4 discriminator 1 view .LVU174
+ 892              	.LBE10:
+ 893              	.LBB11:
+ 297:Core/Src/tft.c **** 				TFT_WriteData16(color);
+ 894              		.loc 1 297 5 is_stmt 1 discriminator 3 view .LVU175
+ 895 007c 3B46     		mov	r3, r7
+ 896 007e 2246     		mov	r2, r4
+ 897 0080 3946     		mov	r1, r7
+ 898 0082 2046     		mov	r0, r4
+ 899 0084 FFF7FEFF 		bl	TFT_SetPos
+ 900              	.LVL134:
+ 298:Core/Src/tft.c **** 			}
+ 901              		.loc 1 298 5 discriminator 3 view .LVU176
+ 902 0088 5046     		mov	r0, r10
+ 903 008a FFF7FEFF 		bl	TFT_WriteData16
+ 904              	.LVL135:
+ 295:Core/Src/tft.c **** 			{
+ 905              		.loc 1 295 38 discriminator 3 view .LVU177
+ 295:Core/Src/tft.c **** 			{
+ 906              		.loc 1 295 39 is_stmt 0 discriminator 3 view .LVU178
+ 907 008e 0137     		adds	r7, r7, #1
+ 908              	.LVL136:
+ 295:Core/Src/tft.c **** 			{
+ 909              		.loc 1 295 39 discriminator 3 view .LVU179
+ 910 0090 BFB2     		uxth	r7, r7
+ 911              	.LVL137:
+ 912              	.L30:
+ 295:Core/Src/tft.c **** 			{
+ 913              		.loc 1 295 25 is_stmt 1 discriminator 1 view .LVU180
+ 295:Core/Src/tft.c **** 			{
+ 914              		.loc 1 295 4 is_stmt 0 discriminator 1 view .LVU181
+ 915 0092 B742     		cmp	r7, r6
+ 916 0094 F2D3     		bcc	.L33
+ 917 0096 17E0     		b	.L27
+ 918              	.LVL138:
+ 919              	.L36:
+ 295:Core/Src/tft.c **** 			{
+ 920              		.loc 1 295 4 discriminator 1 view .LVU182
+ 921              	.LBE11:
+ 922              	.LBB12:
+ 923              	.LBB6:
+ 924              	.LBB7:
+ 307:Core/Src/tft.c **** 		{
+ 308:Core/Src/tft.c **** 			for(uint16_t x = x1; x <= x2 - 1; x++)
+ 309:Core/Src/tft.c **** 			{
+ 310:Core/Src/tft.c **** 				uint16_t y = (uint16_t)(k * x + b);
+ 925              		.loc 1 310 5 is_stmt 1 discriminator 3 view .LVU183
+ 926              		.loc 1 310 31 is_stmt 0 discriminator 3 view .LVU184
+ 927 0098 2046     		mov	r0, r4
+ 928 009a FFF7FEFF 		bl	__aeabi_i2f
+ 929              	.LVL139:
+ 930 009e 3946     		mov	r1, r7
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 23
+
+
+ 931 00a0 FFF7FEFF 		bl	__aeabi_fmul
+ 932              	.LVL140:
+ 933              		.loc 1 310 35 discriminator 3 view .LVU185
+ 934 00a4 3146     		mov	r1, r6
+ 935 00a6 FFF7FEFF 		bl	__aeabi_fadd
+ 936              	.LVL141:
+ 937              		.loc 1 310 14 discriminator 3 view .LVU186
+ 938 00aa FFF7FEFF 		bl	__aeabi_f2uiz
+ 939              	.LVL142:
+ 940 00ae 81B2     		uxth	r1, r0
+ 941              	.LVL143:
+ 311:Core/Src/tft.c **** 				TFT_SetPos(x, y, x, y);
+ 942              		.loc 1 311 5 is_stmt 1 discriminator 3 view .LVU187
+ 943 00b0 0B46     		mov	r3, r1
+ 944 00b2 2246     		mov	r2, r4
+ 945 00b4 2046     		mov	r0, r4
+ 946 00b6 FFF7FEFF 		bl	TFT_SetPos
+ 947              	.LVL144:
+ 312:Core/Src/tft.c **** 				TFT_WriteData16(color);
+ 948              		.loc 1 312 5 discriminator 3 view .LVU188
+ 949 00ba 5046     		mov	r0, r10
+ 950 00bc FFF7FEFF 		bl	TFT_WriteData16
+ 951              	.LVL145:
+ 952              	.LBE7:
+ 308:Core/Src/tft.c **** 			{
+ 953              		.loc 1 308 38 discriminator 3 view .LVU189
+ 308:Core/Src/tft.c **** 			{
+ 954              		.loc 1 308 39 is_stmt 0 discriminator 3 view .LVU190
+ 955 00c0 0134     		adds	r4, r4, #1
+ 956              	.LVL146:
+ 308:Core/Src/tft.c **** 			{
+ 957              		.loc 1 308 39 discriminator 3 view .LVU191
+ 958 00c2 A4B2     		uxth	r4, r4
+ 959              	.LVL147:
+ 960              	.L34:
+ 308:Core/Src/tft.c **** 			{
+ 961              		.loc 1 308 25 is_stmt 1 discriminator 1 view .LVU192
+ 308:Core/Src/tft.c **** 			{
+ 962              		.loc 1 308 4 is_stmt 0 discriminator 1 view .LVU193
+ 963 00c4 AC42     		cmp	r4, r5
+ 964 00c6 E7D3     		bcc	.L36
+ 965              	.LVL148:
+ 966              	.L27:
+ 308:Core/Src/tft.c **** 			{
+ 967              		.loc 1 308 4 discriminator 1 view .LVU194
+ 968              	.LBE6:
+ 969              	.LBE12:
+ 313:Core/Src/tft.c **** 			}
+ 314:Core/Src/tft.c **** 		}
+ 315:Core/Src/tft.c **** 		else
+ 316:Core/Src/tft.c **** 		{
+ 317:Core/Src/tft.c **** 			for(uint16_t x = x2; x <= x1 - 1; x++)
+ 318:Core/Src/tft.c **** 			{
+ 319:Core/Src/tft.c **** 				uint16_t y = (uint16_t)(k * x + b);
+ 320:Core/Src/tft.c **** 				TFT_SetPos(x, y, x, y);
+ 321:Core/Src/tft.c **** 				TFT_WriteData16(color);
+ 322:Core/Src/tft.c **** 			}
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 24
+
+
+ 323:Core/Src/tft.c **** 		}
+ 324:Core/Src/tft.c **** 	}
+ 325:Core/Src/tft.c **** }
+ 970              		.loc 1 325 1 view .LVU195
+ 971 00c8 BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 972              	.LVL149:
+ 973              	.L37:
+ 974              	.LBB13:
+ 975              	.LBB8:
+ 976              	.LBB9:
+ 319:Core/Src/tft.c **** 				TFT_SetPos(x, y, x, y);
+ 977              		.loc 1 319 5 is_stmt 1 discriminator 3 view .LVU196
+ 319:Core/Src/tft.c **** 				TFT_SetPos(x, y, x, y);
+ 978              		.loc 1 319 31 is_stmt 0 discriminator 3 view .LVU197
+ 979 00cc 2846     		mov	r0, r5
+ 980 00ce FFF7FEFF 		bl	__aeabi_i2f
+ 981              	.LVL150:
+ 982 00d2 3946     		mov	r1, r7
+ 983 00d4 FFF7FEFF 		bl	__aeabi_fmul
+ 984              	.LVL151:
+ 319:Core/Src/tft.c **** 				TFT_SetPos(x, y, x, y);
+ 985              		.loc 1 319 35 discriminator 3 view .LVU198
+ 986 00d8 3146     		mov	r1, r6
+ 987 00da FFF7FEFF 		bl	__aeabi_fadd
+ 988              	.LVL152:
+ 319:Core/Src/tft.c **** 				TFT_SetPos(x, y, x, y);
+ 989              		.loc 1 319 14 discriminator 3 view .LVU199
+ 990 00de FFF7FEFF 		bl	__aeabi_f2uiz
+ 991              	.LVL153:
+ 992 00e2 81B2     		uxth	r1, r0
+ 993              	.LVL154:
+ 320:Core/Src/tft.c **** 				TFT_WriteData16(color);
+ 994              		.loc 1 320 5 is_stmt 1 discriminator 3 view .LVU200
+ 995 00e4 0B46     		mov	r3, r1
+ 996 00e6 2A46     		mov	r2, r5
+ 997 00e8 2846     		mov	r0, r5
+ 998 00ea FFF7FEFF 		bl	TFT_SetPos
+ 999              	.LVL155:
+ 321:Core/Src/tft.c **** 			}
+ 1000              		.loc 1 321 5 discriminator 3 view .LVU201
+ 1001 00ee 5046     		mov	r0, r10
+ 1002 00f0 FFF7FEFF 		bl	TFT_WriteData16
+ 1003              	.LVL156:
+ 1004              	.LBE9:
+ 317:Core/Src/tft.c **** 			{
+ 1005              		.loc 1 317 38 discriminator 3 view .LVU202
+ 317:Core/Src/tft.c **** 			{
+ 1006              		.loc 1 317 39 is_stmt 0 discriminator 3 view .LVU203
+ 1007 00f4 0135     		adds	r5, r5, #1
+ 1008              	.LVL157:
+ 317:Core/Src/tft.c **** 			{
+ 1009              		.loc 1 317 39 discriminator 3 view .LVU204
+ 1010 00f6 ADB2     		uxth	r5, r5
+ 1011              	.LVL158:
+ 1012              	.L35:
+ 317:Core/Src/tft.c **** 			{
+ 1013              		.loc 1 317 25 is_stmt 1 discriminator 1 view .LVU205
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 25
+
+
+ 317:Core/Src/tft.c **** 			{
+ 1014              		.loc 1 317 4 is_stmt 0 discriminator 1 view .LVU206
+ 1015 00f8 A542     		cmp	r5, r4
+ 1016 00fa E7D3     		bcc	.L37
+ 1017 00fc E4E7     		b	.L27
+ 1018              	.LBE8:
+ 1019              	.LBE13:
+ 1020              		.cfi_endproc
+ 1021              	.LFE75:
+ 1023              		.global	__aeabi_dmul
+ 1024              		.global	__aeabi_dadd
+ 1025              		.global	__aeabi_d2uiz
+ 1026              		.global	__aeabi_dsub
+ 1027              		.section	.text.TFT_DrawArc,"ax",%progbits
+ 1028              		.align	1
+ 1029              		.global	TFT_DrawArc
+ 1030              		.syntax unified
+ 1031              		.thumb
+ 1032              		.thumb_func
+ 1034              	TFT_DrawArc:
+ 1035              	.LVL159:
+ 1036              	.LFB76:
+ 326:Core/Src/tft.c **** 
+ 327:Core/Src/tft.c **** //画圆弧
+ 328:Core/Src/tft.c **** void TFT_DrawArc(uint16_t centerx, uint16_t centery, uint16_t radius, int16_t deg1, int16_t deg2, u
+ 329:Core/Src/tft.c **** {
+ 1037              		.loc 1 329 1 is_stmt 1 view -0
+ 1038              		.cfi_startproc
+ 1039              		@ args = 8, pretend = 0, frame = 16
+ 1040              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1041              		.loc 1 329 1 is_stmt 0 view .LVU208
+ 1042 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 1043              	.LCFI13:
+ 1044              		.cfi_def_cfa_offset 36
+ 1045              		.cfi_offset 4, -36
+ 1046              		.cfi_offset 5, -32
+ 1047              		.cfi_offset 6, -28
+ 1048              		.cfi_offset 7, -24
+ 1049              		.cfi_offset 8, -20
+ 1050              		.cfi_offset 9, -16
+ 1051              		.cfi_offset 10, -12
+ 1052              		.cfi_offset 11, -8
+ 1053              		.cfi_offset 14, -4
+ 1054 0004 85B0     		sub	sp, sp, #20
+ 1055              	.LCFI14:
+ 1056              		.cfi_def_cfa_offset 56
+ 1057 0006 0292     		str	r2, [sp, #8]
+ 1058 0008 9B46     		mov	fp, r3
+ 1059 000a BDF938A0 		ldrsh	r10, [sp, #56]
+ 1060 000e BDF83C30 		ldrh	r3, [sp, #60]
+ 1061              	.LVL160:
+ 1062              		.loc 1 329 1 view .LVU209
+ 1063 0012 0393     		str	r3, [sp, #12]
+ 330:Core/Src/tft.c **** 	if(deg1 <= deg2)
+ 1064              		.loc 1 330 2 is_stmt 1 view .LVU210
+ 1065              		.loc 1 330 4 is_stmt 0 view .LVU211
+ 1066 0014 D345     		cmp	fp, r10
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 26
+
+
+ 1067 0016 58DD     		ble	.L48
+ 1068 0018 8146     		mov	r9, r0
+ 1069 001a 8846     		mov	r8, r1
+ 1070 001c 5CE0     		b	.L42
+ 1071              	.LVL161:
+ 1072              	.L43:
+ 1073              	.LBB14:
+ 331:Core/Src/tft.c **** 	{
+ 332:Core/Src/tft.c **** 		for(int16_t deg = deg1; deg <= deg2; deg++)
+ 1074              		.loc 1 332 40 is_stmt 1 discriminator 2 view .LVU212
+ 1075              		.loc 1 332 43 is_stmt 0 discriminator 2 view .LVU213
+ 1076 001e 0BF1010B 		add	fp, fp, #1
+ 1077              	.LVL162:
+ 1078              		.loc 1 332 43 discriminator 2 view .LVU214
+ 1079 0022 0FFA8BFB 		sxth	fp, fp
+ 1080              	.LVL163:
+ 1081              	.L41:
+ 1082              		.loc 1 332 27 is_stmt 1 discriminator 1 view .LVU215
+ 1083              		.loc 1 332 3 is_stmt 0 discriminator 1 view .LVU216
+ 1084 0026 D345     		cmp	fp, r10
+ 1085 0028 00F3A780 		bgt	.L40
+ 1086              	.LBB15:
+ 333:Core/Src/tft.c **** 		{
+ 334:Core/Src/tft.c **** 			uint16_t x = centerx + radius * cos(deg * PI / 180);
+ 1087              		.loc 1 334 4 is_stmt 1 view .LVU217
+ 1088              		.loc 1 334 34 is_stmt 0 view .LVU218
+ 1089 002c 0298     		ldr	r0, [sp, #8]
+ 1090 002e FFF7FEFF 		bl	__aeabi_i2d
+ 1091              	.LVL164:
+ 1092 0032 0446     		mov	r4, r0
+ 1093 0034 0D46     		mov	r5, r1
+ 1094              		.loc 1 334 44 view .LVU219
+ 1095 0036 5846     		mov	r0, fp
+ 1096 0038 FFF7FEFF 		bl	__aeabi_i2d
+ 1097              	.LVL165:
+ 1098 003c 50A3     		adr	r3, .L50
+ 1099 003e D3E90023 		ldrd	r2, [r3]
+ 1100 0042 FFF7FEFF 		bl	__aeabi_dmul
+ 1101              	.LVL166:
+ 1102              		.loc 1 334 36 view .LVU220
+ 1103 0046 0022     		movs	r2, #0
+ 1104 0048 4F4B     		ldr	r3, .L50+8
+ 1105 004a FFF7FEFF 		bl	__aeabi_ddiv
+ 1106              	.LVL167:
+ 1107 004e 0246     		mov	r2, r0
+ 1108 0050 0B46     		mov	r3, r1
+ 1109 0052 CDE90023 		strd	r2, [sp]
+ 1110 0056 FFF7FEFF 		bl	cos
+ 1111              	.LVL168:
+ 1112 005a 0246     		mov	r2, r0
+ 1113 005c 0B46     		mov	r3, r1
+ 1114              		.loc 1 334 34 view .LVU221
+ 1115 005e 2046     		mov	r0, r4
+ 1116 0060 2946     		mov	r1, r5
+ 1117 0062 FFF7FEFF 		bl	__aeabi_dmul
+ 1118              	.LVL169:
+ 1119 0066 0646     		mov	r6, r0
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 27
+
+
+ 1120 0068 0F46     		mov	r7, r1
+ 1121              		.loc 1 334 25 view .LVU222
+ 1122 006a 4846     		mov	r0, r9
+ 1123 006c FFF7FEFF 		bl	__aeabi_i2d
+ 1124              	.LVL170:
+ 1125 0070 3246     		mov	r2, r6
+ 1126 0072 3B46     		mov	r3, r7
+ 1127 0074 FFF7FEFF 		bl	__aeabi_dadd
+ 1128              	.LVL171:
+ 1129              		.loc 1 334 13 view .LVU223
+ 1130 0078 FFF7FEFF 		bl	__aeabi_d2uiz
+ 1131              	.LVL172:
+ 1132 007c 86B2     		uxth	r6, r0
+ 1133              	.LVL173:
+ 335:Core/Src/tft.c **** 			uint16_t y = centery - radius * sin(deg * PI / 180);
+ 1134              		.loc 1 335 4 is_stmt 1 view .LVU224
+ 1135              		.loc 1 335 36 is_stmt 0 view .LVU225
+ 1136 007e DDE90001 		ldrd	r0, [sp]
+ 1137 0082 FFF7FEFF 		bl	sin
+ 1138              	.LVL174:
+ 1139 0086 0246     		mov	r2, r0
+ 1140 0088 0B46     		mov	r3, r1
+ 1141              		.loc 1 335 34 view .LVU226
+ 1142 008a 2046     		mov	r0, r4
+ 1143 008c 2946     		mov	r1, r5
+ 1144 008e FFF7FEFF 		bl	__aeabi_dmul
+ 1145              	.LVL175:
+ 1146 0092 0446     		mov	r4, r0
+ 1147 0094 0D46     		mov	r5, r1
+ 1148              		.loc 1 335 25 view .LVU227
+ 1149 0096 4046     		mov	r0, r8
+ 1150 0098 FFF7FEFF 		bl	__aeabi_i2d
+ 1151              	.LVL176:
+ 1152 009c 2246     		mov	r2, r4
+ 1153 009e 2B46     		mov	r3, r5
+ 1154 00a0 FFF7FEFF 		bl	__aeabi_dsub
+ 1155              	.LVL177:
+ 1156              		.loc 1 335 13 view .LVU228
+ 1157 00a4 FFF7FEFF 		bl	__aeabi_d2uiz
+ 1158              	.LVL178:
+ 1159 00a8 81B2     		uxth	r1, r0
+ 1160              	.LVL179:
+ 336:Core/Src/tft.c **** 			if(x >= 1 && x <= WIDTH && y >= 0 && y <= HEIGHT)
+ 1161              		.loc 1 336 4 is_stmt 1 view .LVU229
+ 1162              		.loc 1 336 14 is_stmt 0 view .LVU230
+ 1163 00aa 721E     		subs	r2, r6, #1
+ 1164 00ac 92B2     		uxth	r2, r2
+ 1165              		.loc 1 336 6 view .LVU231
+ 1166 00ae EF2A     		cmp	r2, #239
+ 1167 00b0 B5D8     		bhi	.L43
+ 1168              		.loc 1 336 38 discriminator 1 view .LVU232
+ 1169 00b2 B1F5A07F 		cmp	r1, #320
+ 1170 00b6 B2D8     		bhi	.L43
+ 337:Core/Src/tft.c **** 			{
+ 338:Core/Src/tft.c **** 				TFT_SetPos(x, y, x, y);
+ 1171              		.loc 1 338 5 is_stmt 1 view .LVU233
+ 1172 00b8 0B46     		mov	r3, r1
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 28
+
+
+ 1173 00ba 3246     		mov	r2, r6
+ 1174 00bc 3046     		mov	r0, r6
+ 1175 00be FFF7FEFF 		bl	TFT_SetPos
+ 1176              	.LVL180:
+ 339:Core/Src/tft.c **** 				TFT_WriteData16(color);
+ 1177              		.loc 1 339 5 view .LVU234
+ 1178 00c2 0398     		ldr	r0, [sp, #12]
+ 1179 00c4 FFF7FEFF 		bl	TFT_WriteData16
+ 1180              	.LVL181:
+ 1181 00c8 A9E7     		b	.L43
+ 1182              	.LVL182:
+ 1183              	.L48:
+ 1184              		.loc 1 339 5 is_stmt 0 view .LVU235
+ 1185 00ca 8146     		mov	r9, r0
+ 1186 00cc 8846     		mov	r8, r1
+ 1187 00ce AAE7     		b	.L41
+ 1188              	.LVL183:
+ 1189              	.L46:
+ 1190              		.loc 1 339 5 view .LVU236
+ 1191              	.LBE15:
+ 1192              	.LBE14:
+ 1193              	.LBB16:
+ 340:Core/Src/tft.c **** 			}
+ 341:Core/Src/tft.c **** 		}
+ 342:Core/Src/tft.c **** 	}
+ 343:Core/Src/tft.c **** 	else
+ 344:Core/Src/tft.c **** 	{
+ 345:Core/Src/tft.c **** 		for(int16_t deg = deg2; deg <= deg1; deg++)
+ 1194              		.loc 1 345 40 is_stmt 1 discriminator 2 view .LVU237
+ 1195              		.loc 1 345 43 is_stmt 0 discriminator 2 view .LVU238
+ 1196 00d0 0AF1010A 		add	r10, r10, #1
+ 1197              	.LVL184:
+ 1198              		.loc 1 345 43 discriminator 2 view .LVU239
+ 1199 00d4 0FFA8AFA 		sxth	r10, r10
+ 1200              	.LVL185:
+ 1201              	.L42:
+ 1202              		.loc 1 345 27 is_stmt 1 discriminator 1 view .LVU240
+ 1203              		.loc 1 345 3 is_stmt 0 discriminator 1 view .LVU241
+ 1204 00d8 DA45     		cmp	r10, fp
+ 1205 00da 4EDC     		bgt	.L40
+ 1206              	.LBB17:
+ 346:Core/Src/tft.c **** 		{
+ 347:Core/Src/tft.c **** 			uint16_t x = centerx + radius * cos(deg * PI / 180);
+ 1207              		.loc 1 347 4 is_stmt 1 view .LVU242
+ 1208              		.loc 1 347 34 is_stmt 0 view .LVU243
+ 1209 00dc 0298     		ldr	r0, [sp, #8]
+ 1210 00de FFF7FEFF 		bl	__aeabi_i2d
+ 1211              	.LVL186:
+ 1212 00e2 0446     		mov	r4, r0
+ 1213 00e4 0D46     		mov	r5, r1
+ 1214              		.loc 1 347 44 view .LVU244
+ 1215 00e6 5046     		mov	r0, r10
+ 1216 00e8 FFF7FEFF 		bl	__aeabi_i2d
+ 1217              	.LVL187:
+ 1218 00ec 24A3     		adr	r3, .L50
+ 1219 00ee D3E90023 		ldrd	r2, [r3]
+ 1220 00f2 FFF7FEFF 		bl	__aeabi_dmul
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 29
+
+
+ 1221              	.LVL188:
+ 1222              		.loc 1 347 36 view .LVU245
+ 1223 00f6 0022     		movs	r2, #0
+ 1224 00f8 234B     		ldr	r3, .L50+8
+ 1225 00fa FFF7FEFF 		bl	__aeabi_ddiv
+ 1226              	.LVL189:
+ 1227 00fe 0246     		mov	r2, r0
+ 1228 0100 0B46     		mov	r3, r1
+ 1229 0102 CDE90023 		strd	r2, [sp]
+ 1230 0106 FFF7FEFF 		bl	cos
+ 1231              	.LVL190:
+ 1232 010a 0246     		mov	r2, r0
+ 1233 010c 0B46     		mov	r3, r1
+ 1234              		.loc 1 347 34 view .LVU246
+ 1235 010e 2046     		mov	r0, r4
+ 1236 0110 2946     		mov	r1, r5
+ 1237 0112 FFF7FEFF 		bl	__aeabi_dmul
+ 1238              	.LVL191:
+ 1239 0116 0646     		mov	r6, r0
+ 1240 0118 0F46     		mov	r7, r1
+ 1241              		.loc 1 347 25 view .LVU247
+ 1242 011a 4846     		mov	r0, r9
+ 1243 011c FFF7FEFF 		bl	__aeabi_i2d
+ 1244              	.LVL192:
+ 1245 0120 3246     		mov	r2, r6
+ 1246 0122 3B46     		mov	r3, r7
+ 1247 0124 FFF7FEFF 		bl	__aeabi_dadd
+ 1248              	.LVL193:
+ 1249              		.loc 1 347 13 view .LVU248
+ 1250 0128 FFF7FEFF 		bl	__aeabi_d2uiz
+ 1251              	.LVL194:
+ 1252 012c 86B2     		uxth	r6, r0
+ 1253              	.LVL195:
+ 348:Core/Src/tft.c **** 			uint16_t y = centery - radius * sin(deg * PI / 180);
+ 1254              		.loc 1 348 4 is_stmt 1 view .LVU249
+ 1255              		.loc 1 348 36 is_stmt 0 view .LVU250
+ 1256 012e DDE90001 		ldrd	r0, [sp]
+ 1257 0132 FFF7FEFF 		bl	sin
+ 1258              	.LVL196:
+ 1259 0136 0246     		mov	r2, r0
+ 1260 0138 0B46     		mov	r3, r1
+ 1261              		.loc 1 348 34 view .LVU251
+ 1262 013a 2046     		mov	r0, r4
+ 1263 013c 2946     		mov	r1, r5
+ 1264 013e FFF7FEFF 		bl	__aeabi_dmul
+ 1265              	.LVL197:
+ 1266 0142 0446     		mov	r4, r0
+ 1267 0144 0D46     		mov	r5, r1
+ 1268              		.loc 1 348 25 view .LVU252
+ 1269 0146 4046     		mov	r0, r8
+ 1270 0148 FFF7FEFF 		bl	__aeabi_i2d
+ 1271              	.LVL198:
+ 1272 014c 2246     		mov	r2, r4
+ 1273 014e 2B46     		mov	r3, r5
+ 1274 0150 FFF7FEFF 		bl	__aeabi_dsub
+ 1275              	.LVL199:
+ 1276              		.loc 1 348 13 view .LVU253
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 30
+
+
+ 1277 0154 FFF7FEFF 		bl	__aeabi_d2uiz
+ 1278              	.LVL200:
+ 1279 0158 81B2     		uxth	r1, r0
+ 1280              	.LVL201:
+ 349:Core/Src/tft.c **** 			if(x >= 1 && x <= WIDTH && y >= 0 && y <= HEIGHT)
+ 1281              		.loc 1 349 4 is_stmt 1 view .LVU254
+ 1282              		.loc 1 349 14 is_stmt 0 view .LVU255
+ 1283 015a 721E     		subs	r2, r6, #1
+ 1284 015c 92B2     		uxth	r2, r2
+ 1285              		.loc 1 349 6 view .LVU256
+ 1286 015e EF2A     		cmp	r2, #239
+ 1287 0160 B6D8     		bhi	.L46
+ 1288              		.loc 1 349 38 discriminator 1 view .LVU257
+ 1289 0162 B1F5A07F 		cmp	r1, #320
+ 1290 0166 B3D8     		bhi	.L46
+ 350:Core/Src/tft.c **** 			{
+ 351:Core/Src/tft.c **** 				TFT_SetPos(x, y, x, y);
+ 1291              		.loc 1 351 5 is_stmt 1 view .LVU258
+ 1292 0168 0B46     		mov	r3, r1
+ 1293 016a 3246     		mov	r2, r6
+ 1294 016c 3046     		mov	r0, r6
+ 1295 016e FFF7FEFF 		bl	TFT_SetPos
+ 1296              	.LVL202:
+ 352:Core/Src/tft.c **** 				TFT_WriteData16(color);
+ 1297              		.loc 1 352 5 view .LVU259
+ 1298 0172 0398     		ldr	r0, [sp, #12]
+ 1299 0174 FFF7FEFF 		bl	TFT_WriteData16
+ 1300              	.LVL203:
+ 1301 0178 AAE7     		b	.L46
+ 1302              	.LVL204:
+ 1303              	.L40:
+ 1304              		.loc 1 352 5 is_stmt 0 view .LVU260
+ 1305              	.LBE17:
+ 1306              	.LBE16:
+ 353:Core/Src/tft.c **** 			}
+ 354:Core/Src/tft.c **** 		}
+ 355:Core/Src/tft.c **** 	}
+ 356:Core/Src/tft.c **** }
+ 1307              		.loc 1 356 1 view .LVU261
+ 1308 017a 05B0     		add	sp, sp, #20
+ 1309              	.LCFI15:
+ 1310              		.cfi_def_cfa_offset 36
+ 1311              		@ sp needed
+ 1312 017c BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 1313              	.LVL205:
+ 1314              	.L51:
+ 1315              		.loc 1 356 1 view .LVU262
+ 1316              		.align	3
+ 1317              	.L50:
+ 1318 0180 7A008BFC 		.word	-57999238
+ 1319 0184 FA210940 		.word	1074340346
+ 1320 0188 00806640 		.word	1080459264
+ 1321              		.cfi_endproc
+ 1322              	.LFE76:
+ 1324              		.section	.text.TFT_DrawStr,"ax",%progbits
+ 1325              		.align	1
+ 1326              		.global	TFT_DrawStr
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 31
+
+
+ 1327              		.syntax unified
+ 1328              		.thumb
+ 1329              		.thumb_func
+ 1331              	TFT_DrawStr:
+ 1332              	.LVL206:
+ 1333              	.LFB77:
+ 357:Core/Src/tft.c **** 
+ 358:Core/Src/tft.c **** //写字
+ 359:Core/Src/tft.c **** void TFT_DrawStr(uint16_t x, uint16_t y, char* str, uint16_t color)
+ 360:Core/Src/tft.c **** {
+ 1334              		.loc 1 360 1 is_stmt 1 view -0
+ 1335              		.cfi_startproc
+ 1336              		@ args = 0, pretend = 0, frame = 0
+ 1337              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1338              		.loc 1 360 1 is_stmt 0 view .LVU264
+ 1339 0000 2DE9F84F 		push	{r3, r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 1340              	.LCFI16:
+ 1341              		.cfi_def_cfa_offset 40
+ 1342              		.cfi_offset 3, -40
+ 1343              		.cfi_offset 4, -36
+ 1344              		.cfi_offset 5, -32
+ 1345              		.cfi_offset 6, -28
+ 1346              		.cfi_offset 7, -24
+ 1347              		.cfi_offset 8, -20
+ 1348              		.cfi_offset 9, -16
+ 1349              		.cfi_offset 10, -12
+ 1350              		.cfi_offset 11, -8
+ 1351              		.cfi_offset 14, -4
+ 1352 0004 8246     		mov	r10, r0
+ 1353 0006 8946     		mov	r9, r1
+ 1354 0008 1746     		mov	r7, r2
+ 1355 000a 9846     		mov	r8, r3
+ 361:Core/Src/tft.c **** 	uint8_t len = strlen(str);
+ 1356              		.loc 1 361 2 is_stmt 1 view .LVU265
+ 1357              		.loc 1 361 16 is_stmt 0 view .LVU266
+ 1358 000c 1046     		mov	r0, r2
+ 1359              	.LVL207:
+ 1360              		.loc 1 361 16 view .LVU267
+ 1361 000e FFF7FEFF 		bl	strlen
+ 1362              	.LVL208:
+ 1363              		.loc 1 361 16 view .LVU268
+ 1364 0012 8346     		mov	fp, r0
+ 1365              	.LVL209:
+ 362:Core/Src/tft.c **** 	for(int i = 0; i <= len - 1; i++)
+ 1366              		.loc 1 362 2 is_stmt 1 view .LVU269
+ 1367              	.LBB18:
+ 1368              		.loc 1 362 6 view .LVU270
+ 1369              		.loc 1 362 10 is_stmt 0 view .LVU271
+ 1370 0014 0026     		movs	r6, #0
+ 1371              		.loc 1 362 2 view .LVU272
+ 1372 0016 18E0     		b	.L53
+ 1373              	.LVL210:
+ 1374              	.L59:
+ 1375              	.LBB19:
+ 1376              	.LBB20:
+ 363:Core/Src/tft.c **** 	{
+ 364:Core/Src/tft.c **** 		TFT_SetPos(x + 8 * i, y, x + 8 * i + 7, y + 15);
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 32
+
+
+ 365:Core/Src/tft.c **** 		for(int j = 0; j <= 15; j++)
+ 366:Core/Src/tft.c **** 			for(int k = 0; k <= 7; k++) TFT_WriteData16(TFT_chara[str[i] - ' '][j] & (1 << k) ? color : 0);
+ 1377              		.loc 1 366 32 view .LVU273
+ 1378 0018 0020     		movs	r0, #0
+ 1379              	.L55:
+ 1380              		.loc 1 366 32 discriminator 5 view .LVU274
+ 1381 001a FFF7FEFF 		bl	TFT_WriteData16
+ 1382              	.LVL211:
+ 1383              		.loc 1 366 27 is_stmt 1 discriminator 5 view .LVU275
+ 1384              		.loc 1 366 28 is_stmt 0 discriminator 5 view .LVU276
+ 1385 001e 0134     		adds	r4, r4, #1
+ 1386              	.LVL212:
+ 1387              	.L57:
+ 1388              		.loc 1 366 19 is_stmt 1 discriminator 6 view .LVU277
+ 1389              		.loc 1 366 4 is_stmt 0 discriminator 6 view .LVU278
+ 1390 0020 072C     		cmp	r4, #7
+ 1391 0022 0CDC     		bgt	.L62
+ 1392              		.loc 1 366 32 is_stmt 1 discriminator 7 view .LVU279
+ 1393              		.loc 1 366 61 is_stmt 0 discriminator 7 view .LVU280
+ 1394 0024 BB5D     		ldrb	r3, [r7, r6]	@ zero_extendqisi2
+ 1395              		.loc 1 366 65 discriminator 7 view .LVU281
+ 1396 0026 A3F12002 		sub	r2, r3, #32
+ 1397              		.loc 1 366 71 discriminator 7 view .LVU282
+ 1398 002a 114B     		ldr	r3, .L65
+ 1399 002c 03EB0213 		add	r3, r3, r2, lsl #4
+ 1400 0030 5B5D     		ldrb	r3, [r3, r5]	@ zero_extendqisi2
+ 1401              		.loc 1 366 86 discriminator 7 view .LVU283
+ 1402 0032 2341     		asrs	r3, r3, r4
+ 1403              		.loc 1 366 32 discriminator 7 view .LVU284
+ 1404 0034 13F0010F 		tst	r3, #1
+ 1405 0038 EED0     		beq	.L59
+ 1406              		.loc 1 366 32 view .LVU285
+ 1407 003a 4046     		mov	r0, r8
+ 1408 003c EDE7     		b	.L55
+ 1409              	.L62:
+ 1410              		.loc 1 366 32 view .LVU286
+ 1411              	.LBE20:
+ 365:Core/Src/tft.c **** 			for(int k = 0; k <= 7; k++) TFT_WriteData16(TFT_chara[str[i] - ' '][j] & (1 << k) ? color : 0);
+ 1412              		.loc 1 365 27 is_stmt 1 discriminator 2 view .LVU287
+ 365:Core/Src/tft.c **** 			for(int k = 0; k <= 7; k++) TFT_WriteData16(TFT_chara[str[i] - ' '][j] & (1 << k) ? color : 0);
+ 1413              		.loc 1 365 28 is_stmt 0 discriminator 2 view .LVU288
+ 1414 003e 0135     		adds	r5, r5, #1
+ 1415              	.LVL213:
+ 1416              	.L54:
+ 365:Core/Src/tft.c **** 			for(int k = 0; k <= 7; k++) TFT_WriteData16(TFT_chara[str[i] - ' '][j] & (1 << k) ? color : 0);
+ 1417              		.loc 1 365 18 is_stmt 1 discriminator 1 view .LVU289
+ 365:Core/Src/tft.c **** 			for(int k = 0; k <= 7; k++) TFT_WriteData16(TFT_chara[str[i] - ' '][j] & (1 << k) ? color : 0);
+ 1418              		.loc 1 365 3 is_stmt 0 discriminator 1 view .LVU290
+ 1419 0040 0F2D     		cmp	r5, #15
+ 1420 0042 01DC     		bgt	.L63
+ 1421              	.LBB21:
+ 1422              		.loc 1 366 12 view .LVU291
+ 1423 0044 0024     		movs	r4, #0
+ 1424 0046 EBE7     		b	.L57
+ 1425              	.L63:
+ 1426              	.LBE21:
+ 1427              	.LBE19:
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 33
+
+
+ 362:Core/Src/tft.c **** 	for(int i = 0; i <= len - 1; i++)
+ 1428              		.loc 1 362 31 is_stmt 1 discriminator 2 view .LVU292
+ 362:Core/Src/tft.c **** 	for(int i = 0; i <= len - 1; i++)
+ 1429              		.loc 1 362 32 is_stmt 0 discriminator 2 view .LVU293
+ 1430 0048 0136     		adds	r6, r6, #1
+ 1431              	.LVL214:
+ 1432              	.L53:
+ 362:Core/Src/tft.c **** 	for(int i = 0; i <= len - 1; i++)
+ 1433              		.loc 1 362 17 is_stmt 1 discriminator 1 view .LVU294
+ 362:Core/Src/tft.c **** 	for(int i = 0; i <= len - 1; i++)
+ 1434              		.loc 1 362 19 is_stmt 0 discriminator 1 view .LVU295
+ 1435 004a 5FFA8BF3 		uxtb	r3, fp
+ 362:Core/Src/tft.c **** 	for(int i = 0; i <= len - 1; i++)
+ 1436              		.loc 1 362 2 discriminator 1 view .LVU296
+ 1437 004e B342     		cmp	r3, r6
+ 1438 0050 0CDD     		ble	.L64
+ 364:Core/Src/tft.c **** 		for(int j = 0; j <= 15; j++)
+ 1439              		.loc 1 364 3 is_stmt 1 view .LVU297
+ 1440 0052 0AEBC600 		add	r0, r10, r6, lsl #3
+ 1441 0056 80B2     		uxth	r0, r0
+ 1442 0058 09F10F03 		add	r3, r9, #15
+ 1443 005c C21D     		adds	r2, r0, #7
+ 1444 005e 9BB2     		uxth	r3, r3
+ 1445 0060 92B2     		uxth	r2, r2
+ 1446 0062 4946     		mov	r1, r9
+ 1447 0064 FFF7FEFF 		bl	TFT_SetPos
+ 1448              	.LVL215:
+ 365:Core/Src/tft.c **** 			for(int k = 0; k <= 7; k++) TFT_WriteData16(TFT_chara[str[i] - ' '][j] & (1 << k) ? color : 0);
+ 1449              		.loc 1 365 3 view .LVU298
+ 1450              	.LBB22:
+ 365:Core/Src/tft.c **** 			for(int k = 0; k <= 7; k++) TFT_WriteData16(TFT_chara[str[i] - ' '][j] & (1 << k) ? color : 0);
+ 1451              		.loc 1 365 7 view .LVU299
+ 365:Core/Src/tft.c **** 			for(int k = 0; k <= 7; k++) TFT_WriteData16(TFT_chara[str[i] - ' '][j] & (1 << k) ? color : 0);
+ 1452              		.loc 1 365 11 is_stmt 0 view .LVU300
+ 1453 0068 0025     		movs	r5, #0
+ 365:Core/Src/tft.c **** 			for(int k = 0; k <= 7; k++) TFT_WriteData16(TFT_chara[str[i] - ' '][j] & (1 << k) ? color : 0);
+ 1454              		.loc 1 365 3 view .LVU301
+ 1455 006a E9E7     		b	.L54
+ 1456              	.LVL216:
+ 1457              	.L64:
+ 365:Core/Src/tft.c **** 			for(int k = 0; k <= 7; k++) TFT_WriteData16(TFT_chara[str[i] - ' '][j] & (1 << k) ? color : 0);
+ 1458              		.loc 1 365 3 view .LVU302
+ 1459              	.LBE22:
+ 1460              	.LBE18:
+ 367:Core/Src/tft.c **** 	}
+ 368:Core/Src/tft.c **** }
+ 1461              		.loc 1 368 1 view .LVU303
+ 1462 006c BDE8F88F 		pop	{r3, r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 1463              	.LVL217:
+ 1464              	.L66:
+ 1465              		.loc 1 368 1 view .LVU304
+ 1466              		.align	2
+ 1467              	.L65:
+ 1468 0070 00000000 		.word	.LANCHOR0
+ 1469              		.cfi_endproc
+ 1470              	.LFE77:
+ 1472              		.section	.rodata.TFT_Itoa.str1.4,"aMS",%progbits,1
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 34
+
+
+ 1473              		.align	2
+ 1474              	.LC0:
+ 1475 0000 30202020 		.ascii	"0     \000"
+ 1475      202000
+ 1476 0007 00       		.align	2
+ 1477              	.LC1:
+ 1478 0008 2D00     		.ascii	"-\000"
+ 1479              		.global	__aeabi_d2iz
+ 1480 000a 0000     		.align	2
+ 1481              	.LC2:
+ 1482 000c 25640A00 		.ascii	"%d\012\000"
+ 1483              		.section	.text.TFT_Itoa,"ax",%progbits
+ 1484              		.align	1
+ 1485              		.global	TFT_Itoa
+ 1486              		.syntax unified
+ 1487              		.thumb
+ 1488              		.thumb_func
+ 1490              	TFT_Itoa:
+ 1491              	.LVL218:
+ 1492              	.LFB78:
+ 369:Core/Src/tft.c **** 
+ 370:Core/Src/tft.c **** //数字转字符串(字符串有效长度不超过6位)
+ 371:Core/Src/tft.c **** char* TFT_Itoa(int16_t num)
+ 372:Core/Src/tft.c **** {
+ 1493              		.loc 1 372 1 is_stmt 1 view -0
+ 1494              		.cfi_startproc
+ 1495              		@ args = 0, pretend = 0, frame = 8
+ 1496              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1497              		.loc 1 372 1 is_stmt 0 view .LVU306
+ 1498 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 1499              	.LCFI17:
+ 1500              		.cfi_def_cfa_offset 36
+ 1501              		.cfi_offset 4, -36
+ 1502              		.cfi_offset 5, -32
+ 1503              		.cfi_offset 6, -28
+ 1504              		.cfi_offset 7, -24
+ 1505              		.cfi_offset 8, -20
+ 1506              		.cfi_offset 9, -16
+ 1507              		.cfi_offset 10, -12
+ 1508              		.cfi_offset 11, -8
+ 1509              		.cfi_offset 14, -4
+ 1510 0004 83B0     		sub	sp, sp, #12
+ 1511              	.LCFI18:
+ 1512              		.cfi_def_cfa_offset 48
+ 373:Core/Src/tft.c **** 	static char str[7] = "";
+ 1513              		.loc 1 373 2 is_stmt 1 view .LVU307
+ 374:Core/Src/tft.c **** 	memset(str, 0, 7 * sizeof(char));
+ 1514              		.loc 1 374 2 view .LVU308
+ 1515 0006 3D4B     		ldr	r3, .L79
+ 1516 0008 0022     		movs	r2, #0
+ 1517 000a 1A60     		str	r2, [r3]
+ 1518 000c C3F80320 		str	r2, [r3, #3]	@ unaligned
+ 375:Core/Src/tft.c **** 
+ 376:Core/Src/tft.c **** 	if(num == 0)
+ 1519              		.loc 1 376 2 view .LVU309
+ 1520              		.loc 1 376 4 is_stmt 0 view .LVU310
+ 1521 0010 78B1     		cbz	r0, .L77
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 35
+
+
+ 1522 0012 8346     		mov	fp, r0
+ 377:Core/Src/tft.c ****     {
+ 378:Core/Src/tft.c ****         strcat(str, "0     ");
+ 379:Core/Src/tft.c ****         return str;
+ 380:Core/Src/tft.c ****     }
+ 381:Core/Src/tft.c **** 	else if(num < 0)
+ 1523              		.loc 1 381 7 is_stmt 1 view .LVU311
+ 1524              		.loc 1 381 9 is_stmt 0 view .LVU312
+ 1525 0014 0028     		cmp	r0, #0
+ 1526 0016 1DDB     		blt	.L78
+ 1527              	.LVL219:
+ 1528              	.L70:
+ 382:Core/Src/tft.c **** 	{
+ 383:Core/Src/tft.c **** 		strcat(str, "-");
+ 384:Core/Src/tft.c **** 		num = -num;
+ 385:Core/Src/tft.c **** 	}
+ 386:Core/Src/tft.c **** 
+ 387:Core/Src/tft.c **** 	int digit = (int)(log10(num));
+ 1529              		.loc 1 387 2 is_stmt 1 view .LVU313
+ 1530              		.loc 1 387 20 is_stmt 0 view .LVU314
+ 1531 0018 5846     		mov	r0, fp
+ 1532 001a FFF7FEFF 		bl	__aeabi_i2d
+ 1533              	.LVL220:
+ 1534 001e FFF7FEFF 		bl	log10
+ 1535              	.LVL221:
+ 1536              		.loc 1 387 6 view .LVU315
+ 1537 0022 FFF7FEFF 		bl	__aeabi_d2iz
+ 1538              	.LVL222:
+ 1539 0026 8246     		mov	r10, r0
+ 1540              	.LVL223:
+ 388:Core/Src/tft.c **** 	printf("%d\n", digit);
+ 1541              		.loc 1 388 2 is_stmt 1 view .LVU316
+ 1542 0028 0146     		mov	r1, r0
+ 1543 002a 3548     		ldr	r0, .L79+4
+ 1544              	.LVL224:
+ 1545              		.loc 1 388 2 is_stmt 0 view .LVU317
+ 1546 002c FFF7FEFF 		bl	printf
+ 1547              	.LVL225:
+ 389:Core/Src/tft.c **** 	for(int i = digit; i >= 0; i--)
+ 1548              		.loc 1 389 2 is_stmt 1 view .LVU318
+ 1549              	.LBB23:
+ 1550              		.loc 1 389 6 view .LVU319
+ 1551              		.loc 1 389 2 is_stmt 0 view .LVU320
+ 1552 0030 53E0     		b	.L71
+ 1553              	.LVL226:
+ 1554              	.L77:
+ 1555              		.loc 1 389 2 view .LVU321
+ 1556              	.LBE23:
+ 378:Core/Src/tft.c ****         return str;
+ 1557              		.loc 1 378 9 is_stmt 1 view .LVU322
+ 1558 0032 1C46     		mov	r4, r3
+ 1559 0034 1846     		mov	r0, r3
+ 1560              	.LVL227:
+ 378:Core/Src/tft.c ****         return str;
+ 1561              		.loc 1 378 9 is_stmt 0 view .LVU323
+ 1562 0036 FFF7FEFF 		bl	strlen
+ 1563              	.LVL228:
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 36
+
+
+ 1564 003a 0346     		mov	r3, r0
+ 1565 003c 2118     		adds	r1, r4, r0
+ 1566 003e 314A     		ldr	r2, .L79+8
+ 1567 0040 1068     		ldr	r0, [r2]
+ 1568 0042 E050     		str	r0, [r4, r3]	@ unaligned
+ 1569 0044 9088     		ldrh	r0, [r2, #4]	@ unaligned
+ 1570 0046 9379     		ldrb	r3, [r2, #6]	@ zero_extendqisi2
+ 1571 0048 8880     		strh	r0, [r1, #4]	@ unaligned
+ 1572 004a 8B71     		strb	r3, [r1, #6]
+ 379:Core/Src/tft.c ****     }
+ 1573              		.loc 1 379 9 is_stmt 1 view .LVU324
+ 1574              	.LVL229:
+ 1575              	.L69:
+ 390:Core/Src/tft.c **** 	{
+ 391:Core/Src/tft.c **** 		char temp[2] = "";
+ 392:Core/Src/tft.c **** 		temp[0] = num / pow(10, i) + '0';
+ 393:Core/Src/tft.c **** 		strcat(str, temp);
+ 394:Core/Src/tft.c **** 		num %= (int)pow(10, i);
+ 395:Core/Src/tft.c **** 	}
+ 396:Core/Src/tft.c **** 
+ 397:Core/Src/tft.c **** 	//补空格
+ 398:Core/Src/tft.c **** 	for(int i = 0; i <= 5; i++)
+ 399:Core/Src/tft.c **** 	{
+ 400:Core/Src/tft.c **** 		if(!str[i]) str[i] = ' ';
+ 401:Core/Src/tft.c **** 	}
+ 402:Core/Src/tft.c **** 	return str;
+ 403:Core/Src/tft.c **** }
+ 1576              		.loc 1 403 1 is_stmt 0 view .LVU325
+ 1577 004c 2B48     		ldr	r0, .L79
+ 1578 004e 03B0     		add	sp, sp, #12
+ 1579              	.LCFI19:
+ 1580              		.cfi_remember_state
+ 1581              		.cfi_def_cfa_offset 36
+ 1582              		@ sp needed
+ 1583 0050 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 1584              	.LVL230:
+ 1585              	.L78:
+ 1586              	.LCFI20:
+ 1587              		.cfi_restore_state
+ 383:Core/Src/tft.c **** 		num = -num;
+ 1588              		.loc 1 383 3 is_stmt 1 view .LVU326
+ 1589 0054 294C     		ldr	r4, .L79
+ 1590 0056 2046     		mov	r0, r4
+ 1591              	.LVL231:
+ 383:Core/Src/tft.c **** 		num = -num;
+ 1592              		.loc 1 383 3 is_stmt 0 view .LVU327
+ 1593 0058 FFF7FEFF 		bl	strlen
+ 1594              	.LVL232:
+ 1595 005c 2A4B     		ldr	r3, .L79+12
+ 1596 005e 1B88     		ldrh	r3, [r3]	@ unaligned
+ 1597 0060 2352     		strh	r3, [r4, r0]	@ unaligned
+ 384:Core/Src/tft.c **** 	}
+ 1598              		.loc 1 384 3 is_stmt 1 view .LVU328
+ 384:Core/Src/tft.c **** 	}
+ 1599              		.loc 1 384 7 is_stmt 0 view .LVU329
+ 1600 0062 CBF1000B 		rsb	fp, fp, #0
+ 1601 0066 0FFA8BFB 		sxth	fp, fp
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 37
+
+
+ 1602              	.LVL233:
+ 384:Core/Src/tft.c **** 	}
+ 1603              		.loc 1 384 7 view .LVU330
+ 1604 006a D5E7     		b	.L70
+ 1605              	.LVL234:
+ 1606              	.L72:
+ 1607              	.LBB25:
+ 1608              	.LBB24:
+ 391:Core/Src/tft.c **** 		temp[0] = num / pow(10, i) + '0';
+ 1609              		.loc 1 391 3 is_stmt 1 discriminator 3 view .LVU331
+ 391:Core/Src/tft.c **** 		temp[0] = num / pow(10, i) + '0';
+ 1610              		.loc 1 391 8 is_stmt 0 discriminator 3 view .LVU332
+ 1611 006c 0023     		movs	r3, #0
+ 1612 006e ADF80430 		strh	r3, [sp, #4]	@ movhi
+ 392:Core/Src/tft.c **** 		strcat(str, temp);
+ 1613              		.loc 1 392 3 is_stmt 1 discriminator 3 view .LVU333
+ 392:Core/Src/tft.c **** 		strcat(str, temp);
+ 1614              		.loc 1 392 19 is_stmt 0 discriminator 3 view .LVU334
+ 1615 0072 5046     		mov	r0, r10
+ 1616 0074 FFF7FEFF 		bl	__aeabi_i2d
+ 1617              	.LVL235:
+ 1618 0078 0446     		mov	r4, r0
+ 1619 007a 0D46     		mov	r5, r1
+ 1620 007c 4FF00008 		mov	r8, #0
+ 1621 0080 DFF88890 		ldr	r9, .L79+16
+ 1622 0084 0246     		mov	r2, r0
+ 1623 0086 0B46     		mov	r3, r1
+ 1624 0088 4046     		mov	r0, r8
+ 1625 008a 4946     		mov	r1, r9
+ 1626 008c FFF7FEFF 		bl	pow
+ 1627              	.LVL236:
+ 1628 0090 0646     		mov	r6, r0
+ 1629 0092 0F46     		mov	r7, r1
+ 392:Core/Src/tft.c **** 		strcat(str, temp);
+ 1630              		.loc 1 392 17 discriminator 3 view .LVU335
+ 1631 0094 5846     		mov	r0, fp
+ 1632 0096 FFF7FEFF 		bl	__aeabi_i2d
+ 1633              	.LVL237:
+ 1634 009a 3246     		mov	r2, r6
+ 1635 009c 3B46     		mov	r3, r7
+ 1636 009e FFF7FEFF 		bl	__aeabi_ddiv
+ 1637              	.LVL238:
+ 392:Core/Src/tft.c **** 		strcat(str, temp);
+ 1638              		.loc 1 392 30 discriminator 3 view .LVU336
+ 1639 00a2 0022     		movs	r2, #0
+ 1640 00a4 1A4B     		ldr	r3, .L79+20
+ 1641 00a6 FFF7FEFF 		bl	__aeabi_dadd
+ 1642              	.LVL239:
+ 392:Core/Src/tft.c **** 		strcat(str, temp);
+ 1643              		.loc 1 392 11 discriminator 3 view .LVU337
+ 1644 00aa FFF7FEFF 		bl	__aeabi_d2uiz
+ 1645              	.LVL240:
+ 1646 00ae 8DF80400 		strb	r0, [sp, #4]
+ 393:Core/Src/tft.c **** 		num %= (int)pow(10, i);
+ 1647              		.loc 1 393 3 is_stmt 1 discriminator 3 view .LVU338
+ 1648 00b2 01A9     		add	r1, sp, #4
+ 1649 00b4 1148     		ldr	r0, .L79
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 38
+
+
+ 1650 00b6 FFF7FEFF 		bl	strcat
+ 1651              	.LVL241:
+ 394:Core/Src/tft.c **** 	}
+ 1652              		.loc 1 394 3 discriminator 3 view .LVU339
+ 394:Core/Src/tft.c **** 	}
+ 1653              		.loc 1 394 15 is_stmt 0 discriminator 3 view .LVU340
+ 1654 00ba 2246     		mov	r2, r4
+ 1655 00bc 2B46     		mov	r3, r5
+ 1656 00be 4046     		mov	r0, r8
+ 1657 00c0 4946     		mov	r1, r9
+ 1658 00c2 FFF7FEFF 		bl	pow
+ 1659              	.LVL242:
+ 394:Core/Src/tft.c **** 	}
+ 1660              		.loc 1 394 10 discriminator 3 view .LVU341
+ 1661 00c6 FFF7FEFF 		bl	__aeabi_d2iz
+ 1662              	.LVL243:
+ 394:Core/Src/tft.c **** 	}
+ 1663              		.loc 1 394 7 discriminator 3 view .LVU342
+ 1664 00ca 9BFBF0F3 		sdiv	r3, fp, r0
+ 1665 00ce 00FB13BB 		mls	fp, r0, r3, fp
+ 1666              	.LVL244:
+ 394:Core/Src/tft.c **** 	}
+ 1667              		.loc 1 394 7 discriminator 3 view .LVU343
+ 1668 00d2 0FFA8BFB 		sxth	fp, fp
+ 1669              	.LVL245:
+ 394:Core/Src/tft.c **** 	}
+ 1670              		.loc 1 394 7 discriminator 3 view .LVU344
+ 1671              	.LBE24:
+ 389:Core/Src/tft.c **** 	{
+ 1672              		.loc 1 389 29 is_stmt 1 discriminator 3 view .LVU345
+ 389:Core/Src/tft.c **** 	{
+ 1673              		.loc 1 389 30 is_stmt 0 discriminator 3 view .LVU346
+ 1674 00d6 0AF1FF3A 		add	r10, r10, #-1
+ 1675              	.LVL246:
+ 1676              	.L71:
+ 389:Core/Src/tft.c **** 	{
+ 1677              		.loc 1 389 21 is_stmt 1 discriminator 1 view .LVU347
+ 389:Core/Src/tft.c **** 	{
+ 1678              		.loc 1 389 2 is_stmt 0 discriminator 1 view .LVU348
+ 1679 00da BAF1000F 		cmp	r10, #0
+ 1680 00de C5DA     		bge	.L72
+ 389:Core/Src/tft.c **** 	{
+ 1681              		.loc 1 389 2 discriminator 1 view .LVU349
+ 1682              	.LBE25:
+ 1683              	.LBB26:
+ 398:Core/Src/tft.c **** 	{
+ 1684              		.loc 1 398 10 view .LVU350
+ 1685 00e0 0023     		movs	r3, #0
+ 1686 00e2 00E0     		b	.L73
+ 1687              	.LVL247:
+ 1688              	.L74:
+ 398:Core/Src/tft.c **** 	{
+ 1689              		.loc 1 398 25 is_stmt 1 discriminator 2 view .LVU351
+ 398:Core/Src/tft.c **** 	{
+ 1690              		.loc 1 398 26 is_stmt 0 discriminator 2 view .LVU352
+ 1691 00e4 0133     		adds	r3, r3, #1
+ 1692              	.LVL248:
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 39
+
+
+ 1693              	.L73:
+ 398:Core/Src/tft.c **** 	{
+ 1694              		.loc 1 398 17 is_stmt 1 discriminator 1 view .LVU353
+ 398:Core/Src/tft.c **** 	{
+ 1695              		.loc 1 398 2 is_stmt 0 discriminator 1 view .LVU354
+ 1696 00e6 052B     		cmp	r3, #5
+ 1697 00e8 B0DC     		bgt	.L69
+ 400:Core/Src/tft.c **** 	}
+ 1698              		.loc 1 400 3 is_stmt 1 view .LVU355
+ 400:Core/Src/tft.c **** 	}
+ 1699              		.loc 1 400 10 is_stmt 0 view .LVU356
+ 1700 00ea 044A     		ldr	r2, .L79
+ 1701 00ec D25C     		ldrb	r2, [r2, r3]	@ zero_extendqisi2
+ 400:Core/Src/tft.c **** 	}
+ 1702              		.loc 1 400 5 view .LVU357
+ 1703 00ee 002A     		cmp	r2, #0
+ 1704 00f0 F8D1     		bne	.L74
+ 400:Core/Src/tft.c **** 	}
+ 1705              		.loc 1 400 15 is_stmt 1 discriminator 1 view .LVU358
+ 400:Core/Src/tft.c **** 	}
+ 1706              		.loc 1 400 22 is_stmt 0 discriminator 1 view .LVU359
+ 1707 00f2 024A     		ldr	r2, .L79
+ 1708 00f4 2021     		movs	r1, #32
+ 1709 00f6 D154     		strb	r1, [r2, r3]
+ 1710 00f8 F4E7     		b	.L74
+ 1711              	.L80:
+ 1712 00fa 00BF     		.align	2
+ 1713              	.L79:
+ 1714 00fc 00000000 		.word	.LANCHOR1
+ 1715 0100 0C000000 		.word	.LC2
+ 1716 0104 00000000 		.word	.LC0
+ 1717 0108 08000000 		.word	.LC1
+ 1718 010c 00002440 		.word	1076101120
+ 1719 0110 00004840 		.word	1078460416
+ 1720              	.LBE26:
+ 1721              		.cfi_endproc
+ 1722              	.LFE78:
+ 1724              		.section	.text.TFT_Test,"ax",%progbits
+ 1725              		.align	1
+ 1726              		.global	TFT_Test
+ 1727              		.syntax unified
+ 1728              		.thumb
+ 1729              		.thumb_func
+ 1731              	TFT_Test:
+ 1732              	.LFB79:
+ 404:Core/Src/tft.c **** 
+ 405:Core/Src/tft.c **** //初始测试程序
+ 406:Core/Src/tft.c **** void TFT_Test(void)
+ 407:Core/Src/tft.c **** {  
+ 1733              		.loc 1 407 1 is_stmt 1 view -0
+ 1734              		.cfi_startproc
+ 1735              		@ args = 0, pretend = 0, frame = 0
+ 1736              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1737 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 1738              	.LCFI21:
+ 1739              		.cfi_def_cfa_offset 24
+ 1740              		.cfi_offset 4, -24
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 40
+
+
+ 1741              		.cfi_offset 5, -20
+ 1742              		.cfi_offset 6, -16
+ 1743              		.cfi_offset 7, -12
+ 1744              		.cfi_offset 8, -8
+ 1745              		.cfi_offset 14, -4
+ 1746 0004 82B0     		sub	sp, sp, #8
+ 1747              	.LCFI22:
+ 1748              		.cfi_def_cfa_offset 32
+ 408:Core/Src/tft.c ****   TFT_DrawArc(120, 160, 60, 0, 360, RGB2565(200, 184, 248));
+ 1749              		.loc 1 408 3 view .LVU361
+ 1750 0006 F822     		movs	r2, #248
+ 1751 0008 B821     		movs	r1, #184
+ 1752 000a C820     		movs	r0, #200
+ 1753 000c FFF7FEFF 		bl	RGB2565
+ 1754              	.LVL249:
+ 1755 0010 0190     		str	r0, [sp, #4]
+ 1756 0012 4FF4B476 		mov	r6, #360
+ 1757 0016 0096     		str	r6, [sp]
+ 1758 0018 0023     		movs	r3, #0
+ 1759 001a 3C22     		movs	r2, #60
+ 1760 001c A021     		movs	r1, #160
+ 1761 001e 7820     		movs	r0, #120
+ 1762 0020 FFF7FEFF 		bl	TFT_DrawArc
+ 1763              	.LVL250:
+ 409:Core/Src/tft.c **** 
+ 410:Core/Src/tft.c ****   TFT_DrawArc(60, 202, 74, 40, 83, RGB2565(255, 201, 14));
+ 1764              		.loc 1 410 3 view .LVU362
+ 1765 0024 0E22     		movs	r2, #14
+ 1766 0026 C921     		movs	r1, #201
+ 1767 0028 FF20     		movs	r0, #255
+ 1768 002a FFF7FEFF 		bl	RGB2565
+ 1769              	.LVL251:
+ 1770 002e 0446     		mov	r4, r0
+ 1771 0030 0190     		str	r0, [sp, #4]
+ 1772 0032 5323     		movs	r3, #83
+ 1773 0034 0093     		str	r3, [sp]
+ 1774 0036 2823     		movs	r3, #40
+ 1775 0038 4A22     		movs	r2, #74
+ 1776 003a CA21     		movs	r1, #202
+ 1777 003c 3C20     		movs	r0, #60
+ 1778 003e FFF7FEFF 		bl	TFT_DrawArc
+ 1779              	.LVL252:
+ 411:Core/Src/tft.c ****   TFT_DrawArc(113, 158, 5, -116, 39, RGB2565(255, 201, 14));
+ 1780              		.loc 1 411 3 view .LVU363
+ 1781 0042 0194     		str	r4, [sp, #4]
+ 1782 0044 2723     		movs	r3, #39
+ 1783 0046 0093     		str	r3, [sp]
+ 1784 0048 6FF07303 		mvn	r3, #115
+ 1785 004c 0522     		movs	r2, #5
+ 1786 004e 9E21     		movs	r1, #158
+ 1787 0050 7120     		movs	r0, #113
+ 1788 0052 FFF7FEFF 		bl	TFT_DrawArc
+ 1789              	.LVL253:
+ 412:Core/Src/tft.c ****   TFT_DrawLine(97, 150, 110, 163, RGB2565(255, 201, 14));
+ 1790              		.loc 1 412 3 view .LVU364
+ 1791 0056 0094     		str	r4, [sp]
+ 1792 0058 A323     		movs	r3, #163
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 41
+
+
+ 1793 005a 6E22     		movs	r2, #110
+ 1794 005c 9621     		movs	r1, #150
+ 1795 005e 6120     		movs	r0, #97
+ 1796 0060 FFF7FEFF 		bl	TFT_DrawLine
+ 1797              	.LVL254:
+ 413:Core/Src/tft.c ****   TFT_DrawArc(108, 166, 4, -133, 47, RGB2565(255, 201, 14));
+ 1798              		.loc 1 413 3 view .LVU365
+ 1799 0064 0194     		str	r4, [sp, #4]
+ 1800 0066 4FF02F08 		mov	r8, #47
+ 1801 006a CDF80080 		str	r8, [sp]
+ 1802 006e 6FF08403 		mvn	r3, #132
+ 1803 0072 0422     		movs	r2, #4
+ 1804 0074 A621     		movs	r1, #166
+ 1805 0076 6C20     		movs	r0, #108
+ 1806 0078 FFF7FEFF 		bl	TFT_DrawArc
+ 1807              	.LVL255:
+ 414:Core/Src/tft.c ****   TFT_DrawLine(93, 157, 105, 168, RGB2565(255, 201, 14));
+ 1808              		.loc 1 414 3 view .LVU366
+ 1809 007c 0094     		str	r4, [sp]
+ 1810 007e A823     		movs	r3, #168
+ 1811 0080 6922     		movs	r2, #105
+ 1812 0082 9D21     		movs	r1, #157
+ 1813 0084 5D20     		movs	r0, #93
+ 1814 0086 FFF7FEFF 		bl	TFT_DrawLine
+ 1815              	.LVL256:
+ 415:Core/Src/tft.c ****   TFT_DrawArc(105, 169, 5, -85, 8, RGB2565(255, 201, 14));
+ 1816              		.loc 1 415 3 view .LVU367
+ 1817 008a 0194     		str	r4, [sp, #4]
+ 1818 008c 0823     		movs	r3, #8
+ 1819 008e 0093     		str	r3, [sp]
+ 1820 0090 6FF05403 		mvn	r3, #84
+ 1821 0094 0522     		movs	r2, #5
+ 1822 0096 A921     		movs	r1, #169
+ 1823 0098 6920     		movs	r0, #105
+ 1824 009a FFF7FEFF 		bl	TFT_DrawArc
+ 1825              	.LVL257:
+ 416:Core/Src/tft.c ****   TFT_DrawLine(97, 150, 110, 163, RGB2565(255, 201, 14));
+ 1826              		.loc 1 416 3 view .LVU368
+ 1827 009e 0094     		str	r4, [sp]
+ 1828 00a0 A323     		movs	r3, #163
+ 1829 00a2 6E22     		movs	r2, #110
+ 1830 00a4 9621     		movs	r1, #150
+ 1831 00a6 6120     		movs	r0, #97
+ 1832 00a8 FFF7FEFF 		bl	TFT_DrawLine
+ 1833              	.LVL258:
+ 417:Core/Src/tft.c ****   TFT_DrawArc(75, 189, 28, 44, 90, RGB2565(255, 201, 14));
+ 1834              		.loc 1 417 3 view .LVU369
+ 1835 00ac 0194     		str	r4, [sp, #4]
+ 1836 00ae 5A23     		movs	r3, #90
+ 1837 00b0 0093     		str	r3, [sp]
+ 1838 00b2 2C23     		movs	r3, #44
+ 1839 00b4 1C22     		movs	r2, #28
+ 1840 00b6 BD21     		movs	r1, #189
+ 1841 00b8 4B20     		movs	r0, #75
+ 1842 00ba FFF7FEFF 		bl	TFT_DrawArc
+ 1843              	.LVL259:
+ 418:Core/Src/tft.c ****   TFT_DrawArc(76, 166, 5, 120, 252, RGB2565(255, 201, 14));
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 42
+
+
+ 1844              		.loc 1 418 3 view .LVU370
+ 1845 00be 0194     		str	r4, [sp, #4]
+ 1846 00c0 FC27     		movs	r7, #252
+ 1847 00c2 0097     		str	r7, [sp]
+ 1848 00c4 7823     		movs	r3, #120
+ 1849 00c6 0522     		movs	r2, #5
+ 1850 00c8 A621     		movs	r1, #166
+ 1851 00ca 4C20     		movs	r0, #76
+ 1852 00cc FFF7FEFF 		bl	TFT_DrawArc
+ 1853              	.LVL260:
+ 419:Core/Src/tft.c ****   TFT_DrawLine(73, 170, 95, 181, RGB2565(255, 201, 14));
+ 1854              		.loc 1 419 3 view .LVU371
+ 1855 00d0 0094     		str	r4, [sp]
+ 1856 00d2 B523     		movs	r3, #181
+ 1857 00d4 5F22     		movs	r2, #95
+ 1858 00d6 AA21     		movs	r1, #170
+ 1859 00d8 4920     		movs	r0, #73
+ 1860 00da FFF7FEFF 		bl	TFT_DrawLine
+ 1861              	.LVL261:
+ 420:Core/Src/tft.c ****   TFT_DrawArc(92, 186, 5, -92, 60, RGB2565(255, 201, 14));
+ 1862              		.loc 1 420 3 view .LVU372
+ 1863 00de 0194     		str	r4, [sp, #4]
+ 1864 00e0 3C25     		movs	r5, #60
+ 1865 00e2 0095     		str	r5, [sp]
+ 1866 00e4 6FF05B03 		mvn	r3, #91
+ 1867 00e8 0522     		movs	r2, #5
+ 1868 00ea BA21     		movs	r1, #186
+ 1869 00ec 5C20     		movs	r0, #92
+ 1870 00ee FFF7FEFF 		bl	TFT_DrawArc
+ 1871              	.LVL262:
+ 421:Core/Src/tft.c ****   TFT_DrawArc(93, 156, 34, -82, -162, RGB2565(255, 201, 14));
+ 1872              		.loc 1 421 3 view .LVU373
+ 1873 00f2 0194     		str	r4, [sp, #4]
+ 1874 00f4 6FF0A103 		mvn	r3, #161
+ 1875 00f8 0093     		str	r3, [sp]
+ 1876 00fa 6FF05103 		mvn	r3, #81
+ 1877 00fe 2222     		movs	r2, #34
+ 1878 0100 9C21     		movs	r1, #156
+ 1879 0102 5D20     		movs	r0, #93
+ 1880 0104 FFF7FEFF 		bl	TFT_DrawArc
+ 1881              	.LVL263:
+ 422:Core/Src/tft.c **** 
+ 423:Core/Src/tft.c ****   TFT_DrawArc(111, 181, 32, -112, -166, RGB2565(173, 221, 247));
+ 1882              		.loc 1 423 3 view .LVU374
+ 1883 0108 F722     		movs	r2, #247
+ 1884 010a DD21     		movs	r1, #221
+ 1885 010c AD20     		movs	r0, #173
+ 1886 010e FFF7FEFF 		bl	RGB2565
+ 1887              	.LVL264:
+ 1888 0112 0446     		mov	r4, r0
+ 1889 0114 0190     		str	r0, [sp, #4]
+ 1890 0116 6FF0A503 		mvn	r3, #165
+ 1891 011a 0093     		str	r3, [sp]
+ 1892 011c 6FF06F03 		mvn	r3, #111
+ 1893 0120 2022     		movs	r2, #32
+ 1894 0122 B521     		movs	r1, #181
+ 1895 0124 6F20     		movs	r0, #111
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 43
+
+
+ 1896 0126 FFF7FEFF 		bl	TFT_DrawArc
+ 1897              	.LVL265:
+ 424:Core/Src/tft.c ****   TFT_DrawArc(119, 167, 47, 36, -114, RGB2565(173, 221, 247));
+ 1898              		.loc 1 424 3 view .LVU375
+ 1899 012a 0194     		str	r4, [sp, #4]
+ 1900 012c 6FF07103 		mvn	r3, #113
+ 1901 0130 0093     		str	r3, [sp]
+ 1902 0132 2423     		movs	r3, #36
+ 1903 0134 4246     		mov	r2, r8
+ 1904 0136 A721     		movs	r1, #167
+ 1905 0138 7720     		movs	r0, #119
+ 1906 013a FFF7FEFF 		bl	TFT_DrawArc
+ 1907              	.LVL266:
+ 425:Core/Src/tft.c ****   TFT_DrawArc(132, 161, 33, 42, 147, RGB2565(173, 221, 247));
+ 1908              		.loc 1 425 3 view .LVU376
+ 1909 013e 0194     		str	r4, [sp, #4]
+ 1910 0140 9323     		movs	r3, #147
+ 1911 0142 0093     		str	r3, [sp]
+ 1912 0144 2A23     		movs	r3, #42
+ 1913 0146 2122     		movs	r2, #33
+ 1914 0148 A121     		movs	r1, #161
+ 1915 014a 8420     		movs	r0, #132
+ 1916 014c FFF7FEFF 		bl	TFT_DrawArc
+ 1917              	.LVL267:
+ 426:Core/Src/tft.c ****   TFT_DrawArc(123, 185, 40, 110, 80, RGB2565(173, 221, 247));
+ 1918              		.loc 1 426 3 view .LVU377
+ 1919 0150 0194     		str	r4, [sp, #4]
+ 1920 0152 5023     		movs	r3, #80
+ 1921 0154 0093     		str	r3, [sp]
+ 1922 0156 6E23     		movs	r3, #110
+ 1923 0158 2822     		movs	r2, #40
+ 1924 015a B921     		movs	r1, #185
+ 1925 015c 7B20     		movs	r0, #123
+ 1926 015e FFF7FEFF 		bl	TFT_DrawArc
+ 1927              	.LVL268:
+ 427:Core/Src/tft.c ****   TFT_DrawArc(126, 167, 22, 79, -156, RGB2565(173, 221, 247));
+ 1928              		.loc 1 427 3 view .LVU378
+ 1929 0162 0194     		str	r4, [sp, #4]
+ 1930 0164 6FF09B03 		mvn	r3, #155
+ 1931 0168 0093     		str	r3, [sp]
+ 1932 016a 4F23     		movs	r3, #79
+ 1933 016c 1622     		movs	r2, #22
+ 1934 016e A721     		movs	r1, #167
+ 1935 0170 7E20     		movs	r0, #126
+ 1936 0172 FFF7FEFF 		bl	TFT_DrawArc
+ 1937              	.LVL269:
+ 428:Core/Src/tft.c ****   TFT_DrawArc(95, 184, 15, 38, 140, RGB2565(173, 221, 247));
+ 1938              		.loc 1 428 3 view .LVU379
+ 1939 0176 0194     		str	r4, [sp, #4]
+ 1940 0178 8C23     		movs	r3, #140
+ 1941 017a 0093     		str	r3, [sp]
+ 1942 017c 2623     		movs	r3, #38
+ 1943 017e 0F22     		movs	r2, #15
+ 1944 0180 B821     		movs	r1, #184
+ 1945 0182 5F20     		movs	r0, #95
+ 1946 0184 FFF7FEFF 		bl	TFT_DrawArc
+ 1947              	.LVL270:
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 44
+
+
+ 429:Core/Src/tft.c **** 
+ 430:Core/Src/tft.c ****   TFT_DrawArc(93, 176, 2, 0, 360, RGB2565(252, 67, 14));
+ 1948              		.loc 1 430 3 view .LVU380
+ 1949 0188 0E22     		movs	r2, #14
+ 1950 018a 4321     		movs	r1, #67
+ 1951 018c 3846     		mov	r0, r7
+ 1952 018e FFF7FEFF 		bl	RGB2565
+ 1953              	.LVL271:
+ 1954 0192 0190     		str	r0, [sp, #4]
+ 1955 0194 0096     		str	r6, [sp]
+ 1956 0196 0023     		movs	r3, #0
+ 1957 0198 0222     		movs	r2, #2
+ 1958 019a B021     		movs	r1, #176
+ 1959 019c 5D20     		movs	r0, #93
+ 1960 019e FFF7FEFF 		bl	TFT_DrawArc
+ 1961              	.LVL272:
+ 431:Core/Src/tft.c **** 
+ 432:Core/Src/tft.c ****   HAL_Delay(200);
+ 1962              		.loc 1 432 3 view .LVU381
+ 1963 01a2 C820     		movs	r0, #200
+ 1964 01a4 FFF7FEFF 		bl	HAL_Delay
+ 1965              	.LVL273:
+ 433:Core/Src/tft.c ****   TFT_Fill(60, 100, 180, 230, 0);
+ 1966              		.loc 1 433 3 view .LVU382
+ 1967 01a8 0023     		movs	r3, #0
+ 1968 01aa 0093     		str	r3, [sp]
+ 1969 01ac E623     		movs	r3, #230
+ 1970 01ae B422     		movs	r2, #180
+ 1971 01b0 6421     		movs	r1, #100
+ 1972 01b2 2846     		mov	r0, r5
+ 1973 01b4 FFF7FEFF 		bl	TFT_Fill
+ 1974              	.LVL274:
+ 434:Core/Src/tft.c **** }...
+ 1975              		.loc 1 434 1 is_stmt 0 view .LVU383
+ 1976 01b8 02B0     		add	sp, sp, #8
+ 1977              	.LCFI23:
+ 1978              		.cfi_def_cfa_offset 24
+ 1979              		@ sp needed
+ 1980 01ba BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 1981              		.cfi_endproc
+ 1982              	.LFE79:
+ 1984              		.global	TFT_chara
+ 1985              		.section	.bss.str.0,"aw",%nobits
+ 1986              		.align	2
+ 1987              		.set	.LANCHOR1,. + 0
+ 1990              	str.0:
+ 1991 0000 00000000 		.space	7
+ 1991      000000
+ 1992              		.section	.data.TFT_chara,"aw"
+ 1993              		.align	2
+ 1994              		.set	.LANCHOR0,. + 0
+ 1997              	TFT_chara:
+ 1998 0000 00000000 		.ascii	"\000\000\000\000\000\000\000\000\000\000\000\000\000"
+ 1998      00000000 
+ 1998      00000000 
+ 1998      00
+ 1999 000d 000000   		.ascii	"\000\000\000"
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 45
+
+
+ 2000 0010 00000008 		.ascii	"\000\000\000\010\010\010\010\010\010\010\000\000\030"
+ 2000      08080808 
+ 2000      08080000 
+ 2000      18
+ 2001 001d 180000   		.ascii	"\030\000\000"
+ 2002 0020 00486C24 		.ascii	"\000Hl$\022\000\000\000\000\000\000\000\000\000\000"
+ 2002      12000000 
+ 2002      00000000 
+ 2002      000000
+ 2003 002f 00       		.ascii	"\000"
+ 2004 0030 00000024 		.ascii	"\000\000\000$$$\177\022\022\022\177\022\022\022\000"
+ 2004      24247F12 
+ 2004      12127F12 
+ 2004      121200
+ 2005 003f 00       		.ascii	"\000"
+ 2006 0040 0000081C 		.ascii	"\000\000\010\034**\012\014\030((**\034\010\010"
+ 2006      2A2A0A0C 
+ 2006      1828282A 
+ 2006      2A1C0808 
+ 2007 0050 00000022 		.ascii	"\000\000\000\"%\025\025\025*XTTT\"\000\000"
+ 2007      25151515 
+ 2007      2A585454 
+ 2007      54220000 
+ 2008 0060 0000000C 		.ascii	"\000\000\000\014\022\022\022\012v%)\021\221n\000\000"
+ 2008      1212120A 
+ 2008      76252911 
+ 2008      916E0000 
+ 2009 0070 00060604 		.ascii	"\000\006\006\004\003\000\000\000\000\000\000\000\000"
+ 2009      03000000 
+ 2009      00000000 
+ 2009      00
+ 2010 007d 000000   		.ascii	"\000\000\000"
+ 2011 0080 00402010 		.ascii	"\000@ \020\020\010\010\010\010\010\010\020\020 @\000"
+ 2011      10080808 
+ 2011      08080810 
+ 2011      10204000 
+ 2012 0090 00020408 		.ascii	"\000\002\004\010\010\020\020\020\020\020\020\010\010"
+ 2012      08101010 
+ 2012      10101008 
+ 2012      08
+ 2013 009d 040200   		.ascii	"\004\002\000"
+ 2014 00a0 00000000 		.ascii	"\000\000\000\000\010\010k\034\034k\010\010\000\000\000"
+ 2014      08086B1C 
+ 2014      1C6B0808 
+ 2014      000000
+ 2015 00af 00       		.ascii	"\000"
+ 2016 00b0 00000000 		.ascii	"\000\000\000\000\010\010\010\010\177\010\010\010\010"
+ 2016      08080808 
+ 2016      7F080808 
+ 2016      08
+ 2017 00bd 000000   		.ascii	"\000\000\000"
+ 2018 00c0 00000000 		.ascii	"\000\000\000\000\000\000\000\000\000\000\000\000\006"
+ 2018      00000000 
+ 2018      00000000 
+ 2018      06
+ 2019 00cd 060403   		.ascii	"\006\004\003"
+ 2020 00d0 00000000 		.ascii	"\000\000\000\000\000\000\000\000\376\000\000\000\000"
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 46
+
+
+ 2020      00000000 
+ 2020      FE000000 
+ 2020      00
+ 2021 00dd 000000   		.ascii	"\000\000\000"
+ 2022 00e0 00000000 		.ascii	"\000\000\000\000\000\000\000\000\000\000\000\000\006"
+ 2022      00000000 
+ 2022      00000000 
+ 2022      06
+ 2023 00ed 060000   		.ascii	"\006\000\000"
+ 2024 00f0 00008040 		.ascii	"\000\000\200@@  \020\020\010\010\004\004\002\002\000"
+ 2024      40202010 
+ 2024      10080804 
+ 2024      04020200 
+ 2025 0100 00000018 		.ascii	"\000\000\000\030$BBBBBBB$\030\000\000"
+ 2025      24424242 
+ 2025      42424242 
+ 2025      24180000 
+ 2026 0110 00000008 		.ascii	"\000\000\000\010\016\010\010\010\010\010\010\010\010"
+ 2026      0E080808 
+ 2026      08080808 
+ 2026      08
+ 2027 011d 3E0000   		.ascii	">\000\000"
+ 2028 0120 0000003C 		.ascii	"\000\000\000<BBB  \020\010\004B~\000\000"
+ 2028      42424220 
+ 2028      20100804 
+ 2028      427E0000 
+ 2029 0130 0000003C 		.ascii	"\000\000\000<BB \030 @@B\"\034\000\000"
+ 2029      42422018 
+ 2029      20404042 
+ 2029      221C0000 
+ 2030 0140 00000020 		.ascii	"\000\000\000 0($$\"\"~  x\000\000"
+ 2030      30282424 
+ 2030      22227E20 
+ 2030      20780000 
+ 2031 0150 0000007E 		.ascii	"\000\000\000~\002\002\002\032&@@B\"\034\000\000"
+ 2031      0202021A 
+ 2031      26404042 
+ 2031      221C0000 
+ 2032 0160 00000038 		.ascii	"\000\000\0008$\002\002\032&BBB$\030\000\000"
+ 2032      2402021A 
+ 2032      26424242 
+ 2032      24180000 
+ 2033 0170 0000007E 		.ascii	"\000\000\000~\"\"\020\020\010\010\010\010\010\010\000"
+ 2033      22221010 
+ 2033      08080808 
+ 2033      080800
+ 2034 017f 00       		.ascii	"\000"
+ 2035 0180 0000003C 		.ascii	"\000\000\000<BBB$\030$BBB<\000\000"
+ 2035      42424224 
+ 2035      18244242 
+ 2035      423C0000 
+ 2036 0190 00000018 		.ascii	"\000\000\000\030$BBBdX@@$\034\000\000"
+ 2036      24424242 
+ 2036      64584040 
+ 2036      241C0000 
+ 2037 01a0 00000000 		.ascii	"\000\000\000\000\000\000\030\030\000\000\000\000\030"
+ 2037      00001818 
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 47
+
+
+ 2037      00000000 
+ 2037      18
+ 2038 01ad 180000   		.ascii	"\030\000\000"
+ 2039 01b0 00000000 		.ascii	"\000\000\000\000\000\000\000\010\000\000\000\000\000"
+ 2039      00000008 
+ 2039      00000000 
+ 2039      00
+ 2040 01bd 080804   		.ascii	"\010\010\004"
+ 2041 01c0 00000040 		.ascii	"\000\000\000@ \020\010\004\002\004\010\020 @\000\000"
+ 2041      20100804 
+ 2041      02040810 
+ 2041      20400000 
+ 2042 01d0 00000000 		.ascii	"\000\000\000\000\000\000\177\000\000\000\177\000\000"
+ 2042      00007F00 
+ 2042      00007F00 
+ 2042      00
+ 2043 01dd 000000   		.ascii	"\000\000\000"
+ 2044 01e0 00000002 		.ascii	"\000\000\000\002\004\010\020 @ \020\010\004\002\000"
+ 2044      04081020 
+ 2044      40201008 
+ 2044      040200
+ 2045 01ef 00       		.ascii	"\000"
+ 2046 01f0 0000003C 		.ascii	"\000\000\000<BBF@ \020\020\000\030\030\000\000"
+ 2046      42424640 
+ 2046      20101000 
+ 2046      18180000 
+ 2047 0200 0000001C 		.ascii	"\000\000\000\034\"ZUUUU-B\"\034\000\000"
+ 2047      225A5555 
+ 2047      55552D42 
+ 2047      221C0000 
+ 2048 0210 00000008 		.ascii	"\000\000\000\010\010\030\024\024$<\"BB\347\000\000"
+ 2048      08181414 
+ 2048      243C2242 
+ 2048      42E70000 
+ 2049 0220 0000001F 		.ascii	"\000\000\000\037\"\"\"\036\"BBB\"\037\000\000"
+ 2049      2222221E 
+ 2049      22424242 
+ 2049      221F0000 
+ 2050 0230 0000007C 		.ascii	"\000\000\000|BB\001\001\001\001\001B\"\034\000\000"
+ 2050      42420101 
+ 2050      01010142 
+ 2050      221C0000 
+ 2051 0240 0000001F 		.ascii	"\000\000\000\037\"BBBBBBB\"\037\000\000"
+ 2051      22424242 
+ 2051      42424242 
+ 2051      221F0000 
+ 2052 0250 0000003F 		.ascii	"\000\000\000?B\022\022\036\022\022\002BB?\000\000"
+ 2052      4212121E 
+ 2052      12120242 
+ 2052      423F0000 
+ 2053 0260 0000003F 		.ascii	"\000\000\000?B\022\022\036\022\022\002\002\002\007\000"
+ 2053      4212121E 
+ 2053      12120202 
+ 2053      020700
+ 2054 026f 00       		.ascii	"\000"
+ 2055 0270 0000003C 		.ascii	"\000\000\000<\"\"\001\001\001q!\"\"\034\000\000"
+ 2055      22220101 
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 48
+
+
+ 2055      01712122 
+ 2055      221C0000 
+ 2056 0280 000000E7 		.ascii	"\000\000\000\347BBBB~BBBB\347\000\000"
+ 2056      42424242 
+ 2056      7E424242 
+ 2056      42E70000 
+ 2057 0290 0000003E 		.ascii	"\000\000\000>\010\010\010\010\010\010\010\010\010>\000"
+ 2057      08080808 
+ 2057      08080808 
+ 2057      083E00
+ 2058 029f 00       		.ascii	"\000"
+ 2059 02a0 0000007C 		.ascii	"\000\000\000|\020\020\020\020\020\020\020\020\020\020"
+ 2059      10101010 
+ 2059      10101010 
+ 2059      1010
+ 2060 02ae 110F     		.ascii	"\021\017"
+ 2061 02b0 00000077 		.ascii	"\000\000\000w\"\022\012\016\012\022\022\"\"w\000\000"
+ 2061      22120A0E 
+ 2061      0A121222 
+ 2061      22770000 
+ 2062 02c0 00000007 		.ascii	"\000\000\000\007\002\002\002\002\002\002\002\002B\177"
+ 2062      02020202 
+ 2062      02020202 
+ 2062      427F
+ 2063 02ce 0000     		.ascii	"\000\000"
+ 2064 02d0 00000077 		.ascii	"\000\000\000w6666*****k\000\000"
+ 2064      36363636 
+ 2064      2A2A2A2A 
+ 2064      2A6B0000 
+ 2065 02e0 000000E3 		.ascii	"\000\000\000\343FFJJRRRbbG\000\000"
+ 2065      46464A4A 
+ 2065      52525262 
+ 2065      62470000 
+ 2066 02f0 0000001C 		.ascii	"\000\000\000\034\"AAAAAAA\"\034\000\000"
+ 2066      22414141 
+ 2066      41414141 
+ 2066      221C0000 
+ 2067 0300 0000003F 		.ascii	"\000\000\000?BBBB>\002\002\002\002\007\000\000"
+ 2067      42424242 
+ 2067      3E020202 
+ 2067      02070000 
+ 2068 0310 0000001C 		.ascii	"\000\000\000\034\"AAAAAMS2\034`\000"
+ 2068      22414141 
+ 2068      41414D53 
+ 2068      321C6000 
+ 2069 0320 0000003F 		.ascii	"\000\000\000?BBB>\022\022\"\"B\307\000\000"
+ 2069      4242423E 
+ 2069      12122222 
+ 2069      42C70000 
+ 2070 0330 0000007C 		.ascii	"\000\000\000|BB\002\004\030 @BB>\000\000"
+ 2070      42420204 
+ 2070      18204042 
+ 2070      423E0000 
+ 2071 0340 0000007F 		.ascii	"\000\000\000\177I\010\010\010\010\010\010\010\010\034"
+ 2071      49080808 
+ 2071      08080808 
+ 2071      081C
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 49
+
+
+ 2072 034e 0000     		.ascii	"\000\000"
+ 2073 0350 000000E7 		.ascii	"\000\000\000\347BBBBBBBBB<\000\000"
+ 2073      42424242 
+ 2073      42424242 
+ 2073      423C0000 
+ 2074 0360 000000E7 		.ascii	"\000\000\000\347BB\"$$\024\024\030\010\010\000\000"
+ 2074      42422224 
+ 2074      24141418 
+ 2074      08080000 
+ 2075 0370 0000006B 		.ascii	"\000\000\000kIIIIUU6\"\"\"\000\000"
+ 2075      49494949 
+ 2075      55553622 
+ 2075      22220000 
+ 2076 0380 000000E7 		.ascii	"\000\000\000\347B$$\030\030\030$$B\347\000\000"
+ 2076      42242418 
+ 2076      18182424 
+ 2076      42E70000 
+ 2077 0390 00000077 		.ascii	"\000\000\000w\"\"\024\024\010\010\010\010\010\034\000"
+ 2077      22221414 
+ 2077      08080808 
+ 2077      081C00
+ 2078 039f 00       		.ascii	"\000"
+ 2079 03a0 0000007E 		.ascii	"\000\000\000~! \020\020\010\004\004BB?\000\000"
+ 2079      21201010 
+ 2079      08040442 
+ 2079      423F0000 
+ 2080 03b0 00780808 		.ascii	"\000x\010\010\010\010\010\010\010\010\010\010\010\010"
+ 2080      08080808 
+ 2080      08080808 
+ 2080      0808
+ 2081 03be 7800     		.ascii	"x\000"
+ 2082 03c0 00000202 		.ascii	"\000\000\002\002\004\004\010\010\010\020\020   @@"
+ 2082      04040808 
+ 2082      08101020 
+ 2082      20204040 
+ 2083 03d0 001E1010 		.ascii	"\000\036\020\020\020\020\020\020\020\020\020\020\020"
+ 2083      10101010 
+ 2083      10101010 
+ 2083      10
+ 2084 03dd 101E00   		.ascii	"\020\036\000"
+ 2085 03e0 00384400 		.ascii	"\0008D\000\000\000\000\000\000\000\000\000\000\000\000"
+ 2085      00000000 
+ 2085      00000000 
+ 2085      000000
+ 2086 03ef 00       		.ascii	"\000"
+ 2087 03f0 00000000 		.ascii	"\000\000\000\000\000\000\000\000\000\000\000\000\000"
+ 2087      00000000 
+ 2087      00000000 
+ 2087      00
+ 2088 03fd 0000FF   		.ascii	"\000\000\377"
+ 2089 0400 00060800 		.ascii	"\000\006\010\000\000\000\000\000\000\000\000\000\000"
+ 2089      00000000 
+ 2089      00000000 
+ 2089      00
+ 2090 040d 000000   		.ascii	"\000\000\000"
+ 2091 0410 00000000 		.ascii	"\000\000\000\000\000\000\000<BxDBB\374\000\000"
+ 2091      0000003C 
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 50
+
+
+ 2091      42784442 
+ 2091      42FC0000 
+ 2092 0420 00000003 		.ascii	"\000\000\000\003\002\002\002\032&BBB&\032\000\000"
+ 2092      0202021A 
+ 2092      26424242 
+ 2092      261A0000 
+ 2093 0430 00000000 		.ascii	"\000\000\000\000\000\000\0008D\002\002\002D8\000\000"
+ 2093      00000038 
+ 2093      44020202 
+ 2093      44380000 
+ 2094 0440 00000060 		.ascii	"\000\000\000`@@@xDBBBd\330\000\000"
+ 2094      40404078 
+ 2094      44424242 
+ 2094      64D80000 
+ 2095 0450 00000000 		.ascii	"\000\000\000\000\000\000\000<B~\002\002B<\000\000"
+ 2095      0000003C 
+ 2095      427E0202 
+ 2095      423C0000 
+ 2096 0460 000000F0 		.ascii	"\000\000\000\360\210\010\010~\010\010\010\010\010>\000"
+ 2096      8808087E 
+ 2096      08080808 
+ 2096      083E00
+ 2097 046f 00       		.ascii	"\000"
+ 2098 0470 00000000 		.ascii	"\000\000\000\000\000\000\000|\"\"\034\002<BB<"
+ 2098      0000007C 
+ 2098      22221C02 
+ 2098      3C42423C 
+ 2099 0480 00000003 		.ascii	"\000\000\000\003\002\002\002:FBBBB\347\000\000"
+ 2099      0202023A 
+ 2099      46424242 
+ 2099      42E70000 
+ 2100 0490 0000000C 		.ascii	"\000\000\000\014\014\000\000\016\010\010\010\010\010"
+ 2100      0C00000E 
+ 2100      08080808 
+ 2100      08
+ 2101 049d 3E0000   		.ascii	">\000\000"
+ 2102 04a0 00000030 		.ascii	"\000\000\00000\000\0008      \"\036"
+ 2102      30000038 
+ 2102      20202020 
+ 2102      2020221E 
+ 2103 04b0 00000003 		.ascii	"\000\000\000\003\002\002\002r\022\012\026\022\"w\000"
+ 2103      02020272 
+ 2103      120A1612 
+ 2103      227700
+ 2104 04bf 00       		.ascii	"\000"
+ 2105 04c0 0000000E 		.ascii	"\000\000\000\016\010\010\010\010\010\010\010\010\010"
+ 2105      08080808 
+ 2105      08080808 
+ 2105      08
+ 2106 04cd 3E0000   		.ascii	">\000\000"
+ 2107 04d0 00000000 		.ascii	"\000\000\000\000\000\000\000\177\222\222\222\222\222"
+ 2107      0000007F 
+ 2107      92929292 
+ 2107      92
+ 2108 04dd B70000   		.ascii	"\267\000\000"
+ 2109 04e0 00000000 		.ascii	"\000\000\000\000\000\000\000;FBBBB\347\000\000"
+ 2109      0000003B 
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 51
+
+
+ 2109      46424242 
+ 2109      42E70000 
+ 2110 04f0 00000000 		.ascii	"\000\000\000\000\000\000\000<BBBBB<\000\000"
+ 2110      0000003C 
+ 2110      42424242 
+ 2110      423C0000 
+ 2111 0500 00000000 		.ascii	"\000\000\000\000\000\000\000\033&BBB\"\036\002\007"
+ 2111      0000001B 
+ 2111      26424242 
+ 2111      221E0207 
+ 2112 0510 00000000 		.ascii	"\000\000\000\000\000\000\000xDBBBDx@\340"
+ 2112      00000078 
+ 2112      44424242 
+ 2112      447840E0 
+ 2113 0520 00000000 		.ascii	"\000\000\000\000\000\000\000wL\004\004\004\004\037\000"
+ 2113      00000077 
+ 2113      4C040404 
+ 2113      041F00
+ 2114 052f 00       		.ascii	"\000"
+ 2115 0530 00000000 		.ascii	"\000\000\000\000\000\000\000|B\002<@B>\000\000"
+ 2115      0000007C 
+ 2115      42023C40 
+ 2115      423E0000 
+ 2116 0540 00000000 		.ascii	"\000\000\000\000\000\010\010>\010\010\010\010\0100\000"
+ 2116      0008083E 
+ 2116      08080808 
+ 2116      083000
+ 2117 054f 00       		.ascii	"\000"
+ 2118 0550 00000000 		.ascii	"\000\000\000\000\000\000\000cBBBBb\334\000\000"
+ 2118      00000063 
+ 2118      42424242 
+ 2118      62DC0000 
+ 2119 0560 00000000 		.ascii	"\000\000\000\000\000\000\000\347B$$\024\010\010\000"
+ 2119      000000E7 
+ 2119      42242414 
+ 2119      080800
+ 2120 056f 00       		.ascii	"\000"
+ 2121 0570 00000000 		.ascii	"\000\000\000\000\000\000\000\353IIUU\"\"\000\000"
+ 2121      000000EB 
+ 2121      49495555 
+ 2121      22220000 
+ 2122 0580 00000000 		.ascii	"\000\000\000\000\000\000\000v$\030\030\030$n\000\000"
+ 2122      00000076 
+ 2122      24181818 
+ 2122      246E0000 
+ 2123 0590 00000000 		.ascii	"\000\000\000\000\000\000\000\347B$$\024\030\010\010"
+ 2123      000000E7 
+ 2123      42242414 
+ 2123      180808
+ 2124 059f 07       		.ascii	"\007"
+ 2125 05a0 00000000 		.ascii	"\000\000\000\000\000\000\000~\"\020\010\010D~\000\000"
+ 2125      0000007E 
+ 2125      22100808 
+ 2125      447E0000 
+ 2126 05b0 00C02020 		.ascii	"\000\300     \020      \300\000"
+ 2126      20202010 
+ 2126      20202020 
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 52
+
+
+ 2126      2020C000 
+ 2127 05c0 10101010 		.ascii	"\020\020\020\020\020\020\020\020\020\020\020\020\020"
+ 2127      10101010 
+ 2127      10101010 
+ 2127      10
+ 2128 05cd 101010   		.ascii	"\020\020\020"
+ 2129 05d0 00060808 		.ascii	"\000\006\010\010\010\010\010\020\010\010\010\010\010"
+ 2129      08080810 
+ 2129      08080808 
+ 2129      08
+ 2130 05dd 080600   		.ascii	"\010\006\000"
+ 2131 05e0 0C32C200 		.ascii	"\0142\302\000\000\000\000\000\000\000\000\000\000\000"
+ 2131      00000000 
+ 2131      00000000 
+ 2131      0000
+ 2132 05ee 0000     		.ascii	"\000\000"
+ 2133              		.text
+ 2134              	.Letext0:
+ 2135              		.file 2 "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2021.10\\arm-none-eabi\\include\\
+ 2136              		.file 3 "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2021.10\\arm-none-eabi\\include\\
+ 2137              		.file 4 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xe.h"
+ 2138              		.file 5 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h"
+ 2139              		.file 6 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h"
+ 2140              		.file 7 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma.h"
+ 2141              		.file 8 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h"
+ 2142              		.file 9 "Core/Inc/spi.h"
+ 2143              		.file 10 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
+ 2144              		.file 11 "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2021.10\\arm-none-eabi\\include\
+ 2145              		.file 12 "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2021.10\\arm-none-eabi\\include\
+ 2146              		.file 13 "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2021.10\\arm-none-eabi\\include\
+ 2147              		.file 14 "<built-in>"
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 53
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 tft.c
+C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s:18     .text.TFT_WriteData:00000000 $t
+C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s:24     .text.TFT_WriteData:00000000 TFT_WriteData
+C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s:79     .text.TFT_WriteData:0000003c $d
+C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s:85     .text.TFT_WriteData16:00000000 $t
+C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s:91     .text.TFT_WriteData16:00000000 TFT_WriteData16
+C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s:172    .text.TFT_WriteData16:00000064 $d
+C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s:178    .text.TFT_WriteCMD:00000000 $t
+C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s:184    .text.TFT_WriteCMD:00000000 TFT_WriteCMD
+C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s:238    .text.TFT_WriteCMD:0000003c $d
+C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s:244    .text.TFT_Init:00000000 $t
+C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s:250    .text.TFT_Init:00000000 TFT_Init
+C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s:564    .text.TFT_Init:000001d0 $d
+C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s:569    .text.TFT_SetPos:00000000 $t
+C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s:575    .text.TFT_SetPos:00000000 TFT_SetPos
+C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s:632    .text.RGB2565:00000000 $t
+C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s:638    .text.RGB2565:00000000 RGB2565
+C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s:666    .text.TFT_Fill:00000000 $t
+C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s:672    .text.TFT_Fill:00000000 TFT_Fill
+C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s:766    .text.TFT_DrawLine:00000000 $t
+C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s:772    .text.TFT_DrawLine:00000000 TFT_DrawLine
+C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s:1028   .text.TFT_DrawArc:00000000 $t
+C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s:1034   .text.TFT_DrawArc:00000000 TFT_DrawArc
+C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s:1318   .text.TFT_DrawArc:00000180 $d
+C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s:1325   .text.TFT_DrawStr:00000000 $t
+C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s:1331   .text.TFT_DrawStr:00000000 TFT_DrawStr
+C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s:1468   .text.TFT_DrawStr:00000070 $d
+C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s:1473   .rodata.TFT_Itoa.str1.4:00000000 $d
+C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s:1484   .text.TFT_Itoa:00000000 $t
+C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s:1490   .text.TFT_Itoa:00000000 TFT_Itoa
+C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s:1714   .text.TFT_Itoa:000000fc $d
+C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s:1725   .text.TFT_Test:00000000 $t
+C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s:1731   .text.TFT_Test:00000000 TFT_Test
+C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s:1997   .data.TFT_chara:00000000 TFT_chara
+C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s:1986   .bss.str.0:00000000 $d
+C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s:1990   .bss.str.0:00000000 str.0
+C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s:1993   .data.TFT_chara:00000000 $d
+
+UNDEFINED SYMBOLS
+HAL_GPIO_WritePin
+HAL_SPI_Transmit
+hspi2
+HAL_Delay
+__aeabi_i2d
+__aeabi_ddiv
+__aeabi_d2f
+__aeabi_i2f
+__aeabi_fmul
+__aeabi_fsub
+__aeabi_fadd
+__aeabi_f2uiz
+__aeabi_dmul
+__aeabi_dadd
+__aeabi_d2uiz
+__aeabi_dsub
+cos
+ARM GAS  C:\Users\LJH\AppData\Local\Temp\ccVPaB7Q.s 			page 54
+
+
+sin
+strlen
+__aeabi_d2iz
+log10
+printf
+pow
+strcat
