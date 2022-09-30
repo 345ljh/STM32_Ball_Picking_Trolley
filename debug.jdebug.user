@@ -1,0 +1,33 @@
+
+GraphedExpression="ps2_rx[3]", DisplayFormat=DISPLAY_FORMAT_DEC, Color=#a00909
+GraphedExpression="ps2_rx[1]", Color=#09a01b
+OpenDocument="startup_stm32f103xe.s", FilePath="C:/Users/LJH/Desktop/Unfinished/CreationA_V1/startup_stm32f103xe.s", Line=58
+OpenDocument="stm32f1xx_hal_spi.c", FilePath="C:/Users/LJH/Desktop/Unfinished/CreationA_V1/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c", Line=1324
+OpenDocument="main.c", FilePath="C:/Users/LJH/Desktop/Unfinished/CreationA_V1/Core/Src/main.c", Line=61
+OpenDocument="stm32f1xx_hal_uart.c", FilePath="C:/Users/LJH/Desktop/Unfinished/CreationA_V1/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c", Line=3161
+OpenDocument="stm32f1xx_hal.c", FilePath="C:/Users/LJH/Desktop/Unfinished/CreationA_V1/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c", Line=297
+OpenDocument="stm32f1xx_it.c", FilePath="C:/Users/LJH/Desktop/Unfinished/CreationA_V1/Core/Src/stm32f1xx_it.c", Line=85
+OpenToolbar="Debug", Floating=0, x=0, y=0
+OpenWindow="Call Stack", DockArea=RIGHT, x=0, y=1, w=839, h=375, TabPos=0, TopOfStack=0, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+OpenWindow="Source Files", DockArea=LEFT, x=0, y=0, w=349, h=686, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+OpenWindow="Memory 1", DockArea=BOTTOM, x=0, y=0, w=210, h=227, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0, EditorAddress=0x2000C000
+OpenWindow="Watched Data 1", DockArea=RIGHT, x=0, y=1, w=839, h=375, TabPos=1, TopOfStack=1, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+OpenWindow="Terminal", DockArea=RIGHT, x=0, y=0, w=839, h=291, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+OpenWindow="Data Sampling", DockArea=BOTTOM, x=1, y=0, w=330, h=227, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0, VisibleTab=0, UniformSampleSpacing=0
+OpenWindow="Console", DockArea=BOTTOM, x=2, y=0, w=1378, h=227, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+TableHeader="Call Stack", SortCol="Function", SortOrder="ASCENDING", VisibleCols=["Function";"Stack Frame";"Source";"PC";"Return Address";"Stack Used"], ColWidths=[162;119;134;100;168;156]
+TableHeader="Source Files", SortCol="File", SortOrder="ASCENDING", VisibleCols=["File";"Status";"Size";"#Insts";"Path"], ColWidths=[233;100;100;100;950]
+TableHeader="Data Sampling Table", SortCol="None", SortOrder="ASCENDING", VisibleCols=["Index";"Time";" ps2_rx[3]";" ps2_rx[1]"], ColWidths=[100;100;100;100]
+TableHeader="Data Sampling Setup", SortCol="Expression", SortOrder="ASCENDING", VisibleCols=["Expression";"Type";"Value";"Min";"Max";"Average";"# Changes";"Min. Change";"Max. Change"], ColWidths=[337;144;100;100;100;114;110;126;126]
+TableHeader="Power Sampling", SortCol="Index", SortOrder="ASCENDING", VisibleCols=["Index";"Time";"Ch 0"], ColWidths=[100;100;100]
+TableHeader="RegisterSelectionDialog", SortCol="None", SortOrder="ASCENDING", VisibleCols=[], ColWidths=[]
+TableHeader="Watched Data 1", SortCol="Expression", SortOrder="ASCENDING", VisibleCols=["Expression";"Value";"Location";"Refresh"], ColWidths=[365;137;167;144]
+TableHeader="TargetExceptionDialog", SortCol="Name", SortOrder="ASCENDING", VisibleCols=["Name";"Value";"Address";"Description"], ColWidths=[200;100;100;887]
+WatchedExpression="ps2_rx", RefreshRate=5, DisplayFormat=DISPLAY_FORMAT_HEX, Window=Watched Data 1
+WatchedExpression="a", RefreshRate=5, Window=Watched Data 1
+WatchedExpression="music_test", RefreshRate=5, Window=Watched Data 1
+WatchedExpression="data", Window=Watched Data 1
+WatchedExpression="state", RefreshRate=5, Window=Watched Data 1
+WatchedExpression="mv_rx_temp", RefreshRate=5, Window=Watched Data 1
+WatchedExpression="state", RefreshRate=5, Window=Watched Data 1
+WatchedExpression="mv_rx", RefreshRate=5, Window=Watched Data 1
